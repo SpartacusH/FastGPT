@@ -341,7 +341,11 @@
         "Simple chat": "简单的对话",
         "Simple chat desc": "一个极其简单的 AI 对话应用",
         "Simple template": "简易模板",
-        "Simple template tip": "极简模板\n已内置参数细节"
+        "Simple template tip": "极简模板\n已内置参数细节",
+        "Generate report":"生成报告",
+        "Generate video":"生成视频",
+        "Generate report desc":"选择报告模版，同时进行一次知识库的检索，将检索结果注入LLM模型生成报告内容",
+        "Generate video desc":"生成视频"
       },
       "tip": {
         "Add a intro to app": "快来给应用一个介绍~",

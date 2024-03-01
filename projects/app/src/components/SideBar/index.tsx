@@ -7,16 +7,17 @@ interface Props extends BoxProps {}
 
 const SideBar = (e?: Props) => {
   const {
-    w = ['100%', '0 0 250px', '0 0 270px', '0 0 290px', '0 0 310px'],
+    w = ['100%', '0 0 250px', '0 0 270px', '0 0 290px', '0 0 510px','0 0 310px'],
     children,
     ...props
   } = e || {};
-
+  console.log(w)
+  console.log(e)
   const [foldSideBar, setFoldSideBar] = useState(false);
   return (
     <Box
       position={'relative'}
-      flex={foldSideBar ? '0 0 0' : w}
+      flex={foldSideBar ? '0 0 0' : (e.flex? e.flex:w)}
       w={['100%', 0]}
       h={'100%'}
       zIndex={1}

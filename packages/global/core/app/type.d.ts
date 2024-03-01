@@ -24,6 +24,7 @@ export interface AppSchema {
 
 export type AppListItemType = {
   _id: string;
+  simpleTemplateId: string;
   name: string;
   avatar: string;
   intro: string;

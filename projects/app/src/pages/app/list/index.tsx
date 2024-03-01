@@ -106,11 +106,22 @@ const MyApps = () => {
                 }
               }}
               onClick={() => {
+                let url;
                 if (userInfo?.team.canWrite) {
-                  router.push(`/app/detail?appId=${app._id}`);
+                  url=`/app/detail?appId=${app._id}`
+                     //router.push(`/app/detail?appId=${app._id}`);
                 } else {
-                  router.push(`/chat?appId=${app._id}`);
+                  url=`/chat?appId=${app._id}`
+                 // router.push(`/chat?appId=${app._id}`);
                 }
+                if(app.simpleTemplateId=='simpleDatasetReport')
+                {
+                    url=`/report?appId=${app._id}`
+                }
+                else if(app.simpleTemplateId=='simpleDatasetVideo'){
+                    url=`/video?appId=${app._id}`
+                }
+                router.push(url)
               }}
             >
               <Flex alignItems={'center'} h={'38px'}>

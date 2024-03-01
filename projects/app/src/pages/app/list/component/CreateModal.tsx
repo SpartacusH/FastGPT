@@ -84,6 +84,7 @@ const CreateModal = ({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
       return postCreateApp({
         avatar: data.avatar,
         name: data.name,
+        simpleTemplateId: template.id,
         type: template.type,
         modules: template.modules || []
       });

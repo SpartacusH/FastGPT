@@ -341,7 +341,11 @@
         "Simple chat": "Simple chat",
         "Simple chat desc": "An extremely simple AI conversation application ",
         "Simple template": "Simple",
-        "Simple template tip": "Simple template\nHas built-in parameter details"
+        "Simple template tip": "Simple template\nHas built-in parameter details",
+        "Generate report":"Generate report",
+        "Generate video":"Generate video",
+        "Generate report desc":"Select a report template and conduct a knowledge base search, injecting the search results into the LLM model to generate report content",
+        "Generate video desc":"Generate video"
       },
       "tip": {
         "Add a intro to app": "Add a intro to app",

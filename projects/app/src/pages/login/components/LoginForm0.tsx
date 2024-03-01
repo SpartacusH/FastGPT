@@ -158,7 +158,7 @@ const LoginForm = ({ setPageType, loginSuccess }: Props) => {
           <Box mt={7} fontSize={'sm'}>
             使用即代表你同意我们的{' '}
             <Link
-              href={''}
+              href={getDocPath('/docs/agreement/disclaimer/')}
               target={'_blank'}
               color={'primary.500'}
             >

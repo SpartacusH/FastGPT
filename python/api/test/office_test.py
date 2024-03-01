@@ -32,7 +32,7 @@ def get_responses():
         test_file_path = create_test_docx_with_image()
         with open(test_file_path, "rb") as f:
             files = {"file": (os.path.basename(test_file_path), f, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")}
-            response = requests.post("http://127.0.0.1:6010/extract_text/", files=files)
+            response = requests.post("http://127.0.0.1:6011/extract_text/", files=files)
             responses.append(response)
         # 测试完成后删除文件
         os.unlink(test_file_path)

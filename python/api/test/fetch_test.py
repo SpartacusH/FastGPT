@@ -1,7 +1,7 @@
 import requests
 
 # 接口的URL
-api_url = "http://127.0.0.1:6010/generate_summary/"
+api_url = "http://127.0.0.1:7010/generate_summary/"
 
 # 请求的数据
 data = {

@@ -45,4 +45,4 @@ async def generate_summary(request: SummaryRequest):
     return result
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=6010)
+    uvicorn.run(app, host="0.0.0.0", port=7010)
