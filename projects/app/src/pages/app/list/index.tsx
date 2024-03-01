@@ -58,7 +58,6 @@ const MyApps = () => {
   const { isFetching } = useQuery(['loadApps'], () => loadMyApps(true), {
     refetchOnMount: true
   });
-  const reportTemplates=[{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'},{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'},{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'},{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'}]
 
   return (
     <PageContainer isLoading={isFetching} insertProps={{ px: [5, '48px'] }}>
@@ -77,7 +76,7 @@ const MyApps = () => {
         gridTemplateColumns={['1fr', 'repeat(2,1fr)', 'repeat(3,1fr)', 'repeat(4,1fr)']}
         gridGap={5}
       >
-        {reportTemplates.map((app) => (
+        {myApps.map((app) => (
           <MyTooltip
             key={app._id}
             label={userInfo?.team.canWrite ? t('app.To Settings') : t('app.To Chat')}
@@ -107,6 +106,7 @@ const MyApps = () => {
                 }
               }}
               onClick={() => {
+                console.log(app)
                 let url;
                 if (userInfo?.team.canWrite) {
                   url=`/app/detail?appId=${app._id}`

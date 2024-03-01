@@ -70,124 +70,125 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const { isPc } = useSystemStore();
   const { Loading, setIsLoading } = useLoading();
   const { isOpen: isOpenSlider, onClose: onCloseSlider, onOpen: onOpenSlider } = useDisclosure();
+const reportTemplates=[{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'},{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'},{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'},{_id:1,name:'海军研究报告',avater:'',intro:'海军研究报告生成模版'}];
 
   const startChat = useCallback(
-    async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
-      const prompts = messages.slice(-2);
-      const completionChatId = chatId ? chatId : nanoid();
+      async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
+        const prompts = messages.slice(-2);
+        const completionChatId = chatId ? chatId : nanoid();
 
-      const { responseText, responseData } = await streamFetch({
-        data: {
-          messages: prompts,
-          variables,
-          appId,
-          chatId: completionChatId
-        },
-        onMessage: generatingMessage,
-        abortCtrl: controller
-      });
+        const { responseText, responseData } = await streamFetch({
+          data: {
+            messages: prompts,
+            variables,
+            appId,
+            chatId: completionChatId
+          },
+          onMessage: generatingMessage,
+          abortCtrl: controller
+        });
 
-      const newTitle =
-        chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
-        prompts[1]?.value?.slice(0, 20) ||
-        t('core.chat.New Chat');
+        const newTitle =
+            chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
+            prompts[1]?.value?.slice(0, 20) ||
+            t('core.chat.New Chat');
 
-      // new chat
-      if (completionChatId !== chatId) {
-        const newHistory: ChatHistoryItemType = {
-          chatId: completionChatId,
-          updateTime: new Date(),
-          title: newTitle,
-          appId,
-          top: false
-        };
-        pushHistory(newHistory);
-        if (controller.signal.reason !== 'leave') {
-          forbidRefresh.current = true;
-          router.replace({
-            query: {
-              chatId: completionChatId,
-              appId
-            }
-          });
-        }
-      } else {
-        // update chat
-        const currentChat = histories.find((item) => item.chatId === chatId);
-        currentChat &&
+        // new chat
+        if (completionChatId !== chatId) {
+          const newHistory: ChatHistoryItemType = {
+            chatId: completionChatId,
+            updateTime: new Date(),
+            title: newTitle,
+            appId,
+            top: false
+          };
+          pushHistory(newHistory);
+          if (controller.signal.reason !== 'leave') {
+            forbidRefresh.current = true;
+            router.replace({
+              query: {
+                chatId: completionChatId,
+                appId
+              }
+            });
+          }
+        } else {
+          // update chat
+          const currentChat = histories.find((item) => item.chatId === chatId);
+          currentChat &&
           updateHistory({
             ...currentChat,
             updateTime: new Date(),
             title: newTitle
           });
-      }
-      // update chat window
-      setChatData((state) => ({
-        ...state,
-        title: newTitle,
-        history: ChatBoxRef.current?.getChatHistories() || state.history
-      }));
+        }
+        // update chat window
+        setChatData((state) => ({
+          ...state,
+          title: newTitle,
+          history: ChatBoxRef.current?.getChatHistories() || state.history
+        }));
 
-      return { responseText, responseData, isNewChat: forbidRefresh.current };
-    },
-    [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
+        return { responseText, responseData, isNewChat: forbidRefresh.current };
+      },
+      [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
   );
 
   // get chat app info
   const loadChatInfo = useCallback(
-    async ({
-      appId,
-      chatId,
-      loading = false
-    }: {
-      appId: string;
-      chatId: string;
-      loading?: boolean;
-    }) => {
-      try {
-        loading && setIsLoading(true);
-        const res = await getInitChatInfo({ appId, chatId });
-        const history = res.history.map((item) => ({
-          ...item,
-          status: ChatStatusEnum.finish
-        }));
+      async ({
+               appId,
+               chatId,
+               loading = false
+             }: {
+        appId: string;
+        chatId: string;
+        loading?: boolean;
+      }) => {
+        try {
+          loading && setIsLoading(true);
+          const res = await getInitChatInfo({ appId, chatId });
+          const history = res.history.map((item) => ({
+            ...item,
+            status: ChatStatusEnum.finish
+          }));
 
-        setChatData({
-          ...res,
-          history
-        });
-
-        // have records.
-        ChatBoxRef.current?.resetHistory(history);
-        ChatBoxRef.current?.resetVariables(res.variables);
-        if (res.history.length > 0) {
-          setTimeout(() => {
-            ChatBoxRef.current?.scrollToBottom('auto');
-          }, 500);
-        }
-      } catch (e: any) {
-        // reset all chat tore
-        setLastChatAppId('');
-        setLastChatId('');
-        toast({
-          title: getErrText(e, t('core.chat.Failed to initialize chat')),
-          status: 'error'
-        });
-        if (e?.code === 501) {
-          router.replace('/app/list');
-        } else if (chatId) {
-          router.replace({
-            query: {
-              ...router.query,
-              chatId: ''
-            }
+          setChatData({
+            ...res,
+            history
           });
+
+          // have records.
+          ChatBoxRef.current?.resetHistory(history);
+          ChatBoxRef.current?.resetVariables(res.variables);
+          if (res.history.length > 0) {
+            setTimeout(() => {
+              ChatBoxRef.current?.scrollToBottom('auto');
+            }, 500);
+          }
+        } catch (e: any) {
+          // reset all chat tore
+          setLastChatAppId('');
+          setLastChatId('');
+          toast({
+            title: getErrText(e, t('core.chat.Failed to initialize chat')),
+            status: 'error'
+          });
+          if (e?.code === 501) {
+            router.replace('/app/list');
+          } else if (chatId) {
+            router.replace({
+              query: {
+                ...router.query,
+                chatId: ''
+              }
+            });
+          }
         }
-      }
-      setIsLoading(false);
-      return null;
-    },
-    [setIsLoading, setChatData, setLastChatAppId, setLastChatId, toast, t, router]
+        setIsLoading(false);
+        return null;
+      },
+      [setIsLoading, setChatData, setLastChatAppId, setLastChatId, toast, t, router]
   );
   // 初始化聊天框
   useQuery(['init', { appId, chatId }], () => {
@@ -248,189 +249,205 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   useQuery(['loadHistories', appId], () => (appId ? loadHistories({ appId }) : null));
 
   return (
-    <Flex h={'100%'}>
-      <Head>
-        <title>{chatData.app.name}</title>
-      </Head>
-      {/* pc show myself apps */}
-      {isPc && (
-        <Box borderRight={theme.borders.base} w={'220px'} flexShrink={0}>
-          <SliderApps appId={appId} />
-        </Box>
-      )}
+      <Flex h={'100%'}>
+        <Head>
+          <title>{chatData.app.name}</title>
+        </Head>
+        {/* pc show myself apps */}
+        {isPc && (
+            <Box borderRight={theme.borders.base} w={'220px'} flexShrink={0}>
+              <SliderApps appId={appId} />
+            </Box>
+        )}
 
-      <PageContainer flex={'1 0 0'} w={0} p={[0, '16px']} position={'relative'}>
-        <Flex h={'100%'} flexDirection={['column', 'row']} bg={'white'}>
-          {/* pc always show history. */}
-          {((children: React.ReactNode) => {
-            return isPc || !appId ? (
-              <SideBar  >{children}</SideBar>
-            ) : (
-              <Drawer
-                isOpen={isOpenSlider}
-                placement="left"
-                autoFocus={false}
-                size={'xs'}
-                onClose={onCloseSlider}
-              >
-                <DrawerOverlay backgroundColor={'rgba(255,255,255,0.5)'} />
-                <DrawerContent maxWidth={'250px'}>{children}</DrawerContent>
-              </Drawer>
-            );
-          })(
-            <Grid
-        py={[4, 6]}
-        gridTemplateColumns={['1fr', 'repeat(2,1fr)', 'repeat(3,1fr)', 'repeat(4,1fr)']}
-        gridGap={5}
-      >
-        {myApps.map((app) => (
-          <MyTooltip
-            key={app._id}
-            label={userInfo?.team.canWrite ? t('app.To Settings') : t('app.To Chat')}
-          >
-            <Box
-              lineHeight={1.5}
-              h={'100%'}
-              py={3}
-              px={5}
-              cursor={'pointer'}
-              borderWidth={'1.5px'}
-              borderColor={'borderColor.low'}
-              bg={'white'}
-              borderRadius={'md'}
-              userSelect={'none'}
-              position={'relative'}
-              display={'flex'}
-              flexDirection={'column'}
-              _hover={{
-                borderColor: 'primary.300',
-                boxShadow: '1.5',
-                '& .delete': {
-                  display: 'flex'
-                },
-                '& .chat': {
-                  display: 'flex'
-                }
-              }}
-              onClick={() => {
-                let url;
-                if (userInfo?.team.canWrite) {
-                  url=`/app/detail?appId=${app._id}`
-                     //router.push(`/app/detail?appId=${app._id}`);
-                } else {
-                  url=`/chat?appId=${app._id}`
-                 // router.push(`/chat?appId=${app._id}`);
-                }
-                if(app.simpleTemplateId=='simpleDatasetReport')
-                {
-                    url=`/report?appId=${app._id}`
-                }
-                else if(app.simpleTemplateId=='simpleDatasetVideo'){
-                    url=`/video?appId=${app._id}`
-                }
-                router.push(url)
-              }}
-            >
-              <Flex alignItems={'center'} h={'38px'}>
-                <Avatar src={app.avatar} borderRadius={'md'} w={'28px'} />
-                <Box ml={3}>{app.name}</Box>
-                {app.isOwner && userInfo?.team.canWrite && (
-                  <IconButton
-                    className="delete"
-                    position={'absolute'}
-                    top={4}
-                    right={4}
-                    size={'xsSquare'}
-                    variant={'whiteDanger'}
-                    icon={<MyIcon name={'delete'} w={'14px'} />}
-                    aria-label={'delete'}
-                    display={['', 'none']}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openConfirm(() => onclickDelApp(app._id))();
-                    }}
-                  />
-                )}
-              </Flex>
-              <Box
-                flex={1}
-                className={'textEllipsis3'}
-                py={2}
-                wordBreak={'break-all'}
-                fontSize={'sm'}
-                color={'myGray.600'}
-              >
-                {app.intro || '这个应用还没写介绍~'}
-              </Box>
-              <Flex h={'34px'} alignItems={'flex-end'}>
-                <Box flex={1}>
-                  <PermissionIconText permission={app.permission} color={'myGray.600'} />
-                </Box>
-                {userInfo?.team.canWrite && (
-                  <IconButton
-                    className="chat"
-                    size={'xsSquare'}
-                    variant={'whitePrimary'}
-                    icon={
-                      <MyTooltip label={'去聊天'}>
-                        <MyIcon name={'core/chat/chatLight'} w={'14px'} />
+        <PageContainer flex={'1 0 0'} w={0} p={[0, '16px']} position={'relative'}>
+          <Flex h={'100%'} flexDirection={['column', 'row']} bg={'white'}>
+            {/* pc always show history. */}
+            {((children: React.ReactNode) => {
+              return isPc || !appId ? (
+                  <SideBar  >{children}</SideBar>
+              ) : (
+                  <Drawer
+                      isOpen={isOpenSlider}
+                      placement="left"
+                      autoFocus={false}
+                      size={'xs'}
+                      onClose={onCloseSlider}
+                  >
+                    <DrawerOverlay backgroundColor={'rgba(255,255,255,0.5)'} />
+                    <DrawerContent maxWidth={'250px'}>{children}</DrawerContent>
+                  </Drawer>
+              );
+            })
+            (
+                 <Flex
+      position={'relative'}
+      flexDirection={'column'}
+      w={'100%'}
+      h={'100%'}
+      bg={'white'}
+      borderRight={['', theme.borders.base]}
+      whiteSpace={'nowrap'}
+    >
+                <MyTooltip offset={[0, 0]}>
+                  <Flex
+                      pt={5}
+                      pb={2}
+                      px={[2, 5]}
+                      alignItems={'center'}
+                      cursor={'default'}
+                      onClick={() => canRouteToDetail &&
+                          router.replace({
+                            pathname: '/app/detail',
+                            query: {appId}
+                          })}
+                  >
+                    <Avatar src={chatData.app.avatar}/>
+                    <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'} className={'textEllipsis'}>
+                      {chatData.app.name+'-报告模版'}
+                    </Box>
+                  </Flex>
+                </MyTooltip>
+                  <Grid
+                    p={4}
+                    gridTemplateColumns={['1fr', 'repeat(2,1fr)']}
+                    gridGap={5}
+                >
+                  {reportTemplates.map((app) => (
+                      <MyTooltip
+                          key={app._id}
+                          label={userInfo?.team.canWrite ? t('app.To Settings') : t('app.To Chat')}
+                      >
+                        <Box
+                            lineHeight={1.5}
+                            h={'100%'}
+                            py={3}
+                            px={5}
+                            cursor={'pointer'}
+                            borderWidth={'1.5px'}
+                            borderColor={'borderColor.low'}
+                            bg={'white'}
+                            borderRadius={'md'}
+                            userSelect={'none'}
+                            position={'relative'}
+                            display={'flex'}
+                            flexDirection={'column'}
+                            _hover={{
+                              borderColor: 'primary.300',
+                              boxShadow: '1.5',
+                              '& .delete': {
+                                display: 'flex'
+                              },
+                              '& .chat': {
+                                display: 'flex'
+                              }
+                            }}
+                            onClick={() => {
+                              let url;
+                              if (userInfo?.team.canWrite) {
+                                url = `/app/detail?appId=${app._id}`;
+                                //router.push(`/app/detail?appId=${app._id}`);
+                              } else {
+                                url = `/chat?appId=${app._id}`;
+                                // router.push(`/chat?appId=${app._id}`);
+                              }
+                              if (app.simpleTemplateId == 'simpleDatasetReport') {
+                                url = `/report?appId=${app._id}`;
+                              } else if (app.simpleTemplateId == 'simpleDatasetVideo') {
+                                url = `/video?appId=${app._id}`;
+                              }
+                              router.push(url);
+                            }}
+                        >
+                          <Flex alignItems={'center'} h={'38px'}>
+                            <Avatar src={app.avatar} borderRadius={'md'} w={'28px'}/>
+                            <Box ml={3}>{app.name}</Box>
+                            {app.isOwner && userInfo?.team.canWrite && (
+                                <IconButton
+                                    className="delete"
+                                    position={'absolute'}
+                                    top={4}
+                                    right={4}
+                                    size={'xsSquare'}
+                                    variant={'whiteDanger'}
+                                    icon={<MyIcon name={'delete'} w={'14px'}/>}
+                                    aria-label={'delete'}
+                                    display={['', 'none']}/>
+                            )}
+                          </Flex>
+                          <Box
+                              flex={1}
+                              className={'textEllipsis3'}
+                              py={2}
+                              wordBreak={'break-all'}
+                              fontSize={'sm'}
+                              color={'myGray.600'}
+                          >
+                            {app.intro || '这个应用还没写介绍~'}
+                          </Box>
+                          <Flex h={'34px'} alignItems={'flex-end'}>
+                            {userInfo?.team.canWrite && (
+                                <IconButton
+                                    className="chat"
+                                    size={'xsSquare'}
+                                    variant={'whitePrimary'}
+                                    icon={<MyTooltip label={'去聊天'}>
+                                      <MyIcon name={'core/chat/chatLight'} w={'14px'}/>
+                                    </MyTooltip>}
+                                    aria-label={'chat'}
+                                    display={['', 'none']}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      router.push(`/chat?appId=${app._id}`);
+                                    }}/>
+                            )}
+                          </Flex>
+                        </Box>
                       </MyTooltip>
-                    }
-                    aria-label={'chat'}
-                    display={['', 'none']}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push(`/chat?appId=${app._id}`);
-                    }}
-                  />
-                )}
-              </Flex>
-            </Box>
-          </MyTooltip>
-        ))}
-      </Grid>
-
-          )}
-          {/* chat container */}
-          <Flex
-            position={'relative'}
-            h={[0, '100%']}
-            w={['100%', 0]}
-            flex={'1 0 0'}
-            flexDirection={'column'}
-          >
-            {/* header */}
-            <ChatHeader
-              appAvatar={chatData.app.avatar}
-              appName={chatData.app.name}
-              appId={appId}
-              history={chatData.history}
-              chatModels={chatData.app.chatModels}
-              onOpenSlider={onOpenSlider}
-              showHistory
-            />
-
-            {/* chat box */}
-            <Box flex={1}>
-              <ChatBox
-                ref={ChatBoxRef}
-                showEmptyIntro
-                appAvatar={chatData.app.avatar}
-                userAvatar={userInfo?.avatar}
-                userGuideModule={chatData.app?.userGuideModule}
-                showFileSelector={checkChatSupportSelectFileByChatModels(chatData.app.chatModels)}
-                feedbackType={'user'}
-                onStartChat={startChat}
-                onDelMessage={(e) => delOneHistoryItem({ ...e, appId, chatId })}
-                appId={appId}
-                chatId={chatId}
+                  ))}
+                </Grid>
+                 </Flex>
+            )}
+            {/* chat container */}
+            <Flex
+                position={'relative'}
+                h={[0, '100%']}
+                w={['100%', 0]}
+                flex={'1 0 0'}
+                flexDirection={'column'}
+            >
+              {/* header */}
+              <ChatHeader
+                  appAvatar={chatData.app.avatar}
+                  appName={chatData.app.name}
+                  appId={appId}
+                  history={chatData.history}
+                  chatModels={chatData.app.chatModels}
+                  onOpenSlider={onOpenSlider}
+                  showHistory
               />
-            </Box>
+
+              {/* chat box */}
+              <Box flex={1}>
+                <ChatBox
+                    ref={ChatBoxRef}
+                    showEmptyIntro
+                    appAvatar={chatData.app.avatar}
+                    userAvatar={userInfo?.avatar}
+                    userGuideModule={chatData.app?.userGuideModule}
+                    showFileSelector={checkChatSupportSelectFileByChatModels(chatData.app.chatModels)}
+                    feedbackType={'user'}
+                    onStartChat={startChat}
+                    onDelMessage={(e) => delOneHistoryItem({ ...e, appId, chatId })}
+                    appId={appId}
+                    chatId={chatId}
+                />
+              </Box>
+            </Flex>
           </Flex>
-        </Flex>
-        <Loading fixed={false} />
-      </PageContainer>
-    </Flex>
+          <Loading fixed={false} />
+        </PageContainer>
+      </Flex>
   );
 };
 
