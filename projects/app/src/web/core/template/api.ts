@@ -5,7 +5,7 @@ import type {
   GetTemplateCollectionsProps,
   GetTemplateDataListProps,
   UpdateTemplateCollectionParams
-} from '@/global/core/api/datasetReq.d';
+} from '@/global/core/api/templateReq.d';
 import type {
   CreateTemplateCollectionParams,
   TemplateUpdateBody,
@@ -36,12 +36,12 @@ import type { TemplateDataItemType } from '@fastgpt/global/core/template/type';
 import type { TemplateCollectionsListItemType } from '@/global/core/template/type.d';
 import { PagingData } from '@/types';
 
-/* ======================== dataset ======================= */
+/* ======================== template ======================= */
 export const getTemplates = (data: { parentId?: string; type?: `${TemplateTypeEnum}` }) =>
   GET<TemplateListItemType[]>(`/core/template/list`, data);
 
 /**
- * get type=dataset list
+ * get type=template list
  */
 export const getAllTemplate = () => GET<TemplateListItemType[]>(`/core/template/allTemplate`);
 
@@ -84,7 +84,7 @@ export const postLinkCollectionSync = (collectionId: string) =>
   });
 
 /* =============================== data ==================================== */
-/* get dataset list */
+/* get template list */
 export const getTemplateDataList = (data: GetTemplateDataListProps) =>
   POST(`/core/template/data/list`, data);
 
@@ -98,13 +98,13 @@ export const postChunks2Template = (data: PushTemplateDataProps) =>
   POST<PushTemplateDataResponse>(`/core/template/data/pushData`, data);
 
 /**
- * insert one data to dataset (immediately insert)
+ * insert one data to template (immediately insert)
  */
 export const postInsertData2Template = (data: InsertOneTemplateDataProps) =>
   POST<string>(`/core/template/data/insertData`, data);
 
 /**
- * update one datasetData by id
+ * update one templateData by id
  */
 export const putTemplateDataById = (data: UpdateTemplateDataProps) =>
   PUT('/core/template/data/update', data);
