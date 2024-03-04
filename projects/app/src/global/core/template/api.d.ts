@@ -17,8 +17,6 @@ export type CreateTemplateParams = {
   name: string;
   intro: string;
   avatar: string;
-  vectorModel?: string;
-  agentModel?: string;
   type: `${TemplateTypeEnum}`;
 };
 
