@@ -15,7 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       parentId,
       name,
       type = TemplateTypeEnum.template,
-      avatar
+      avatar,
+      fileId,
+      fileName,
     } = req.body as CreateTemplateParams;
 
     // auth
@@ -36,6 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       teamId,
       tmbId,
       avatar,
+      fileId:fileId,
+      fileName:fileName,
       parentId: parentId || null,
       type
     });
