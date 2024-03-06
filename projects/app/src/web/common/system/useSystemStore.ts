@@ -116,8 +116,10 @@ export const useSystemStore = create<State>()(
             state.feConfigs = res.feConfigs || {};
             state.subPlans = res.subPlans;
             state.systemVersion = res.systemVersion;
+            console.log(res);
 
             state.llmModelList = res.llmModels ?? state.llmModelList;
+                        console.log(state.llmModelList);
             state.datasetModelList = state.llmModelList.filter((item) => item.datasetProcess);
             state.vectorModelList = res.vectorModels ?? state.vectorModelList;
             state.audioSpeechModelList = res.audioSpeechModels ?? state.audioSpeechModelList;
