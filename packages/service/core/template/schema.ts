@@ -54,6 +54,14 @@ const TemplateSchema = new Schema({
     type: String,
     required: true
   },
+  fileName: {
+    type: String,
+    required: true
+  },
+  fileId: {
+    type: String,
+    required: true
+  },
   updateTime: {
     type: Date,
     default: () => new Date()

@@ -11,9 +11,6 @@ import {useRequest} from '@/web/common/hooks/useRequest';
 import Avatar from '@/components/Avatar';
 import MyTooltip from '@/components/MyTooltip';
 import MyModal from '@/components/MyModal';
-import {postCreateDataset} from '@/web/core/dataset/api';
-import type {CreateDatasetParams} from '@/global/core/dataset/api.d';
-
 import {postCreateTemplate} from '@/web/core/template/api';
 import type {CreateTemplateParams} from '@/global/core/template/api.d';
 import MySelect from '@/components/Select';
