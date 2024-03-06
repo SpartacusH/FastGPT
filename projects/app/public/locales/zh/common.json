@@ -88,6 +88,7 @@
     "Exit": "退出",
     "Expired Time": "过期时间",
     "File": "文件",
+    "Upload Template File":"上传模版文件",
     "Filed is repeat": "",
     "Filed is repeated": "字段重复了",
     "Finish": "完成",
@@ -479,6 +480,9 @@
       "tip": {
         "leave page": "内容已修改，确认离开页面吗？"
       }
+    },
+    "template": {
+       "Create template": "创建一个报告模版"
     },
     "dataset": {
       "All Dataset": "全部知识库",

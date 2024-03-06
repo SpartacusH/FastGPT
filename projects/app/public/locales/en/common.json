@@ -480,6 +480,9 @@
         "leave page": "Content has been modified, are you sure to leave the page?"
       }
     },
+    "template": {
+       "Create template": "Create template"
+    },
     "dataset": {
       "All Dataset": "All Dataset",
       "Avatar": "Avatar",

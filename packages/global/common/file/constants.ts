@@ -1,9 +1,13 @@
 export enum BucketNameEnum {
-  dataset = 'dataset'
+  dataset = 'dataset',
+  template= 'template'
 }
 export const bucketNameMap = {
   [BucketNameEnum.dataset]: {
     label: 'common.file.bucket.dataset'
+  },
+  [BucketNameEnum.template]: {
+    label: 'common.file.bucket.template'
   }
 };
 

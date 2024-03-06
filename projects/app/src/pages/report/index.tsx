@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+
 import { getInitChatInfo } from '@/web/core/chat/api';
 import {
   Box,
@@ -9,7 +10,7 @@ import {
   Drawer,
   DrawerOverlay,
   DrawerContent,
-  useTheme, Grid, IconButton
+  useTheme, Grid, IconButton, Button
 } from '@chakra-ui/react';
 import { useSystemStore } from '@/web/common/system/useSystemStore';
 import { useQuery } from '@tanstack/react-query';
@@ -36,16 +37,22 @@ import { checkChatSupportSelectFileByChatModels } from '@/web/core/chat/utils';
 import { chatContentReplaceBlock } from '@fastgpt/global/core/chat/utils';
 import { ChatStatusEnum } from '@fastgpt/global/core/chat/constants';
 import MyTooltip from "@/components/MyTooltip";
+import CreateModal from './components/CreateModal';
 import Avatar from "@/components/Avatar";
 import MyIcon from "@fastgpt/web/components/common/Icon";
 import PermissionIconText from "@/components/support/permission/IconText";
+import {AddIcon} from "@chakra-ui/icons";
+import {DatasetTypeEnum} from "@fastgpt/global/core/dataset/constants";
+import {useConfirm} from "@/web/common/hooks/useConfirm";
+import {useEditTitle} from "@/web/common/hooks/useEditTitle";
+import dynamic from "next/dynamic";
 
 const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const router = useRouter();
   const theme = useTheme();
   const { t } = useTranslation();
   const { toast } = useToast();
-
+  const { parentId } = router.query as { parentId: string };
   const ChatBoxRef = useRef<ComponentRef>(null);
   const forbidRefresh = useRef(false);
 
@@ -66,7 +73,19 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   } = useChatStore();
   const { myApps, loadMyApps } = useAppStore();
   const { userInfo } = useUserStore();
+  const { openConfirm, ConfirmModal } = useConfirm({
+    title: '删除提示',
+    content: '确认删除该应用所有信息？'
+  });
+  const {
+    isOpen: isOpenCreateModal,
+    onOpen: onOpenCreateModal,
+    onClose: onCloseCreateModal
+  } = useDisclosure();
 
+  const { onOpenModal: onOpenTitleModal, EditModal: EditTitleModal } = useEditTitle({
+    title: t('Rename')
+  });
   const { isPc } = useSystemStore();
   const { Loading, setIsLoading } = useLoading();
   const { isOpen: isOpenSlider, onClose: onCloseSlider, onOpen: onOpenSlider } = useDisclosure();
@@ -296,16 +315,14 @@ const reportTemplates=[{_id:1,name:'海军研究报告',avater:'',intro:'海军�
                       px={[2, 5]}
                       alignItems={'center'}
                       cursor={'default'}
-                      onClick={() => canRouteToDetail &&
-                          router.replace({
-                            pathname: '/app/detail',
-                            query: {appId}
-                          })}
                   >
                     <Avatar src={chatData.app.avatar}/>
                     <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'} className={'textEllipsis'}>
                       {chatData.app.name+'-报告模版'}
                     </Box>
+                      <Button leftIcon={<AddIcon />} variant={'primaryOutline'} onClick={onOpenCreateModal}>
+            {t('common.New Create')}
+          </Button>
                   </Flex>
                 </MyTooltip>
                   <Grid
@@ -406,6 +423,10 @@ const reportTemplates=[{_id:1,name:'海军研究报告',avater:'',intro:'海军�
                       </MyTooltip>
                   ))}
                 </Grid>
+
+                    <ConfirmModal />
+      <EditTitleModal />
+     {isOpenCreateModal && <CreateModal onClose={onCloseCreateModal} parentId={parentId} />}
                  </Flex>
             )}
             {/* chat container */}

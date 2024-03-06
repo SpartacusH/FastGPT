@@ -17,6 +17,8 @@ export type CreateTemplateParams = {
   name: string;
   intro: string;
   avatar: string;
+  fileId:string;
+  fileName:string;
   type: `${TemplateTypeEnum}`;
 };
 
