@@ -8,7 +8,7 @@ import { authTemplate } from '@fastgpt/service/support/permission/auth/template'
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
     await connectToDatabase();
-    const { id, parentId, name, avatar, intro, permission, agentModel, websiteConfig, status } =
+    const { id, parentId, name, avatar, intro, permission, websiteConfig, status } =
       req.body as TemplateUpdateBody;
 
     if (!id) {
@@ -30,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         ...(name && { name }),
         ...(avatar && { avatar }),
         ...(permission && { permission }),
-        ...(agentModel && { agentModel: agentModel.model }),
         ...(websiteConfig && { websiteConfig }),
         ...(status && { status }),
         ...(intro && { intro })

@@ -15,20 +15,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       parentId,
       name,
       type = TemplateTypeEnum.template,
-      avatar,
-      vectorModel = global.vectorModels[0].model,
-      agentModel = getTemplateModel().model
+      avatar
     } = req.body as CreateTemplateParams;
 
     // auth
     const { teamId, tmbId } = await authUserNotVisitor({ req, authToken: true, authApiKey: true });
 
-    // check model valid
-    const vectorModelStore = getVectorModel(vectorModel);
-    const agentModelStore = getLLMModel(agentModel);
-    if (!vectorModelStore || !agentModelStore) {
-      throw new Error('vectorModel or qaModel is invalid');
-    }
 
     // check limit
     const authCount = await MongoTemplate.countDocuments({
@@ -43,8 +35,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       name,
       teamId,
       tmbId,
-      vectorModel,
-      agentModel,
       avatar,
       parentId: parentId || null,
       type
