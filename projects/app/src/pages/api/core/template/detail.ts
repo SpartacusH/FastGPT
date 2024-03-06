@@ -28,8 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     jsonRes<TemplateItemType>(res, {
       data: {
         ...template,
-        vectorModel: getVectorModel(template.vectorModel),
-        agentModel: getLLMModel(template.agentModel),
         canWrite,
         isOwner
       }
