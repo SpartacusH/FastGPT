@@ -18,6 +18,7 @@ export type TemplateSchemaType = {
   teamId: string;
   tmbId: string;
   updateTime: Date;
+  createTime: Date;
   avatar: string;
   name: string;
   vectorModel: string;

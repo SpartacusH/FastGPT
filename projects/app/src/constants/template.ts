@@ -11,6 +11,7 @@ export const defaultTemplateDetail: TemplateItemType = {
   teamId: '',
   tmbId: '',
   updateTime: new Date(),
+  createTime: new Date(),
   type: 'template',
   avatar: '/icon/logo.svg',
   name: '',
