@@ -19,7 +19,6 @@ export type CreateTemplateParams = {
   avatar: string;
   fileId:string;
   fileName:string;
-  type: `${TemplateTypeEnum}`;
 };
 
 /* ================= collection ===================== */
