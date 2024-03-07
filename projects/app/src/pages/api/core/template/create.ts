@@ -13,8 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await connectToDatabase();
     const {
       parentId,
-      name,
       type = TemplateTypeEnum.template,
+      name,
+      intro,
       avatar,
       fileId,
       fileName,
@@ -34,14 +35,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     const { _id } = await MongoTemplate.create({
-      name,
-      teamId,
-      tmbId,
-      avatar,
+      name:name,
+      teamId:teamId,
+      tmbId:tmbId,
+      avatar:avatar,
+      intro: intro,
       fileId:fileId,
       fileName:fileName,
       parentId: parentId || null,
-      type
+      type:type
     });
 
     if (type === TemplateTypeEnum.template) {
