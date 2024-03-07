@@ -29,7 +29,7 @@ import {uploadFiles} from '@/web/common/file/controller'
 import {fi} from "date-fns/locale";
 import {jsonRes} from '@fastgpt/service/common/response';
 import { BucketNameEnum } from '@fastgpt/global/common/file/constants';
-const CreateModal = ({onClose, parentId}: { onClose: () => void; parentId?: string }) => {
+const CreateModal = ({onClose, parentId,editCallback}: { onClose: () => void; parentId?: string, editCallback: (name: string) => Promise<any>; }) => {
     const {t} = useTranslation();
     const [refresh, setRefresh] = useState(false);
     const {toast} = useToast();
@@ -98,12 +98,14 @@ const CreateModal = ({onClose, parentId}: { onClose: () => void; parentId?: stri
     const {mutate: onclickCreate, isLoading: creating} = useRequest({
         mutationFn: async (data: CreateTemplateParams) => {
             const id = await postCreateTemplate(data);
-            return id;
+            return editCallback(id);
         },
         successToast: t('common.Create Success'),
         errorToast: t('common.Create Failed'),
-        onSuccess(id) {
-            router.push(`/dataset/detail?datasetId=${id}`);
+        onSuccess(data) {
+            console.log(data);
+            onClose();
+            //router.push(`/report?appId=${data.parentId}`);
         }
     });
 

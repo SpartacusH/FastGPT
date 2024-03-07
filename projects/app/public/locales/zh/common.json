@@ -40,6 +40,7 @@
     "Output Field Settings": "输出字段编辑",
     "Paste Config": "粘贴配置",
     "To Chat": "前去对话",
+    "To Report": "生成报告",
     "To Settings": "查看详情",
     "Variable Key Repeat Tip": "变量 key 重复",
     "module": {
@@ -482,7 +483,8 @@
       }
     },
     "template": {
-       "Create template": "创建一个报告模版"
+       "Create template": "创建一个报告模版",
+       "Delete Confirm": "确认删除该报告模版？删除后数据无法恢复，请确认！"
     },
     "dataset": {
       "All Dataset": "全部知识库",

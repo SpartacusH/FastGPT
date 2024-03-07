@@ -40,6 +40,7 @@
     "Output Field Settings": "Output Field Settings",
     "Paste Config": "Paste Config",
     "To Chat": "To Chat Page",
+    "To Report": "To Report Page",
     "To Settings": "To Settings Page",
     "Variable Key Repeat Tip": "Variable Key Repeat",
     "module": {
@@ -481,7 +482,8 @@
       }
     },
     "template": {
-       "Create template": "Create template"
+       "Create template": "Create template",
+       "Delete Confirm": "Are you sure to delete the template? Data cannot be recovered after deletion, please confirm!"
     },
     "dataset": {
       "All Dataset": "All Dataset",
