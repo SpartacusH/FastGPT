@@ -40,7 +40,7 @@ const CreateModal = ({onClose, parentId,editCallback}: { onClose: () => void; pa
     const {userInfo} = useUserStore();
     const {register, setValue, getValues, handleSubmit} = useForm<CreateTemplateParams>({
         defaultValues: {
-            parentId,
+            parentId:parentId,
             type: TemplateTypeEnum.template,
             avatar: '/icon/logo.svg',
             name: '',

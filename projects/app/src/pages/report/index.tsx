@@ -77,7 +77,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
     const theme = useTheme();
     const {t} = useTranslation();
     const {toast} = useToast();
-    const {parentId} = router.query as { parentId: string };
+    const {parentId} = router.query as { appId: string };
     const {setLoading} = useSystemStore();
     const {userInfo} = useUserStore();
     const ChatBoxRef = useRef<ComponentRef>(null);
@@ -123,11 +123,11 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
         successToast: t('common.Delete Success'),
         errorToast: t('template.Delete Template Error')
     });
-
+    console.log(appId);
     const {data, refetch, isFetching} = useQuery(
-        ['loadTemplate', parentId],
+        ['loadTemplate', appId],
         () => {
-            return Promise.all([loadTemplates(parentId), getTemplatePaths(parentId)]);
+            return Promise.all([loadTemplates(appId), getTemplatePaths(appId)]);
         },
         {
             onError(err) {
@@ -388,6 +388,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                             w={'100%'}
                             h={'100%'}
                             bg={'white'}
+                            size={'md'}
                             borderRight={['', theme.borders.base]}
                             whiteSpace={'nowrap'}
                         >
@@ -411,10 +412,11 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                             </MyTooltip>
                             <Grid
                                 p={4}
-                                gridTemplateColumns={['1fr', 'repeat(2,1fr)']}
+                                gridTemplateColumns={['1fr']}
+                              //  gridTemplateColumns={['1fr', 'repeat(2,1fr)']}
                                 gridGap={5}
-                            >
 
+                            >
                                 {formatTemplates.map((template) => (
                                      <MyTooltip
                                         key={template._id}
@@ -566,27 +568,6 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                                                                     }
                                                                 })
                                                         },
-                                                        // {
-                                                        //     label: (
-                                                        //         <Flex alignItems={'center'}>
-                                                        //             <MyIcon name={'common/file/move'} w={'14px'}
-                                                        //                     mr={2}/>
-                                                        //             {t('Move')}
-                                                        //         </Flex>
-                                                        //     ),
-                                                        //     onClick: () => setMoveDataId(template._id)
-                                                        // },
-                                                        // {
-                                                        //     label: (
-                                                        //         <Flex alignItems={'center'}>
-                                                        //             <MyIcon name={'export'} w={'14px'} mr={2}/>
-                                                        //             {t('Export')}
-                                                        //         </Flex>
-                                                        //     ),
-                                                        //     onClick: () => {
-                                                        //         exportTemplate(template);
-                                                        //     }
-                                                        // },
                                                         {
                                                             label: (
                                                                 <Flex alignItems={'center'}>
@@ -638,7 +619,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
 
                             <ConfirmModal/>
                             <EditTitleModal/>
-                            {isOpenCreateModal && <CreateModal onClose={onCloseCreateModal} parentId={parentId} editCallback={async (name) => {
+                            {isOpenCreateModal && <CreateModal onClose={onCloseCreateModal} parentId={appId} editCallback={async (name) => {
             try {
               refetch();
             } catch (error) {
