@@ -66,6 +66,10 @@ const TemplateSchema = new Schema({
     type: Date,
     default: () => new Date()
   },
+  createTime: {
+    type: Date,
+    default: () => new Date()
+  },
   vectorModel: {
     type: String,
     required: true,
