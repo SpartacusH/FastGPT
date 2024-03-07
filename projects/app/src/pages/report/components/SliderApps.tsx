@@ -58,11 +58,29 @@ const SliderApps = ({ appId }: { appId: string }) => {
                     bg: 'myGray.200'
                   },
                   onClick: () => {
-                    router.replace({
-                      query: {
-                        appId: item._id
+                       console.log(item);
+                      console.log(item.simpleTemplateId)
+                      if(item.simpleTemplateId=='simpleDatasetReport')
+                      {
+                          router.push(`/report?appId=${item._id}`);
                       }
-                    });
+                      else if(item.simpleTemplateId=='simpleDatasetVideo'){
+                          router.push(`/report?appId=${item._id}`);
+                      }
+                      else {
+                           router.push(`/chat?appId=${item._id}`);
+                          // router.replace({
+                          //     query: {
+                          //         appId: item._id
+                          //     }
+                          // });
+                      }
+
+                    // router.replace({
+                    //   query: {
+                    //     appId: item._id
+                    //   }
+                    // });
                   }
                 })}
           >

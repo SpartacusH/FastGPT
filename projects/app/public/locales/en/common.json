@@ -483,7 +483,8 @@
     },
     "template": {
        "Create template": "Create template",
-       "Delete Confirm": "Are you sure to delete the template? Data cannot be recovered after deletion, please confirm!"
+       "Delete Confirm": "Are you sure to delete the template? Data cannot be recovered after deletion, please confirm!",
+       "Exit Template": "Exit"
     },
     "dataset": {
       "All Dataset": "All Dataset",
