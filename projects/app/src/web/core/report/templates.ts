@@ -737,7 +737,7 @@ export const reportTemplates: (ReportItemType & {
     ]
   },
   {
-    id: 'simpleDatasetReport',
+    id: 'report-universal',
     avatar: '/imgs/module/db.png',
     name: 'core.report.template.Generate report',
     intro: 'core.report.template.Generate report desc',
@@ -1183,7 +1183,7 @@ export const reportTemplates: (ReportItemType & {
     ]
   },
     {
-    id: 'simpleDatasetVideo',
+    id: 'video-universal',
     avatar: '/imgs/module/video.png',
     name: 'core.report.template.Generate video',
     intro: 'core.report.template.Generate video desc',

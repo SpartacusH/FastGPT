@@ -114,9 +114,9 @@ const MyApps = () => {
                                 } else {
                                     url = `/chat?appId=${app._id}`
                                     // router.push(`/chat?appId=${app._id}`);
-                                    if (app.simpleTemplateId == 'simpleDatasetReport') {
+                                    if (app.simpleTemplateId == 'report-universal') {
                                         url = `/report?appId=${app._id}`
-                                    } else if (app.simpleTemplateId == 'simpleDatasetVideo') {
+                                    } else if (app.simpleTemplateId == 'video-universal') {
                                         url = `/video?appId=${app._id}`
                                     }
                                 }
@@ -173,9 +173,9 @@ const MyApps = () => {
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             let url = `/chat?appId=${app._id}`;
-                                            if (app.simpleTemplateId == 'simpleDatasetReport') {
+                                            if (app.simpleTemplateId == 'report-universal') {
                                                 url = `/report?appId=${app._id}`
-                                            } else if (app.simpleTemplateId == 'simpleDatasetVideo') {
+                                            } else if (app.simpleTemplateId == 'video-universal') {
                                                 url = `/video?appId=${app._id}`
                                             }
                                             router.push(url);

@@ -58,11 +58,11 @@ const SliderApps = ({ appId }: { appId: string }) => {
                     bg: 'myGray.200'
                   },
                   onClick: () => {
-                      if(item.simpleTemplateId=='simpleDatasetReport')
+                      if(item.simpleTemplateId=='report-universal')
                       {
                           router.push(`/report?appId=${item._id}`);
                       }
-                      else if(item.simpleTemplateId=='simpleDatasetVideo'){
+                      else if(item.simpleTemplateId=='video-universal'){
                           router.push(`/report?appId=${item._id}`);
                       }
                       else {
