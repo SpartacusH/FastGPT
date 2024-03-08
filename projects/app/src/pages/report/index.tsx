@@ -11,7 +11,7 @@ import {
     Drawer,
     DrawerOverlay,
     DrawerContent,
-    useTheme, Grid, IconButton, Button, BoxProps
+    useTheme, Grid, IconButton, Button
 } from '@chakra-ui/react';
 import {useSystemStore} from '@/web/common/system/useSystemStore';
 import {useQuery} from '@tanstack/react-query';
@@ -54,7 +54,7 @@ import MyTooltip from "@/components/MyTooltip";
 import CreateModal from './components/CreateModal';
 import Avatar from "@/components/Avatar";
 import MyIcon from "@fastgpt/web/components/common/Icon";
-import {AddIcon, QuestionOutlineIcon, SmallAddIcon} from "@chakra-ui/icons";
+import {AddIcon} from "@chakra-ui/icons";
 import {DatasetTypeEnum} from "@fastgpt/global/core/dataset/constants";
 import {useConfirm} from "@/web/common/hooks/useConfirm";
 import {useEditTitle} from "@/web/common/hooks/useEditTitle";
@@ -71,14 +71,6 @@ import {
     FolderImgUrl
 } from '@fastgpt/global/core/template/constants';
 import MyMenu from '@/components/MyMenu';
-import SelectAiModel from "@/components/Select/SelectAiModel";
-import {chatNodeSystemPromptTip, welcomeTextTip} from "@fastgpt/global/core/module/template/tip";
-import PromptEditor from "@fastgpt/web/components/common/Textarea/PromptEditor";
-import SearchParamsTip from "@/components/core/dataset/SearchParamsTip";
-import VariableEdit from "@/components/core/module/Flow/components/modules/VariableEdit";
-import MyTextarea from "@/components/common/Textarea/MyTextarea";
-import EditForm from './components/EditForm';
-import {useSticky} from "@/web/common/hooks/useSticky";
 
 const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
     const isShow = useRef(false);//是否显示生成报告
@@ -369,27 +361,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
 
     useQuery(['loadHistories', appId], () => (appId ? loadHistories({appId}) : null));
 
-    const BoxStyles: BoxProps = {
-        px: 5,
-        py: '16px',
-        borderBottomWidth: '1px',
-        borderBottomColor: 'borderColor.low'
-    };
-    const BoxBtnStyles: BoxProps = {
-        cursor: 'pointer',
-        px: 3,
-        py: 1,
-        borderRadius: 'md',
-        _hover: {
-            bg: 'myGray.150'
-        }
-    };
-    const LabelStyles: BoxProps = {
-        w: ['60px', '100px'],
-        flexShrink: 0,
-        fontSize: ['sm', 'md']
-    };
-    const {parentRef, divRef, isSticky} = useSticky();
+
     return (
         <Flex h={'100%'}>
             <Head>
@@ -421,7 +393,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                             </Drawer>
                         );
                     })
-                    (
+                    (!isFlexVisible &&
                         <Flex
                             position={'relative'}
                             flexDirection={'column'}
@@ -432,299 +404,306 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                             borderRight={['', theme.borders.base]}
                             whiteSpace={'nowrap'}
                         >
-                            {!isFlexVisible &&
-                                <>
-                                    <MyTooltip offset={[0, 0]}>
-                                        <Flex
-                                            pt={5}
-                                            pb={2}
-                                            px={[2, 5]}
-                                            alignItems={'center'}
-                                            cursor={'default'}
-                                        >
-                                            <Avatar src={chatData.app.avatar}/>
-                                            <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'}
-                                                 className={'textEllipsis'}>
-                                                {chatData.app.name + '-报告模版'}
-                                            </Box>
-                                            <Button leftIcon={<AddIcon/>} variant={'primaryOutline'}
-                                                    onClick={onOpenCreateModal}>
-                                                {t('common.New Create')}
-                                            </Button>
-                                        </Flex>
-                                    </MyTooltip>
-                                    <Grid
-                                        p={4}
-                                        gridTemplateColumns={['1fr']}
-                                        //  gridTemplateColumns={['1fr', 'repeat(2,1fr)']}
-                                        gridGap={5}
+                            <MyTooltip offset={[0, 0]}>
+                                <Flex
+                                    pt={5}
+                                    pb={2}
+                                    px={[2, 5]}
+                                    alignItems={'center'}
+                                    cursor={'default'}
+                                >
+                                    <Avatar src={chatData.app.avatar}/>
+                                    <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'} className={'textEllipsis'}>
+                                        {chatData.app.name + '-报告模版'}
+                                    </Box>
+                                    <Button leftIcon={<AddIcon/>} variant={'primaryOutline'}
+                                            onClick={onOpenCreateModal}>
+                                        {t('common.New Create')}
+                                    </Button>
+                                </Flex>
+                            </MyTooltip>
+                            <Grid
+                                p={4}
+                                gridTemplateColumns={['1fr']}
+                                //  gridTemplateColumns={['1fr', 'repeat(2,1fr)']}
+                                gridGap={5}
+
+                            >
+                                {formatTemplates.map((template) => (
+                                    <MyTooltip
+                                        key={template._id}
+                                        label={t('app.To Report')}
                                     >
-                                        {formatTemplates.map((template) => (
-                                            <MyTooltip
-                                                key={template._id}
-                                                label={t('app.To Report')}
-                                            >
+                                        <Box
+                                            display={'flex'}
+                                            flexDirection={'column'}
+                                            key={template._id}
+                                            py={3}
+                                            px={5}
+                                            cursor={'pointer'}
+                                            borderWidth={1.5}
+                                            borderColor={dragTargetId === template._id ? 'primary.600' : 'borderColor.low'}
+                                            bg={'white'}
+                                            borderRadius={'md'}
+                                            minH={'130px'}
+                                            position={'relative'}
+                                            data-drag-id={template.type === DatasetTypeEnum.folder ? template._id : undefined}
+                                            draggable
+                                            onDragStart={(e) => {
+                                                setDragStartId(template._id);
+                                            }}
+                                            onDragOver={(e) => {
+                                                e.preventDefault();
+                                                const targetId = e.currentTarget.getAttribute('data-drag-id');
+                                                if (!targetId) return;
+                                                DatasetTypeEnum.folder && setDragTargetId(targetId);
+                                            }}
+                                            onDragLeave={(e) => {
+                                                e.preventDefault();
+                                                setDragTargetId(undefined);
+                                            }}
+                                            onDrop={async (e) => {
+                                                e.preventDefault();
+                                                if (!dragTargetId || !dragStartId || dragTargetId === dragStartId) return;
+                                                // update parentId
+                                                try {
+                                                    await putDatasetById({
+                                                        id: dragStartId,
+                                                        parentId: dragTargetId
+                                                    });
+                                                    refetch();
+                                                } catch (error) {
+                                                }
+                                                setDragTargetId(undefined);
+                                            }}
+                                            _hover={{
+                                                borderColor: 'primary.300',
+                                                boxShadow: '1.5',
+                                                '& .delete': {
+                                                    display: 'block'
+                                                }
+                                            }}
+                                            onClick={() => {
+                                                setIsFlexVisible(!isFlexVisible);
+                                                // router.push({
+                                                //     pathname: '/template/detail',
+                                                //     query: {
+                                                //         templateId: template._id
+                                                //     }
+                                                // });
+                                            }}
+                                        >
+                                            {userInfo?.team.canWrite && template.isOwner && (
                                                 <Box
-                                                    display={'flex'}
-                                                    flexDirection={'column'}
-                                                    key={template._id}
-                                                    py={3}
-                                                    px={5}
-                                                    cursor={'pointer'}
-                                                    borderWidth={1.5}
-                                                    borderColor={dragTargetId === template._id ? 'primary.600' : 'borderColor.low'}
-                                                    bg={'white'}
+                                                    position={'absolute'}
+                                                    top={3}
+                                                    right={3}
                                                     borderRadius={'md'}
-                                                    minH={'130px'}
-                                                    position={'relative'}
-                                                    data-drag-id={template.type === DatasetTypeEnum.folder ? template._id : undefined}
-                                                    draggable
-                                                    onDragStart={(e) => {
-                                                        setDragStartId(template._id);
-                                                    }}
-                                                    onDragOver={(e) => {
-                                                        e.preventDefault();
-                                                        const targetId = e.currentTarget.getAttribute('data-drag-id');
-                                                        if (!targetId) return;
-                                                        DatasetTypeEnum.folder && setDragTargetId(targetId);
-                                                    }}
-                                                    onDragLeave={(e) => {
-                                                        e.preventDefault();
-                                                        setDragTargetId(undefined);
-                                                    }}
-                                                    onDrop={async (e) => {
-                                                        e.preventDefault();
-                                                        if (!dragTargetId || !dragStartId || dragTargetId === dragStartId) return;
-                                                        // update parentId
-                                                        try {
-                                                            await putDatasetById({
-                                                                id: dragStartId,
-                                                                parentId: dragTargetId
-                                                            });
-                                                            refetch();
-                                                        } catch (error) {
-                                                        }
-                                                        setDragTargetId(undefined);
-                                                    }}
                                                     _hover={{
-                                                        borderColor: 'primary.300',
-                                                        boxShadow: '1.5',
-                                                        '& .delete': {
-                                                            display: 'block'
+                                                        color: 'primary.500',
+                                                        '& .icon': {
+                                                            bg: 'myGray.100'
                                                         }
                                                     }}
-                                                    onClick={() => {
-                                                        setIsFlexVisible(!isFlexVisible);
-                                                        // router.push({
-                                                        //     pathname: '/template/detail',
-                                                        //     query: {
-                                                        //         templateId: template._id
-                                                        //     }
-                                                        // });
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                     }}
                                                 >
-                                                    {userInfo?.team.canWrite && template.isOwner && (
-                                                        <Box
-                                                            position={'absolute'}
-                                                            top={3}
-                                                            right={3}
-                                                            borderRadius={'md'}
-                                                            _hover={{
-                                                                color: 'primary.500',
-                                                                '& .icon': {
-                                                                    bg: 'myGray.100'
-                                                                }
-                                                            }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                            }}
-                                                        >
-                                                            <MyMenu
-                                                                width={120}
-                                                                Button={
-                                                                    <Box w={'22px'} h={'22px'}>
-                                                                        <MyIcon
-                                                                            className="icon"
-                                                                            name={'more'}
-                                                                            h={'16px'}
-                                                                            w={'16px'}
-                                                                            px={1}
-                                                                            py={1}
-                                                                            borderRadius={'md'}
-                                                                            cursor={'pointer'}
-                                                                        />
-                                                                    </Box>
-                                                                }
-                                                                menuList={[
-                                                                    ...(template.permission === PermissionTypeEnum.private
-                                                                        ? [
-                                                                            {
-                                                                                label: (
-                                                                                    <Flex alignItems={'center'}>
-                                                                                        <MyIcon
-                                                                                            name={'support/permission/publicLight'}
-                                                                                            w={'14px'} mr={2}/>
-                                                                                        {t('permission.Set Public')}
-                                                                                    </Flex>
-                                                                                ),
-                                                                                onClick: () => {
-                                                                                    updateTemplate({
-                                                                                        id: template._id,
-                                                                                        permission: PermissionTypeEnum.public
-                                                                                    });
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                        : [
-                                                                            {
-                                                                                label: (
-                                                                                    <Flex alignItems={'center'}>
-                                                                                        <MyIcon
-                                                                                            name={'support/permission/privateLight'}
-                                                                                            w={'14px'}
-                                                                                            mr={2}
-                                                                                        />
-                                                                                        {t('permission.Set Private')}
-                                                                                    </Flex>
-                                                                                ),
-                                                                                onClick: () => {
-                                                                                    updateTemplate({
-                                                                                        id: template._id,
-                                                                                        permission: PermissionTypeEnum.private
-                                                                                    });
-                                                                                }
-                                                                            }
-                                                                        ]),
+                                                    <MyMenu
+                                                        width={120}
+                                                        Button={
+                                                            <Box w={'22px'} h={'22px'}>
+                                                                <MyIcon
+                                                                    className="icon"
+                                                                    name={'more'}
+                                                                    h={'16px'}
+                                                                    w={'16px'}
+                                                                    px={1}
+                                                                    py={1}
+                                                                    borderRadius={'md'}
+                                                                    cursor={'pointer'}
+                                                                />
+                                                            </Box>
+                                                        }
+                                                        menuList={[
+                                                            ...(template.permission === PermissionTypeEnum.private
+                                                                ? [
                                                                     {
                                                                         label: (
                                                                             <Flex alignItems={'center'}>
-                                                                                <MyIcon name={'edit'} w={'14px'}
-                                                                                        mr={2}/>
-                                                                                {t('Rename')}
-                                                                            </Flex>
-                                                                        ),
-                                                                        onClick: () =>
-                                                                            onOpenTitleModal({
-                                                                                defaultVal: template.name,
-                                                                                onSuccess: (val) => {
-                                                                                    if (val === template.name || !val) return;
-                                                                                    updateTemplate({
-                                                                                        id: template._id,
-                                                                                        name: val
-                                                                                    });
-                                                                                }
-                                                                            })
-                                                                    },
-                                                                    {
-                                                                        label: (
-                                                                            <Flex alignItems={'center'}>
-                                                                                <MyIcon name={'delete'} w={'14px'}
-                                                                                        mr={2}/>
-                                                                                {t('common.Delete')}
+                                                                                <MyIcon
+                                                                                    name={'support/permission/publicLight'}
+                                                                                    w={'14px'} mr={2}/>
+                                                                                {t('permission.Set Public')}
                                                                             </Flex>
                                                                         ),
                                                                         onClick: () => {
-                                                                            openConfirm(
-                                                                                () => onclickDelTemplate(template._id),
-                                                                                undefined,
-                                                                                DeleteTipsMap.current[template.type]
-                                                                            )();
+                                                                            updateTemplate({
+                                                                                id: template._id,
+                                                                                permission: PermissionTypeEnum.public
+                                                                            });
                                                                         }
                                                                     }
-                                                                ]}
-                                                            />
-                                                        </Box>
-                                                    )}
-                                                    <Flex alignItems={'center'} h={'38px'}>
-                                                        <Avatar src={template.avatar} borderRadius={'md'} w={'28px'}/>
-                                                        <Box mx={3} className="textEllipsis3">
-                                                            {template.name}
-                                                        </Box>
-                                                    </Flex>
-                                                    <Box
-                                                        flex={1}
-                                                        className={'textEllipsis3'}
-                                                        py={1}
-                                                        wordBreak={'break-all'}
-                                                        fontSize={'sm'}
-                                                        color={'myGray.500'}
-                                                    >
-                                                        {template.intro || t('core.dataset.Folder placeholder')}
-                                                    </Box>
-                                                    <Flex alignItems={'center'} fontSize={'sm'}>
-                                                        <Box flex={1}>
-                                                            <PermissionIconText permission={template.permission}
-                                                                                color={'myGray.600'}/>
-                                                        </Box>
-                                                        {/*{template.type !== TemplateTypeEnum.folder && (*/}
-                                                        {/*    <TemplateTypeTag type={template.type} py={1} px={2}/>*/}
-                                                        {/*)}*/}
-                                                    </Flex>
+                                                                ]
+                                                                : [
+                                                                    {
+                                                                        label: (
+                                                                            <Flex alignItems={'center'}>
+                                                                                <MyIcon
+                                                                                    name={'support/permission/privateLight'}
+                                                                                    w={'14px'}
+                                                                                    mr={2}
+                                                                                />
+                                                                                {t('permission.Set Private')}
+                                                                            </Flex>
+                                                                        ),
+                                                                        onClick: () => {
+                                                                            updateTemplate({
+                                                                                id: template._id,
+                                                                                permission: PermissionTypeEnum.private
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                ]),
+                                                            {
+                                                                label: (
+                                                                    <Flex alignItems={'center'}>
+                                                                        <MyIcon name={'edit'} w={'14px'} mr={2}/>
+                                                                        {t('Rename')}
+                                                                    </Flex>
+                                                                ),
+                                                                onClick: () =>
+                                                                    onOpenTitleModal({
+                                                                        defaultVal: template.name,
+                                                                        onSuccess: (val) => {
+                                                                            if (val === template.name || !val) return;
+                                                                            updateTemplate({
+                                                                                id: template._id,
+                                                                                name: val
+                                                                            });
+                                                                        }
+                                                                    })
+                                                            },
+                                                            {
+                                                                label: (
+                                                                    <Flex alignItems={'center'}>
+                                                                        <MyIcon name={'delete'} w={'14px'} mr={2}/>
+                                                                        {t('common.Delete')}
+                                                                    </Flex>
+                                                                ),
+                                                                onClick: () => {
+                                                                    openConfirm(
+                                                                        () => onclickDelTemplate(template._id),
+                                                                        undefined,
+                                                                        DeleteTipsMap.current[template.type]
+                                                                    )();
+                                                                }
+                                                            }
+                                                        ]}
+                                                    />
                                                 </Box>
-                                            </MyTooltip>
-                                        ))}
-                                    </Grid>
-                                    <ConfirmModal/>
-                                    <EditTitleModal/>
-                                    {isOpenCreateModal && <CreateModal onClose={onCloseCreateModal} parentId={appId}
-                                                                       editCallback={async (name) => {
-                                                                           try {
-                                                                               refetch();
-                                                                           } catch (error) {
-                                                                               return Promise.reject(error);
-                                                                           }
-                                                                       }}
-                                    />}
-                                </>}
-
-                            {isFlexVisible &&
-                                <>
-                                    <Box px={5} py={4}>
-                                        <Flex
-                                            alignItems={'center'}
-                                            cursor={'pointer'}
-                                            py={2}
-                                            px={3}
-                                            borderRadius={'md'}
-                                            _hover={{bg: 'myGray.200'}}
-                                            onClick={() => setIsFlexVisible(false)}
-                                        >
-                                            <IconButton
-                                                mr={3}
-                                                icon={<MyIcon name={'common/backFill'} w={'18px'}
-                                                              color={'primary.500'}/>}
-                                                bg={'white'}
-                                                boxShadow={'1px 1px 9px rgba(0,0,0,0.15)'}
-                                                size={'smSquare'}
-                                                borderRadius={'50%'}
-                                                aria-label={''}
-                                            />
-                                            {t('core.template.Exit Template')}
-                                        </Flex>
-                                    </Box>
-                                    <MyTooltip offset={[0, 0]}>
-                                        <Flex
-                                            pt={5}
-                                            pb={2}
-                                            px={[2, 5]}
-                                            alignItems={'center'}
-                                            cursor={'default'}
-                                        >
-                                            <Avatar src={chatData.app.avatar}/>
-                                            <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'}
-                                                 className={'textEllipsis'}>
-                                                {chatData.app.name + '-报告模版'}
+                                            )}
+                                            <Flex alignItems={'center'} h={'38px'}>
+                                                <Avatar src={template.avatar} borderRadius={'md'} w={'28px'}/>
+                                                <Box mx={3} className="textEllipsis3">
+                                                    {template.name}
+                                                </Box>
+                                            </Flex>
+                                            <Box
+                                                flex={1}
+                                                className={'textEllipsis3'}
+                                                py={1}
+                                                wordBreak={'break-all'}
+                                                fontSize={'sm'}
+                                                color={'myGray.500'}
+                                            >
+                                                {template.intro || t('core.dataset.Folder placeholder')}
                                             </Box>
-
-                                        </Flex>
+                                            <Flex alignItems={'center'} fontSize={'sm'}>
+                                                <Box flex={1}>
+                                                    <PermissionIconText permission={template.permission}
+                                                                        color={'myGray.600'}/>
+                                                </Box>
+                                                {/*{template.type !== TemplateTypeEnum.folder && (*/}
+                                                {/*    <TemplateTypeTag type={template.type} py={1} px={2}/>*/}
+                                                {/*)}*/}
+                                            </Flex>
+                                        </Box>
                                     </MyTooltip>
-                                    <EditForm divRef={divRef} isSticky={isSticky}/>
-
-                                </>
-                            }
+                                ))}
+                            </Grid>
+                            <ConfirmModal/>
+                            <EditTitleModal/>
+                            {isOpenCreateModal && <CreateModal onClose={onCloseCreateModal} parentId={appId}
+                                                               editCallback={async (name) => {
+                                                                   try {
+                                                                       refetch();
+                                                                   } catch (error) {
+                                                                       return Promise.reject(error);
+                                                                   }
+                                                               }}
+                            />}
                         </Flex>
                     )
                     }
+
+                    {
+                        (isFlexVisible &&
+                            <Flex
+                                position={'relative'}
+                                flexDirection={'column'}
+                                w={'100%'}
+                                h={'100%'}
+                                bg={'white'}
+                                size={'md'}
+                                borderRight={['', theme.borders.base]}
+                                whiteSpace={'nowrap'}
+                            >
+                                <Box px={5} py={4}>
+                                    <Flex
+                                        alignItems={'center'}
+                                        cursor={'pointer'}
+                                        py={2}
+                                        px={3}
+                                        borderRadius={'md'}
+                                        _hover={{bg: 'myGray.200'}}
+                                        onClick={() => setIsFlexVisible(false)}
+                                    >
+                                        <IconButton
+                                            mr={3}
+                                            icon={<MyIcon name={'common/backFill'} w={'18px'} color={'primary.500'}/>}
+                                            bg={'white'}
+                                            boxShadow={'1px 1px 9px rgba(0,0,0,0.15)'}
+                                            size={'smSquare'}
+                                            borderRadius={'50%'}
+                                            aria-label={''}
+                                        />
+                                        {t('core.template.Exit Template')}
+                                    </Flex>
+                                </Box>
+                                <MyTooltip offset={[0, 0]}>
+                                    <Flex
+                                        pt={5}
+                                        pb={2}
+                                        px={[2, 5]}
+                                        alignItems={'center'}
+                                        cursor={'default'}
+                                    >
+                                        <Avatar src={chatData.app.avatar}/>
+                                        <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'} className={'textEllipsis'}>
+                                            {chatData.app.name + '-报告模版'}
+                                        </Box>
+                                        <Button leftIcon={<AddIcon/>} variant={'primaryOutline'}
+                                                onClick={onOpenCreateModal}>
+                                            {t('common.New Create')}
+                                        </Button>
+                                    </Flex>
+                                </MyTooltip>
+
+                            </Flex>
+                        )
+                    }
+
                     {/* chat container */}
                     <Flex
                         position={'relative'}
