@@ -487,10 +487,6 @@
        "Delete Confirm": "确认删除该报告模版？删除后数据无法恢复，请确认！",
        "Exit Template": "退出生成报告"
     },
-    "report":{
-       "Report params config": "报告配置",
-       "Input Text": "Input Text"
-    },
     "dataset": {
       "All Dataset": "全部知识库",
       "Avatar": "知识库头像",

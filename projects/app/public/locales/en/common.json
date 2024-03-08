@@ -481,10 +481,6 @@
         "leave page": "Content has been modified, are you sure to leave the page?"
       }
     },
-    "report":{
-       "Report params config": "Report Config",
-       "Input Text": "输入问题"
-    },
     "template": {
        "Create template": "Create template",
        "Delete Confirm": "Are you sure to delete the template? Data cannot be recovered after deletion, please confirm!",
