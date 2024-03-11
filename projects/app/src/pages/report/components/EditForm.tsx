@@ -13,18 +13,17 @@ import { useQuery } from '@tanstack/react-query';
 import { QuestionOutlineIcon, SmallAddIcon } from '@chakra-ui/icons';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useSystemStore } from '@/web/common/system/useSystemStore';
-import { appModules2Form, getDefaultAppForm } from '@fastgpt/global/core/app/utils';
-import type { AppSimpleEditFormType } from '@fastgpt/global/core/app/type.d';
+import { reportModules2Form, getDefaultReportForm } from '@fastgpt/global/core/report/utils';
+import type { ReportSimpleEditFormType } from '@fastgpt/global/core/report/type.d';
 import { chatNodeSystemPromptTip, welcomeTextTip } from '@fastgpt/global/core/module/template/tip';
 import { useRequest } from '@/web/common/hooks/useRequest';
 import { useConfirm } from '@/web/common/hooks/useConfirm';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { AppTypeEnum } from '@fastgpt/global/core/app/constants';
+import { ReportTypeEnum } from '@fastgpt/global/core/report/constants';
 import { useDatasetStore } from '@/web/core/dataset/store/dataset';
-import { useAppStore } from '@/web/core/app/store/useAppStore';
-import { useReportStore } from '@/web/core/report/store/useReportStore'
-import { postForm2Modules } from '@/web/core/app/utils';
+import { useReportStore } from '@/web/core/report/store/useReportStore';
+import { postForm2Modules } from '@/web/core/report/utils';
 
 import dynamic from 'next/dynamic';
 import MyTooltip from '@/components/MyTooltip';
@@ -52,7 +51,6 @@ import {compressImgFileAndUpload} from "@/web/common/file/controller";
 import {MongoImageTypeEnum} from "@fastgpt/global/common/file/image/constants";
 import {getErrText} from "@fastgpt/global/common/error/utils";
 import {useToast} from "@fastgpt/web/hooks/useToast";
-import { appTemplates } from '@/web/core/app/templates';
 import {PermissionTypeEnum} from "@fastgpt/global/support/permission/constant";
 const EditForm = ({
   divRef,
@@ -65,16 +63,15 @@ const EditForm = ({
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
-  const { appDetail, updateAppDetail } = useAppStore();
+  const { reportDetail, updateReportDetail } = useReportStore();
   const { loadAllDatasets, allDatasets } = useDatasetStore();
   const { isPc, llmModelList, reRankModelList } = useSystemStore();
-  const { reportDetail, updateReportDetail } = useReportStore();
   const [refresh, setRefresh] = useState(false);
   const [, startTst] = useTransition();
 
   const { register,setValue, getValues, reset, handleSubmit, control, watch } =
-    useForm<AppSimpleEditFormType>({
-      defaultValues: getDefaultAppForm()
+    useForm<ReportSimpleEditFormType>({
+      defaultValues: getDefaultReportForm()
     });
 
   const { fields: datasets, replace: replaceKbList } = useFieldArray({
@@ -99,7 +96,7 @@ const EditForm = ({
   } = useDisclosure();
 
   const { openConfirm: openConfirmSave, ConfirmModal: ConfirmSaveModal } = useConfirm({
-    content: t('core.app.edit.Confirm Save App Tip')
+    content: t('core.report.edit.Confirm Save Report Tip')
   });
 
     const { File, onOpen: onOpenSelectFile } = useSelectFile({
@@ -112,7 +109,7 @@ const EditForm = ({
       if (!file) return;
       try {
         const src = await compressImgFileAndUpload({
-          type: MongoImageTypeEnum.appAvatar,
+          type: MongoImageTypeEnum.reportAvatar,
           file,
           maxW: 300,
           maxH: 300
@@ -153,14 +150,15 @@ const EditForm = ({
   }, [selectLLMModel, llmModelList]);
 
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
-    mutationFn: async (data: AppSimpleEditFormType) => {
+    mutationFn: async (data: ReportSimpleEditFormType) => {
 
       // const template = reportTemplates.find((item) => item.id === data.templateId);
       // if (!template) {
       //   return Promise.reject(t('core.dataset.error.Template does not exist'));
       // }
+      const modules = await postForm2Modules(data);
       console.log(data)
-      const template = appTemplates.find((item) => item.id === 'report-universal');
+      const template = reportTemplates.find((item) => item.id === 'report-universal');
 
       if(!data.avatar)
         data.avatar='/icon/logo.svg';
@@ -174,7 +172,7 @@ const EditForm = ({
       postCreateReport(postData).then(async result => {
         const updateData = {
           modules: template?.modules,
-          type: AppTypeEnum.report,
+          type: ReportTypeEnum.report,
           permission: PermissionTypeEnum.private
         };
         await updateReportDetail(result, updateData);
@@ -191,9 +189,9 @@ const EditForm = ({
 //       console.log(result);
 //      return postCreateReport(postData);
       // const modules = await postForm2Modules(data);
-      // await updateAppDetail(appDetail._id, {
+      // await updateReportDetail(reportDetail._id, {
       //   modules,
-      //   type: AppTypeEnum.simple,
+      //   type: ReportTypeEnum.simple,
       //   permission: undefined
       // });
 
@@ -203,17 +201,17 @@ const EditForm = ({
   });
 
   const { isSuccess: isInitd } = useQuery(
-    ['init', appDetail],
+    ['init', reportDetail],
     () => {
-      const formatVal = appModules2Form({
-        modules: appDetail.modules
+      const formatVal = reportModules2Form({
+        modules: reportDetail.modules
       });
       reset(formatVal);
       setRefresh(!refresh);
       return formatVal;
     },
     {
-      enabled: !!appDetail._id
+      enabled: !!reportDetail._id
     }
   );
   useQuery(['loadAllDatasets'], loadAllDatasets);
@@ -261,16 +259,16 @@ const EditForm = ({
           <Box fontSize={['md', 'xl']} color={'myGray.800'}>
             {t('core.report.Report params config')}
           </Box>
-          <MyTooltip label={t('core.app.Simple Config Tip')} forceShow>
+          <MyTooltip label={t('core.report.Simple Config Tip')} forceShow>
             <MyIcon name={'common/questionLight'} color={'myGray.500'} ml={2} />
           </MyTooltip>
         </Flex>
         <Button
           isLoading={isSaving}
           size={['sm', 'md']}
-          variant={appDetail.type === AppTypeEnum.simple ? 'primary' : 'whitePrimary'}
+          variant={reportDetail.type === ReportTypeEnum.simple ? 'primary' : 'whitePrimary'}
           onClick={() => {
-            if (appDetail.type !== AppTypeEnum.simple) {
+            if (reportDetail.type !== ReportTypeEnum.simple) {
               openConfirmSave(handleSubmit((data) => onSubmitSave(data)))();
             } else {
               handleSubmit((data) => onSubmitSave(data))();
@@ -310,7 +308,7 @@ const EditForm = ({
             autoFocus
             bg={'myWhite.600'}
             {...register('name', {
-              required: t('core.app.error.App name can not be empty')
+              required: t('core.report.error.Report name can not be empty')
             })}
           />
         </Flex>
@@ -319,9 +317,9 @@ const EditForm = ({
           {/* ai */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
-              <MyIcon name={'core/app/simpleMode/ai'} w={'20px'} />
+              <MyIcon name={'core/report/simpleMode/ai'} w={'20px'} />
               <Box ml={2} flex={1}>
-                {t('app.AI Settings')}
+                {t('report.AI Settings')}
               </Box>
             </Flex>
             <Flex alignItems={'center'} mt={5}>
@@ -349,7 +347,7 @@ const EditForm = ({
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
               <Flex alignItems={'center'} flex={1}>
-                <MyIcon name={'core/app/simpleMode/dataset'} w={'20px'} />
+                <MyIcon name={'core/report/simpleMode/dataset'} w={'20px'} />
                 <Box ml={2}>{t('core.dataset.Choose Dataset')}</Box>
               </Flex>
               <Flex alignItems={'center'} {...BoxBtnStyles} onClick={onOpenKbSelect}>
@@ -410,7 +408,7 @@ const EditForm = ({
           {/* welcome */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
-              <MyIcon name={'core/app/simpleMode/chat'} w={'20px'} />
+              <MyIcon name={'core/report/simpleMode/chat'} w={'20px'} />
               <Box mx={2}>{t('core.report.Input Text')}</Box>
               <MyTooltip label={t('core.report.welcomeText')} forceShow>
                 <QuestionOutlineIcon />
@@ -445,7 +443,7 @@ const EditForm = ({
         </Box>
       </Box>
 
-      <ConfirmSaveModal bg={appDetail.type === AppTypeEnum.simple ? '' : 'red.600'} countDown={5} />
+      <ConfirmSaveModal bg={reportDetail.type === ReportTypeEnum.simple ? '' : 'red.600'} countDown={5} />
       {isOpenAIChatSetting && (
         <AIChatSettingsModal
           onClose={onCloseAIChatSetting}

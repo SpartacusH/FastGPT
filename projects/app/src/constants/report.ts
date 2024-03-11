@@ -1,7 +1,7 @@
-import { AppDetailType } from '@fastgpt/global/core/app/type.d';
+import { ReportDetailType } from '@fastgpt/global/core/report/type.d';
 import type { OutLinkEditType } from '@fastgpt/global/support/outLink/type.d';
 
-export const defaultApp: AppDetailType = {
+export const defaultReport: ReportDetailType = {
   _id: '',
   userId: 'userId',
   name: '应用加载中',
