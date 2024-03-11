@@ -23,6 +23,7 @@ import { useTranslation } from 'next-i18next';
 import { AppTypeEnum } from '@fastgpt/global/core/app/constants';
 import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { useAppStore } from '@/web/core/app/store/useAppStore';
+import { useReportStore } from '@/web/core/report/store/useReportStore'
 import { postForm2Modules } from '@/web/core/app/utils';
 
 import dynamic from 'next/dynamic';
@@ -67,6 +68,7 @@ const EditForm = ({
   const { appDetail, updateAppDetail } = useAppStore();
   const { loadAllDatasets, allDatasets } = useDatasetStore();
   const { isPc, llmModelList, reRankModelList } = useSystemStore();
+  const { reportDetail, updateReportDetail } = useReportStore();
   const [refresh, setRefresh] = useState(false);
   const [, startTst] = useTransition();
 
@@ -169,10 +171,14 @@ const EditForm = ({
         modules:  template?.modules
       };
       console.log(postData)
-      postCreateReport(postData).then(result=>{
-         const updateData={modules: template?.modules,type:AppTypeEnum.report,permission:PermissionTypeEnum.private};
-         //await updateAppDetail(result,updateData);
-         console.log(result);
+      postCreateReport(postData).then(async result => {
+        const updateData = {
+          modules: template?.modules,
+          type: AppTypeEnum.report,
+          permission: PermissionTypeEnum.private
+        };
+        await updateReportDetail(result, updateData);
+        console.log(result);
       }).catch(error=>{
         console.log(error);
       })
