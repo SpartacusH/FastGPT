@@ -57,7 +57,7 @@ export async function postForm2Modules(data: ReportSimpleEditFormType) {
     llmModelList
   };
 
-  const modules = await POST<ModuleItemType[]>(`/core/report/form2Modules/fastgpt-universal`, props);
+  const modules = await POST<ModuleItemType[]>(`/core/report/form2Modules/report-universal`, props);
 
   return [...userGuideTemplate(data), ...modules];
 }
