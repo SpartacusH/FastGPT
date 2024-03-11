@@ -1,6 +1,7 @@
 export enum ReportTypeEnum {
   simple = 'simple',
-  advanced = 'advanced'
+  advanced = 'advanced',
+  report = 'report'
 }
 export const ReportTypeMap = {
   [ReportTypeEnum.simple]: {
@@ -8,5 +9,8 @@ export const ReportTypeMap = {
   },
   [ReportTypeEnum.advanced]: {
     label: 'advanced'
+  },
+  [ReportTypeEnum.report]: {
+    label: 'report'
   }
 };

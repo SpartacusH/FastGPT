@@ -32,7 +32,7 @@ const ReportSchema = new Schema({
   },
   type: {
     type: String,
-    default: 'simple',
+    default: 'report',
     enum: Object.keys(ReportTypeMap)
   },
   simpleTemplateId: {
