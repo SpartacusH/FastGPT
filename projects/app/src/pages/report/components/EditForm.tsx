@@ -175,8 +175,11 @@ const EditForm = ({
           type: ReportTypeEnum.report,
           permission: PermissionTypeEnum.private
         };
-        await updateReportDetail(result, updateData);
-        console.log(result);
+        await updateReportDetail(result, {
+          modules,
+          type: ReportTypeEnum.report,
+          permission: undefined
+        });
       }).catch(error=>{
         console.log(error);
       })

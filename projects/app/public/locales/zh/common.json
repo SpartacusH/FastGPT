@@ -279,6 +279,7 @@
       "deterministic": "严谨",
       "edit": {
         "Confirm Save App Tip": "该应用可能为高级编排模式，保存后将会覆盖高级编排配置，请确认！",
+        "Confirm Save Report Tip": "是否保存报告配置？",
         "Out Ad Edit": "您即将退出高级编排页面，请确认",
         "Prompt Editor": "提示词编辑",
         "Query extension background prompt": "对话背景描述",

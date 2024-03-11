@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { getMyReports, getModelById, putReportById } from '@/web/core/report/api';
+import { getReport, getReportModelById, putReportById } from '@/web/core/report/api';
 import { defaultReport } from '@/constants/report';
 import type { ReportUpdateParams } from '@fastgpt/global/core/report/api.d';
 import { ReportDetailType, ReportListItemType } from '@fastgpt/global/core/report/type.d';
@@ -22,7 +22,7 @@ export const useReportStore = create<State>()(
         myReports: [],
         async loadMyReports(init = true) {
           if (get().myReports.length > 0 && !init) return [];
-          const res = await getMyReports();
+          const res = await getReport();
           set((state) => {
             state.myReports = res;
           });
@@ -32,7 +32,7 @@ export const useReportStore = create<State>()(
         async loadReportDetail(id: string, init = false) {
           if (id === get().reportDetail._id && !init) return get().reportDetail;
 
-          const res = await getModelById(id);
+          const res = await getReportModelById(id);
           set((state) => {
             state.reportDetail = res;
           });
