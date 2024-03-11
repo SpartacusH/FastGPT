@@ -13,7 +13,7 @@ export const getReport = () => GET<ReportListItemType[]>('/core/report/list');
 /**
  * 创建一个报告
  */
-export const postCreateReport = (data: CreateReportParams) => POST<string>('/core/report/create', data);
+export  const postCreateReport = (data: CreateReportParams) => POST<string>('/core/report/create', data);
 
 /**
  * 根据 ID 删除报告

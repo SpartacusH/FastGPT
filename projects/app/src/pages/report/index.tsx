@@ -92,7 +92,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
     const ChatBoxRef = useRef<ComponentRef>(null);
     const forbidRefresh = useRef(false);
     const [isFlexVisible, setIsFlexVisible] = useState(false);
-
+   const [currentTemplate, setCurrentTemplate] = useState();
     const DeleteTipsMap = useRef({
         [TemplateTypeEnum.folder]: t('template.deleteFolderTips'),
         [TemplateTypeEnum.template]: t('core.template.Delete Confirm'),
@@ -148,7 +148,6 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
         }
     );
     // const paths = data?.[1] || [];
-
     const formatTemplates = useMemo(
         () =>
             myTemplates.map((item) => {
@@ -515,6 +514,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                                                     }}
                                                     onClick={() => {
                                                         setIsFlexVisible(!isFlexVisible);
+                                                        setCurrentTemplate(template);
                                                         // router.push({
                                                         //     pathname: '/template/detail',
                                                         //     query: {
@@ -679,7 +679,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
 
                             {isFlexVisible &&
                                 <>
-                                    <Box px={5} py={4}>
+                                    <Box px={5} py={2}>
                                         <Flex
                                             alignItems={'center'}
                                             cursor={'pointer'}
@@ -704,7 +704,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                                     </Box>
                                     <MyTooltip offset={[0, 0]}>
                                         <Flex
-                                            pt={5}
+                                            pt={2}
                                             pb={2}
                                             px={[2, 5]}
                                             alignItems={'center'}
@@ -713,7 +713,7 @@ const Chat = ({appId, chatId}: { appId: string; chatId: string }) => {
                                             <Avatar src={chatData.app.avatar}/>
                                             <Box flex={'1 0 0'} w={0} ml={2} fontWeight={'bold'}
                                                  className={'textEllipsis'}>
-                                                {chatData.app.name + '-报告模版'}
+                                                {'模版名称：'+currentTemplate.name}
                                             </Box>
 
                                         </Flex>

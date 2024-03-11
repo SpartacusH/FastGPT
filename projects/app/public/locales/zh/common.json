@@ -488,9 +488,12 @@
        "Exit Template": "退出生成报告"
     },
     "report":{
+       "welcomeText":"输入问题",
        "Report params config": "报告配置",
        "Input Text": "问答",
-       "Input Name": "报告名称"
+       "Output Text": "输出",
+       "Input Name": "报告名称",
+       "Save Config": "保存配置"
     },
     "dataset": {
       "All Dataset": "全部知识库",

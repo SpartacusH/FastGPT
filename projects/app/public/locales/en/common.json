@@ -482,9 +482,12 @@
       }
     },
     "report":{
+       "welcomeText":"Input Question",
        "Report params config": "Report Config",
        "Input Text": "Input Text",
-      "Input Name": "Input Name"
+       "Output Text": "Output Text",
+       "Input Name": "Input Name",
+       "Save Config": "Save Config"
     },
     "template": {
        "Create template": "Create template",

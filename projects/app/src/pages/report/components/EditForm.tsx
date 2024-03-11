@@ -52,6 +52,7 @@ import {MongoImageTypeEnum} from "@fastgpt/global/common/file/image/constants";
 import {getErrText} from "@fastgpt/global/common/error/utils";
 import {useToast} from "@fastgpt/web/hooks/useToast";
 import { appTemplates } from '@/web/core/app/templates';
+import {PermissionTypeEnum} from "@fastgpt/global/support/permission/constant";
 const EditForm = ({
   divRef,
   isSticky
@@ -158,14 +159,31 @@ const EditForm = ({
       // }
       console.log(data)
       const template = appTemplates.find((item) => item.id === 'report-universal');
+
+      if(!data.avatar)
+        data.avatar='/icon/logo.svg';
+
       const postData={
         avatar: data.avatar,
         name: data.name,
         modules:  template?.modules
       };
       console.log(postData)
-      return postCreateReport(postData);
-
+      postCreateReport(postData).then(result=>{
+         const updateData={modules: template?.modules,type:AppTypeEnum.report,permission:PermissionTypeEnum.private};
+         //await updateAppDetail(result,updateData);
+         console.log(result);
+      }).catch(error=>{
+        console.log(error);
+      })
+//       const result=postCreateReport(postData);
+//       promise.then(result => {
+//     console.log(result);
+// }).catch(error => {
+//     console.log(error);
+// });
+//       console.log(result);
+//      return postCreateReport(postData);
       // const modules = await postForm2Modules(data);
       // await updateAppDetail(appDetail._id, {
       //   modules,
@@ -253,7 +271,7 @@ const EditForm = ({
             }
           }}
         >
-          {isPc ? t('core.app.Save and preview') : t('common.Save')}
+          { t('core.report.Save Config')}
         </Button>
       </Flex>
 
@@ -388,7 +406,7 @@ const EditForm = ({
             <Flex alignItems={'center'}>
               <MyIcon name={'core/app/simpleMode/chat'} w={'20px'} />
               <Box mx={2}>{t('core.report.Input Text')}</Box>
-              <MyTooltip label={t(welcomeTextTip)} forceShow>
+              <MyTooltip label={t('core.report.welcomeText')} forceShow>
                 <QuestionOutlineIcon />
               </MyTooltip>
             </Flex>
@@ -396,10 +414,25 @@ const EditForm = ({
               mt={2}
               bg={'myWhite.400'}
               rows={5}
-              placeholder={t(welcomeTextTip)}
-              defaultValue={getValues('userGuide.welcomeText')}
+              placeholder={t('core.report.welcomeText')}
               onBlur={(e) => {
                 setValue('userGuide.welcomeText', e.target.value || '');
+              }}
+            />
+          </Box>
+
+          {/* answer */}
+          <Box {...BoxStyles}>
+            <Flex alignItems={'center'}>
+              <MyIcon name={'core/chat/chatLight'} w={'20px'}  color={'#8774EE'} />
+              <Box mx={2}>{t('core.report.Output Text')}</Box>
+            </Flex>
+            <MyTextarea
+              mt={2}
+              bg={'myWhite.400'}
+              rows={5}
+              onBlur={(e) => {
+                setValue('response', e.target.value || '');
               }}
             />
           </Box>
