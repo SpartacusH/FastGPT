@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useTransition } from 'react';
+import React, {useCallback, useMemo, useState, useTransition} from 'react';
 import {
   Box,
   Flex,
@@ -7,7 +7,7 @@ import {
   useTheme,
   useDisclosure,
   Button,
-  Image
+  Image, Input
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { QuestionOutlineIcon, SmallAddIcon } from '@chakra-ui/icons';
@@ -44,7 +44,14 @@ const TTSSelect = dynamic(
   () => import('@/components/core/module/Flow/components/modules/TTSSelect')
 );
 const QGSwitch = dynamic(() => import('@/components/core/module/Flow/components/modules/QGSwitch'));
-
+import { postCreateReport } from '@/web/core/report/api';
+import { reportTemplates } from '@/web/core/report/templates';
+import {useSelectFile} from "@/web/common/file/hooks/useSelectFile";
+import {compressImgFileAndUpload} from "@/web/common/file/controller";
+import {MongoImageTypeEnum} from "@fastgpt/global/common/file/image/constants";
+import {getErrText} from "@fastgpt/global/common/error/utils";
+import {useToast} from "@fastgpt/web/hooks/useToast";
+import { appTemplates } from '@/web/core/app/templates';
 const EditForm = ({
   divRef,
   isSticky
@@ -52,6 +59,7 @@ const EditForm = ({
   divRef: React.RefObject<HTMLDivElement>;
   isSticky: boolean;
 }) => {
+    const { toast } = useToast();
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
@@ -61,7 +69,7 @@ const EditForm = ({
   const [refresh, setRefresh] = useState(false);
   const [, startTst] = useTransition();
 
-  const { setValue, getValues, reset, handleSubmit, control, watch } =
+  const { register,setValue, getValues, reset, handleSubmit, control, watch } =
     useForm<AppSimpleEditFormType>({
       defaultValues: getDefaultAppForm()
     });
@@ -91,6 +99,34 @@ const EditForm = ({
     content: t('core.app.edit.Confirm Save App Tip')
   });
 
+    const { File, onOpen: onOpenSelectFile } = useSelectFile({
+    fileType: '.jpg,.png',
+    multiple: false
+  });
+    const onSelectFile = useCallback(
+    async (e: File[]) => {
+      const file = e[0];
+      if (!file) return;
+      try {
+        const src = await compressImgFileAndUpload({
+          type: MongoImageTypeEnum.appAvatar,
+          file,
+          maxW: 300,
+          maxH: 300
+        });
+        console.log(src);
+        setValue('avatar', src);
+        setRefresh((state) => !state);
+      } catch (err: any) {
+        toast({
+          title: getErrText(err, t('common.error.Select avatar failed')),
+          status: 'warning'
+        });
+      }
+    },
+    [setValue, t, toast]
+  );
+
   const aiSystemPrompt = watch('aiSettings.systemPrompt');
   const selectLLMModel = watch('aiSettings.model');
   const datasetSearchSetting = watch('dataset');
@@ -115,13 +151,28 @@ const EditForm = ({
 
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
     mutationFn: async (data: AppSimpleEditFormType) => {
-      const modules = await postForm2Modules(data);
 
-      await updateAppDetail(appDetail._id, {
-        modules,
-        type: AppTypeEnum.simple,
-        permission: undefined
-      });
+      // const template = reportTemplates.find((item) => item.id === data.templateId);
+      // if (!template) {
+      //   return Promise.reject(t('core.dataset.error.Template does not exist'));
+      // }
+      console.log(data)
+      const template = appTemplates.find((item) => item.id === 'report-universal');
+      const postData={
+        avatar: data.avatar,
+        name: data.name,
+        modules:  template?.modules
+      };
+      console.log(postData)
+      return postCreateReport(postData);
+
+      // const modules = await postForm2Modules(data);
+      // await updateAppDetail(appDetail._id, {
+      //   modules,
+      //   type: AppTypeEnum.simple,
+      //   permission: undefined
+      // });
+
     },
     successToast: t('common.Save Success'),
     errorToast: t('common.Save Failed')
@@ -209,6 +260,38 @@ const EditForm = ({
       <Box px={4}>
         <Box bg={'white'} borderRadius={'md'} borderWidth={'1px'} borderColor={'borderColor.base'}>
           {/* simple mode select */}
+
+          {/* avator && name */}
+          <Box {...BoxStyles}>
+            <Flex alignItems={'center'}>
+              <MyIcon name={'text'} w={'20px'} color={'#8774EE'}/>
+              <Box mx={2}>{t('core.report.Input Name')}</Box>
+            </Flex>
+            <Flex mt={3} alignItems={'center'}>
+          <MyTooltip label={t('common.Set Avatar')}>
+            <Avatar
+              flexShrink={0}
+               {...register('avatar')}
+              src={getValues('avatar')}
+              w={['28px', '32px']}
+              h={['28px', '32px']}
+              cursor={'pointer'}
+              borderRadius={'md'}
+              onClick={onOpenSelectFile}
+            />
+          </MyTooltip>
+          <Input
+            flex={1}
+            ml={4}
+            autoFocus
+            bg={'myWhite.600'}
+            {...register('name', {
+              required: t('core.app.error.App name can not be empty')
+            })}
+          />
+        </Flex>
+          </Box>
+
           {/* ai */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
@@ -361,6 +444,8 @@ const EditForm = ({
           }}
         />
       )}
+
+      <File onSelect={onSelectFile} />
     </Box>
   );
 };

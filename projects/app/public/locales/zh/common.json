@@ -489,7 +489,8 @@
     },
     "report":{
        "Report params config": "报告配置",
-       "Input Text": "Input Text"
+       "Input Text": "问答",
+       "Input Name": "报告名称"
     },
     "dataset": {
       "All Dataset": "全部知识库",

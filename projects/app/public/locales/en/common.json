@@ -483,7 +483,8 @@
     },
     "report":{
        "Report params config": "Report Config",
-       "Input Text": "输入问题"
+       "Input Text": "Input Text",
+      "Input Name": "Input Name"
     },
     "template": {
        "Create template": "Create template",
