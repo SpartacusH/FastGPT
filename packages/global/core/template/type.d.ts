@@ -119,6 +119,7 @@ export type TemplateListItemType = {
   avatar: string;
   name: string;
   intro: string;
+  fileId: string;
   type: `${TemplateTypeEnum}`;
   isOwner: boolean;
   canWrite: boolean;

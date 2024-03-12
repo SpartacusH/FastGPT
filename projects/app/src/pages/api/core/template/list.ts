@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         avatar: item.avatar,
         name: item.name,
         intro: item.intro,
+        fileId: item.fileId,
         type: item.type,
         permission: item.permission,
         canWrite,
