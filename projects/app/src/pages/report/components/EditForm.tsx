@@ -54,7 +54,8 @@ import { getErrText } from '@fastgpt/global/common/error/utils';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { PermissionTypeEnum } from '@fastgpt/global/support/permission/constant';
 import { StartChatFnProps, useChatBox } from '@/components/ChatBox';
-import { streamFetch } from '@/web/common/api/fetch';
+// import { streamFetch } from '@/web/common/api/fetch';
+import { streamFetch } from '@/web/common/api/reportFetch';
 import { chatContentReplaceBlock } from '@fastgpt/global/core/chat/utils';
 import { ChatHistoryItemType } from '@fastgpt/global/core/chat/type';
 import { customAlphabet } from 'nanoid';
@@ -80,7 +81,9 @@ const EditForm = ({
   const { isPc, llmModelList, reRankModelList } = useSystemStore();
   const [refresh, setRefresh] = useState(false);
   const [, startTst] = useTransition();
-
+  const [reportId, setReportId] = useState('0');
+  const [name, setName] = useState('Hello World');
+  const [count, setCount] = useState(0);
   const { register, setValue, getValues, reset, handleSubmit, control, watch } =
     useForm<ReportSimpleEditFormType>({
       defaultValues: getDefaultReportForm()
@@ -167,20 +170,21 @@ const EditForm = ({
       // if (!template) {
       //   return Promise.reject(t('core.dataset.error.Template does not exist'));
       // }
+
       const modules = await postForm2Modules(data);
       console.log(data);
       const template = reportTemplates.find((item) => item.id === 'report-universal');
-
       if (!data.avatar) data.avatar = '/icon/logo.svg';
-
       const postData = {
         avatar: data.avatar,
         name: data.name,
         modules: template?.modules
       };
-      console.log(postData);
       postCreateReport(postData)
         .then(async (result) => {
+          console.log(result);
+          setValue('id', result);
+
           const updateData = {
             modules: template?.modules,
             type: ReportTypeEnum.report,
@@ -192,25 +196,10 @@ const EditForm = ({
             type: ReportTypeEnum.report,
             permission: undefined
           });
-          appId = result;
         })
         .catch((error) => {
           console.log(error);
         });
-      //       const result=postCreateReport(postData);
-      //       promise.then(result => {
-      //     console.log(result);
-      // }).catch(error => {
-      //     console.log(error);
-      // });
-      //       console.log(result);
-      //      return postCreateReport(postData);
-      // const modules = await postForm2Modules(data);
-      // await updateReportDetail(reportDetail._id, {
-      //   modules,
-      //   type: ReportTypeEnum.simple,
-      //   permission: undefined
-      // });
     },
     successToast: t('common.Save Success'),
     errorToast: t('common.Save Failed')
@@ -277,11 +266,14 @@ const EditForm = ({
       const completionChatId = chatId ? chatId : nanoid();
       controller = new AbortController();
       let inputText = getValues('userGuide.welcomeText');
-      console.log(inputText);
+      appId = getValues('id');
+      console.log('appId:' + appId);
+      messages = [{ dataId: nanoid(), role: 'user', content: inputText }];
       const { responseText, responseData } = await streamFetch({
         data: {
           history: [],
-          prompt: inputText,
+          prompt: '',
+          messages: messages,
           appId: appId
         },
         onMessage: generatingMessage,
@@ -322,27 +314,12 @@ const EditForm = ({
             title: newTitle
           });
       }
-      // update chat window
-      // setChatData((state) => ({
-      //   ...state,
-      //   title: newTitle,
-      //   history: ChatBoxRef.current?.getChatHistories() || state.history
-      // }));
       setValue('response', responseText);
       console.log(responseText);
       return { responseText, responseData, isNewChat: forbidRefresh.current };
     },
     [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
   );
-  //   const { responseText, responseData } = await streamFetch({
-  //   data: {
-  //     history:[],
-  //     prompt: 给个字符串,
-  //     appId: 你写个reportID,
-  //   },
-  //   onMessage: generatingMessage,
-  //   abortCtrl: controller
-  // });
 
   return (
     <Box>
@@ -418,6 +395,7 @@ const EditForm = ({
                   required: t('core.report.error.Report name can not be empty')
                 })}
               />
+              <input type={'hidden'} {...register('id')} />
             </Flex>
           </Box>
 
