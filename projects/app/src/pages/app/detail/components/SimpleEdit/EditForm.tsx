@@ -115,8 +115,9 @@ const EditForm = ({
 
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
     mutationFn: async (data: AppSimpleEditFormType) => {
+      console.log(data);
       const modules = await postForm2Modules(data);
-
+      console.log(modules);
       await updateAppDetail(appDetail._id, {
         modules,
         type: AppTypeEnum.simple,

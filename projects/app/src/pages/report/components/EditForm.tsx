@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState, useTransition} from 'react';
+import React, { useCallback, useMemo, useRef, useState, useTransition } from 'react';
 import {
   Box,
   Flex,
@@ -7,7 +7,8 @@ import {
   useTheme,
   useDisclosure,
   Button,
-  Image, Input
+  Image,
+  Input
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { QuestionOutlineIcon, SmallAddIcon } from '@chakra-ui/icons';
@@ -46,20 +47,31 @@ const TTSSelect = dynamic(
 const QGSwitch = dynamic(() => import('@/components/core/module/Flow/components/modules/QGSwitch'));
 import { postCreateReport } from '@/web/core/report/api';
 import { reportTemplates } from '@/web/core/report/templates';
-import {useSelectFile} from "@/web/common/file/hooks/useSelectFile";
-import {compressImgFileAndUpload} from "@/web/common/file/controller";
-import {MongoImageTypeEnum} from "@fastgpt/global/common/file/image/constants";
-import {getErrText} from "@fastgpt/global/common/error/utils";
-import {useToast} from "@fastgpt/web/hooks/useToast";
-import {PermissionTypeEnum} from "@fastgpt/global/support/permission/constant";
+import { useSelectFile } from '@/web/common/file/hooks/useSelectFile';
+import { compressImgFileAndUpload } from '@/web/common/file/controller';
+import { MongoImageTypeEnum } from '@fastgpt/global/common/file/image/constants';
+import { getErrText } from '@fastgpt/global/common/error/utils';
+import { useToast } from '@fastgpt/web/hooks/useToast';
+import { PermissionTypeEnum } from '@fastgpt/global/support/permission/constant';
+import { StartChatFnProps, useChatBox } from '@/components/ChatBox';
+import { streamFetch } from '@/web/common/api/fetch';
+import { chatContentReplaceBlock } from '@fastgpt/global/core/chat/utils';
+import { ChatHistoryItemType } from '@fastgpt/global/core/chat/type';
+import { customAlphabet } from 'nanoid';
+import { useChatStore } from '@/web/core/chat/storeChat';
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
 const EditForm = ({
   divRef,
-  isSticky
+  isSticky,
+  appId,
+  chatId
 }: {
   divRef: React.RefObject<HTMLDivElement>;
   isSticky: boolean;
+  appId: String;
+  chatId: String;
 }) => {
-    const { toast } = useToast();
+  const { toast } = useToast();
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
@@ -69,7 +81,7 @@ const EditForm = ({
   const [refresh, setRefresh] = useState(false);
   const [, startTst] = useTransition();
 
-  const { register,setValue, getValues, reset, handleSubmit, control, watch } =
+  const { register, setValue, getValues, reset, handleSubmit, control, watch } =
     useForm<ReportSimpleEditFormType>({
       defaultValues: getDefaultReportForm()
     });
@@ -99,11 +111,11 @@ const EditForm = ({
     content: t('core.report.edit.Confirm Save Report Tip')
   });
 
-    const { File, onOpen: onOpenSelectFile } = useSelectFile({
+  const { File, onOpen: onOpenSelectFile } = useSelectFile({
     fileType: '.jpg,.png',
     multiple: false
   });
-    const onSelectFile = useCallback(
+  const onSelectFile = useCallback(
     async (e: File[]) => {
       const file = e[0];
       if (!file) return;
@@ -151,53 +163,54 @@ const EditForm = ({
 
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
     mutationFn: async (data: ReportSimpleEditFormType) => {
-
       // const template = reportTemplates.find((item) => item.id === data.templateId);
       // if (!template) {
       //   return Promise.reject(t('core.dataset.error.Template does not exist'));
       // }
       const modules = await postForm2Modules(data);
-      console.log(data)
+      console.log(data);
       const template = reportTemplates.find((item) => item.id === 'report-universal');
 
-      if(!data.avatar)
-        data.avatar='/icon/logo.svg';
+      if (!data.avatar) data.avatar = '/icon/logo.svg';
 
-      const postData={
+      const postData = {
         avatar: data.avatar,
         name: data.name,
-        modules:  template?.modules
+        modules: template?.modules
       };
-      console.log(postData)
-      postCreateReport(postData).then(async result => {
-        const updateData = {
-          modules: template?.modules,
-          type: ReportTypeEnum.report,
-          permission: PermissionTypeEnum.private
-        };
-        await updateReportDetail(result, {
-          modules,
-          type: ReportTypeEnum.report,
-          permission: undefined
+      console.log(postData);
+      postCreateReport(postData)
+        .then(async (result) => {
+          const updateData = {
+            modules: template?.modules,
+            type: ReportTypeEnum.report,
+            permission: PermissionTypeEnum.private
+          };
+
+          await updateReportDetail(result, {
+            modules,
+            type: ReportTypeEnum.report,
+            permission: undefined
+          });
+          appId = result;
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      }).catch(error=>{
-        console.log(error);
-      })
-//       const result=postCreateReport(postData);
-//       promise.then(result => {
-//     console.log(result);
-// }).catch(error => {
-//     console.log(error);
-// });
-//       console.log(result);
-//      return postCreateReport(postData);
+      //       const result=postCreateReport(postData);
+      //       promise.then(result => {
+      //     console.log(result);
+      // }).catch(error => {
+      //     console.log(error);
+      // });
+      //       console.log(result);
+      //      return postCreateReport(postData);
       // const modules = await postForm2Modules(data);
       // await updateReportDetail(reportDetail._id, {
       //   modules,
       //   type: ReportTypeEnum.simple,
       //   permission: undefined
       // });
-
     },
     successToast: t('common.Save Success'),
     errorToast: t('common.Save Failed')
@@ -240,6 +253,97 @@ const EditForm = ({
     fontSize: ['sm', 'md']
   };
 
+  const forbidRefresh = useRef(false);
+  const {
+    lastChatAppId,
+    setLastChatAppId,
+    lastChatId,
+    setLastChatId,
+    histories,
+    loadHistories,
+    pushHistory,
+    updateHistory,
+    delOneHistory,
+    clearHistories,
+    chatData,
+    setChatData,
+    delOneHistoryItem
+  } = useChatStore();
+
+  const startChat = useCallback(
+    async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
+      console.log(messages);
+      const prompts = [];
+      const completionChatId = chatId ? chatId : nanoid();
+      controller = new AbortController();
+      let inputText = getValues('userGuide.welcomeText');
+      console.log(inputText);
+      const { responseText, responseData } = await streamFetch({
+        data: {
+          history: [],
+          prompt: inputText,
+          appId: appId
+        },
+        onMessage: generatingMessage,
+        abortCtrl: controller
+      });
+
+      const newTitle =
+        chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
+        prompts[1]?.value?.slice(0, 20) ||
+        t('core.chat.New Chat');
+
+      // new chat
+      if (completionChatId !== chatId) {
+        const newHistory: ChatHistoryItemType = {
+          chatId: completionChatId,
+          updateTime: new Date(),
+          title: newTitle,
+          appId,
+          top: false
+        };
+        pushHistory(newHistory);
+        if (controller.signal.reason !== 'leave') {
+          forbidRefresh.current = true;
+          router.replace({
+            query: {
+              chatId: completionChatId,
+              appId
+            }
+          });
+        }
+      } else {
+        // update chat
+        const currentChat = histories.find((item) => item.chatId === chatId);
+        currentChat &&
+          updateHistory({
+            ...currentChat,
+            updateTime: new Date(),
+            title: newTitle
+          });
+      }
+      // update chat window
+      // setChatData((state) => ({
+      //   ...state,
+      //   title: newTitle,
+      //   history: ChatBoxRef.current?.getChatHistories() || state.history
+      // }));
+      setValue('response', responseText);
+      console.log(responseText);
+      return { responseText, responseData, isNewChat: forbidRefresh.current };
+    },
+    [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
+  );
+  //   const { responseText, responseData } = await streamFetch({
+  //   data: {
+  //     history:[],
+  //     prompt: 给个字符串,
+  //     appId: 你写个reportID,
+  //   },
+  //   onMessage: generatingMessage,
+  //   abortCtrl: controller
+  // });
+
   return (
     <Box>
       {/* title */}
@@ -278,7 +382,7 @@ const EditForm = ({
             }
           }}
         >
-          { t('core.report.Save Config')}
+          {t('core.report.Save Config')}
         </Button>
       </Flex>
 
@@ -289,40 +393,40 @@ const EditForm = ({
           {/* avator && name */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
-              <MyIcon name={'text'} w={'20px'} color={'#8774EE'}/>
+              <MyIcon name={'text'} w={'20px'} color={'#8774EE'} />
               <Box mx={2}>{t('core.report.Input Name')}</Box>
             </Flex>
             <Flex mt={3} alignItems={'center'}>
-          <MyTooltip label={t('common.Set Avatar')}>
-            <Avatar
-              flexShrink={0}
-               {...register('avatar')}
-              src={getValues('avatar')}
-              w={['28px', '32px']}
-              h={['28px', '32px']}
-              cursor={'pointer'}
-              borderRadius={'md'}
-              onClick={onOpenSelectFile}
-            />
-          </MyTooltip>
-          <Input
-            flex={1}
-            ml={4}
-            autoFocus
-            bg={'myWhite.600'}
-            {...register('name', {
-              required: t('core.report.error.Report name can not be empty')
-            })}
-          />
-        </Flex>
+              <MyTooltip label={t('common.Set Avatar')}>
+                <Avatar
+                  flexShrink={0}
+                  {...register('avatar')}
+                  src={getValues('avatar')}
+                  w={['28px', '32px']}
+                  h={['28px', '32px']}
+                  cursor={'pointer'}
+                  borderRadius={'md'}
+                  onClick={onOpenSelectFile}
+                />
+              </MyTooltip>
+              <Input
+                flex={1}
+                ml={4}
+                autoFocus
+                bg={'myWhite.600'}
+                {...register('name', {
+                  required: t('core.report.error.Report name can not be empty')
+                })}
+              />
+            </Flex>
           </Box>
 
           {/* ai */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
-              <MyIcon name={'core/report/simpleMode/ai'} w={'20px'} />
+              <MyIcon name={'core/app/simpleMode/ai'} w={'20px'} />
               <Box ml={2} flex={1}>
-                {t('report.AI Settings')}
+                {t('app.AI Settings')}
               </Box>
             </Flex>
             <Flex alignItems={'center'} mt={5}>
@@ -350,7 +454,7 @@ const EditForm = ({
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
               <Flex alignItems={'center'} flex={1}>
-                <MyIcon name={'core/report/simpleMode/dataset'} w={'20px'} />
+                <MyIcon name={'core/app/simpleMode/dataset'} w={'20px'} />
                 <Box ml={2}>{t('core.dataset.Choose Dataset')}</Box>
               </Flex>
               <Flex alignItems={'center'} {...BoxBtnStyles} onClick={onOpenKbSelect}>
@@ -411,7 +515,7 @@ const EditForm = ({
           {/* welcome */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
-              <MyIcon name={'core/report/simpleMode/chat'} w={'20px'} />
+              <MyIcon name={'core/app/simpleMode/chat'} w={'20px'} />
               <Box mx={2}>{t('core.report.Input Text')}</Box>
               <MyTooltip label={t('core.report.welcomeText')} forceShow>
                 <QuestionOutlineIcon />
@@ -431,7 +535,7 @@ const EditForm = ({
           {/* answer */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>
-              <MyIcon name={'core/chat/chatLight'} w={'20px'}  color={'#8774EE'} />
+              <MyIcon name={'core/chat/chatLight'} w={'20px'} color={'#8774EE'} />
               <Box mx={2}>{t('core.report.Output Text')}</Box>
             </Flex>
             <MyTextarea
@@ -442,11 +546,19 @@ const EditForm = ({
                 setValue('response', e.target.value || '');
               }}
             />
+            <Flex alignItems={'center'} justifyContent={'right'} mt={2}>
+              <Button size={['sm', 'md']} variant={'primary'} onClick={startChat}>
+                {t('core.chat.Send Message')}
+              </Button>
+            </Flex>
           </Box>
         </Box>
       </Box>
 
-      <ConfirmSaveModal bg={reportDetail.type === ReportTypeEnum.simple ? '' : 'red.600'} countDown={5} />
+      <ConfirmSaveModal
+        bg={reportDetail.type === ReportTypeEnum.simple ? '' : 'red.600'}
+        countDown={5}
+      />
       {isOpenAIChatSetting && (
         <AIChatSettingsModal
           onClose={onCloseAIChatSetting}

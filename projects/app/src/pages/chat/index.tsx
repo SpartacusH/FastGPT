@@ -70,6 +70,10 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
       const prompts = messages.slice(-2);
+      console.log(messages);
+      console.log(prompts);
+      console.log('controller');
+      console.log(controller);
       const completionChatId = chatId ? chatId : nanoid();
 
       const { responseText, responseData } = await streamFetch({
