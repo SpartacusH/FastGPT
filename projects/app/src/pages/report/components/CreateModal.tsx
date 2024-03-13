@@ -66,7 +66,7 @@ const CreateModal = ({onClose, parentId,editCallback}: { onClose: () => void; pa
             try {
                 const res= await uploadFiles({
                     files:e,
-                    bucketName:BucketNameEnum.dataset,
+                    bucketName:BucketNameEnum.template,
                      metadata:{},
                     percentListen:0
                 });
