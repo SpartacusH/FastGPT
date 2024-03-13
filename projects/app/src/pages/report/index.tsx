@@ -532,15 +532,14 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                           onClick={() => {
                             setIsFlexVisible(!isFlexVisible);
                             setCurrentTemplate(template);
-                            const fileUrl = getFileViewUrl(template._id);
-                            console.log(fileUrl);
+                            const fileUrl = getFileViewUrl(template.fileId)
+                              .then((res) => {
+                                console.log('url:' + res);
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
                             setCurrentFile(fileUrl);
-                            // router.push({
-                            //     pathname: '/template/detail',
-                            //     query: {
-                            //         templateId: template._id
-                            //     }
-                            // });
                           }}
                         >
                           {userInfo?.team.canWrite && template.isOwner && (
@@ -714,7 +713,9 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                       px={3}
                       borderRadius={'md'}
                       _hover={{ bg: 'myGray.200' }}
-                      onClick={() => setIsFlexVisible(false)}
+                      onClick={() => {
+                        setIsFlexVisible(false);
+                      }}
                     >
                       <IconButton
                         mr={3}
