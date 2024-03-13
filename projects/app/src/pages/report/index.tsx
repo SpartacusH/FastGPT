@@ -37,10 +37,8 @@ import { useChatStore } from '@/web/core/chat/storeChat';
 import { useLoading } from '@/web/common/hooks/useLoading';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { customAlphabet } from 'nanoid';
-
 import type { ChatHistoryItemType } from '@fastgpt/global/core/chat/type.d';
 import { useTranslation } from 'next-i18next';
-
 import ChatBox, { type ComponentRef, type StartChatFnProps } from '@/components/ChatBox';
 import PageContainer from '@/components/PageContainer';
 import SideBar from '@/components/SideBar';
@@ -63,7 +61,6 @@ import { DatasetTypeEnum } from '@fastgpt/global/core/dataset/constants';
 import { useConfirm } from '@/web/common/hooks/useConfirm';
 import { useEditTitle } from '@/web/common/hooks/useEditTitle';
 import { useDrag } from '@/web/common/hooks/useDrag';
-import dynamic from 'next/dynamic';
 import { useRequest } from '@/web/common/hooks/useRequest';
 import TemplateTypeTag from '@/components/core/template/TemplateTypeTag';
 import PermissionIconText from '@/components/support/permission/IconText';
@@ -84,7 +81,13 @@ import MyTextarea from '@/components/common/Textarea/MyTextarea';
 import EditForm from './components/EditForm';
 import { useSticky } from '@/web/common/hooks/useSticky';
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
-// import MyEditor from "@/components/MyEditor";
+//import MyEditor from "@/components/MyEditor";
+import dynamic from 'next/dynamic';
+
+const MyEditor = dynamic(() => import('../../components/MyEditor'), {
+  ssr: false,
+  loading: () => <p>Loading ...</p> //异步加载组件前的loading状态
+});
 
 const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const isShow = useRef(false); //是否显示生成报告
@@ -767,23 +770,23 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
               onOpenSlider={onOpenSlider}
               showHistory
             />
-            {/*<MyEditor/>*/}
+            <MyEditor />
             {/* chat box */}
-            <Box flex={1}>
-              <ChatBox
-                ref={ChatBoxRef}
-                showEmptyIntro
-                appAvatar={chatData.app.avatar}
-                userAvatar={userInfo?.avatar}
-                userGuideModule={chatData.app?.userGuideModule}
-                showFileSelector={checkChatSupportSelectFileByChatModels(chatData.app.chatModels)}
-                feedbackType={'user'}
-                onStartChat={startChat}
-                onDelMessage={(e) => delOneHistoryItem({ ...e, appId, chatId })}
-                appId={appId}
-                chatId={chatId}
-              />
-            </Box>
+            {/*<Box flex={1}>*/}
+            {/*  <ChatBox*/}
+            {/*    ref={ChatBoxRef}*/}
+            {/*    showEmptyIntro*/}
+            {/*    appAvatar={chatData.app.avatar}*/}
+            {/*    userAvatar={userInfo?.avatar}*/}
+            {/*    userGuideModule={chatData.app?.userGuideModule}*/}
+            {/*    showFileSelector={checkChatSupportSelectFileByChatModels(chatData.app.chatModels)}*/}
+            {/*    feedbackType={'user'}*/}
+            {/*    onStartChat={startChat}*/}
+            {/*    onDelMessage={(e) => delOneHistoryItem({ ...e, appId, chatId })}*/}
+            {/*    appId={appId}*/}
+            {/*    chatId={chatId}*/}
+            {/*  />*/}
+            {/*</Box>*/}
           </Flex>
         </Flex>
         <Loading fixed={false} />
