@@ -30,8 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       teamId,
       type: TemplateTypeEnum.template
     });
-    if (authCount >= 50) {
-      throw new Error('每个团队上限 50 个知识库');
+    if (authCount >= 100) {
+      throw new Error('每个团队上限 100 个模板');
     }
 
     const { _id } = await MongoTemplate.create({

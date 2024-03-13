@@ -5,6 +5,7 @@ import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { useTemplateStore } from '@/web/core/template/store/template';
 import { getInitChatInfo } from '@/web/core/chat/api';
 import { getFileViewUrl } from '@/web/core/template/api';
+import {getFileViewUrl as test} from '@/web/core/dataset/api'
 import {
   Box,
   Flex,
@@ -529,16 +530,30 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                               display: 'block'
                             }
                           }}
-                          onClick={() => {
+                          onClick={ () => {
                             setIsFlexVisible(!isFlexVisible);
                             setCurrentTemplate(template);
-                            const fileUrl = getFileViewUrl(template.fileId)
-                              .then((res) => {
-                                console.log('url:' + res);
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
+                            const fileUrl1 =  test("65e916a6c78ab9f0f940fa1c")
+                                .then((res) => {
+                                  console.log('urldasdsadas:' + res);
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            const fileUrl2 =  getFileViewUrl("65f14e97c1c21a52520be302")
+                                .then((res) => {
+                                  console.log('urlsssssssssss:' + res);
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            const fileUrl =  getFileViewUrl(template.fileId)
+                                .then((res) => {
+                                  console.log('url:' + res);
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
                             setCurrentFile(fileUrl);
                           }}
                         >
