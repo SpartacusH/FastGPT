@@ -172,7 +172,7 @@ export async function authTemplateFile({
       fileId
     })
   ]);
-
+  console.log(BucketNameEnum.template + '   ' + fileId);
   if (!file) {
     return Promise.reject(CommonErrEnum.fileNotFound);
   }

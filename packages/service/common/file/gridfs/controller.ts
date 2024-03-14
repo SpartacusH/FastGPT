@@ -68,6 +68,8 @@ export async function getFileById({
   bucketName: `${BucketNameEnum}`;
   fileId: string;
 }) {
+  console.log('bucketName' + bucketName);
+  console.log('fileId' + fileId);
   const db = getGFSCollection(bucketName);
   const file = await db.findOne<DatasetFileSchema>({
     _id: new Types.ObjectId(fileId)
