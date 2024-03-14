@@ -108,6 +108,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const [isFlexVisible, setIsFlexVisible] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState();
   const [currentFile, setCurrentFile] = useState();
+  const [html, setHtml] = useState('<p>hello</p>');
   const DeleteTipsMap = useRef({
     [TemplateTypeEnum.folder]: t('template.deleteFolderTips'),
     [TemplateTypeEnum.template]: t('core.template.Delete Confirm'),
@@ -393,6 +394,18 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     fontSize: ['sm', 'md']
   };
   const { parentRef, divRef, isSticky } = useSticky();
+  const fetchWordFile = async (url) => {
+    try {
+      const response = await fetch(url); // 替换为你要读取的 Word 文件的 URL
+      const arrayBuffer = await response.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      console.log(result.value);
+      return result.value;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Flex h={'100%'}>
       <Head>
@@ -521,52 +534,13 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                           onClick={() => {
                             setIsFlexVisible(!isFlexVisible);
                             setCurrentTemplate(template);
-                            // const fileUrl1 = test("65e916a6c78ab9f0f940fa1c")
-                            //     .then((res) => {
-                            //         console.log('urldasdsadas:' + res);
-                            //     })
-                            //     .catch((err) => {
-                            //         console.log(err);
-                            //     });
-                            // const fileUrl2 =  getFileViewUrl("65f14e97c1c21a52520be302")
-                            //     .then((res) => {
-                            //       console.log('urlsssssssssss:' + res);
-                            //     })
-                            //     .catch((err) => {
-                            //       console.log(err);
-                            //     });
+
                             const fileUrl = getFileViewUrl(template.fileId)
                               .then((res) => {
                                 console.log('url:' + res);
-                                fetch(res)
-                                  .then((response) => {
-                                    // const arrayBuffer= response.arrayBuffer();
-                                    // const result = await mammoth.extractRawText({ arrayBuffer });
-                                    console.log(result.value);
-                                  })
-                                  .catch((error) => console.error(error));
-
-                                axios({
-                                  url: res,
-                                  method: 'GET',
-                                  responseType: 'arraybuffer' // 必须设置responseType为'arraybuffer'
-                                })
-                                  .then((response) => {
-                                    // 将Word文档写入到一个临时文件
-                                    fs.writeFileSync('/tmp/myfile.docx', response.data);
-
-                                    // 使用mammoth解析Word文档
-                                    mammoth
-                                      .extractRawText({ path: '/tmp/myfile.docx' })
-                                      .then((result) => {
-                                        let text = result.value; // Word文档的内容
-                                        console.log(text);
-                                      })
-                                      .done();
-                                  })
-                                  .catch((error) => {
-                                    console.error(error);
-                                  });
+                                fetchWordFile(res).then((re) => {
+                                  setHtml(re);
+                                });
                               })
                               .catch((err) => {
                                 console.log(err);
@@ -803,23 +777,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
               onOpenSlider={onOpenSlider}
               showHistory
             />
-            <MyEditor />
-            {/* chat box */}
-            {/*<Box flex={1}>*/}
-            {/*  <ChatBox*/}
-            {/*    ref={ChatBoxRef}*/}
-            {/*    showEmptyIntro*/}
-            {/*    appAvatar={chatData.app.avatar}*/}
-            {/*    userAvatar={userInfo?.avatar}*/}
-            {/*    userGuideModule={chatData.app?.userGuideModule}*/}
-            {/*    showFileSelector={checkChatSupportSelectFileByChatModels(chatData.app.chatModels)}*/}
-            {/*    feedbackType={'user'}*/}
-            {/*    onStartChat={startChat}*/}
-            {/*    onDelMessage={(e) => delOneHistoryItem({ ...e, appId, chatId })}*/}
-            {/*    appId={appId}*/}
-            {/*    chatId={chatId}*/}
-            {/*  />*/}
-            {/*</Box>*/}
+            <MyEditor html={html} setHtml={setHtml} />
           </Flex>
         </Flex>
         <Loading fixed={false} />

@@ -269,19 +269,25 @@ const EditForm = ({
   const generatingMessage1 = useCallback(
     ({ text = '', status, name }: generatingMessageProps) => {
       console.log(text);
+      console.log(getValues('response'));
+      setValue('response', getValues('response') + text);
     },
     [generatingScroll]
   );
 
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
+      setValue('response', '');
       const prompts = [];
       const completionChatId = chatId ? chatId : nanoid();
       controller = new AbortController();
       let inputText = getValues('userGuide.welcomeText');
       appId = getValues('id');
       console.log('appId:' + appId);
-      messages = [{ dataId: nanoid(), role: 'user', content: inputText }, {dataId: nanoid(), role: 'assistant', content: ''}];
+      messages = [
+        { dataId: nanoid(), role: 'user', content: inputText },
+        { dataId: nanoid(), role: 'assistant', content: '' }
+      ];
       const { responseText, responseData } = await streamFetch({
         data: {
           history: [],
@@ -292,42 +298,7 @@ const EditForm = ({
         onMessage: generatingMessage1,
         abortCtrl: controller
       });
-      // const newTitle =
-      //   chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
-      //   prompts[1]?.value?.slice(0, 20) ||
-      //   t('core.chat.New Chat');
 
-      // // new chat
-      // if (completionChatId !== chatId) {
-      //   const newHistory: ChatHistoryItemType = {
-      //     chatId: completionChatId,
-      //     updateTime: new Date(),
-      //     title: newTitle,
-      //     appId,
-      //     top: false
-      //   };
-      //   pushHistory(newHistory);
-      //   if (controller.signal.reason !== 'leave') {
-      //     forbidRefresh.current = true;
-      //     router.replace({
-      //       query: {
-      //         chatId: completionChatId,
-      //         appId
-      //       }
-      //     });
-      //   }
-      // } else {
-      //   // update chat
-      //   const currentChat = histories.find((item) => item.chatId === chatId);
-      //   currentChat &&
-      //     updateHistory({
-      //       ...currentChat,
-      //       updateTime: new Date(),
-      //       title: newTitle
-      //     });
-      // }
-      setValue('response', responseText);
-      console.log(responseText);
       return { responseText, responseData, isNewChat: forbidRefresh.current };
     },
     [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
@@ -528,14 +499,8 @@ const EditForm = ({
               <MyIcon name={'core/chat/chatLight'} w={'20px'} color={'#8774EE'} />
               <Box mx={2}>{t('core.report.Output Text')}</Box>
             </Flex>
-            <MyTextarea
-              mt={2}
-              bg={'myWhite.400'}
-              rows={5}
-              onBlur={(e) => {
-                setValue('response', e.target.value || '');
-              }}
-            />
+            <MyTextarea mt={2} bg={'myWhite.400'} rows={5} value={getValues('response')} />
+
             <Flex alignItems={'center'} justifyContent={'right'} mt={2}>
               <Button size={['sm', 'md']} variant={'primary'} onClick={startChat}>
                 {t('core.chat.Send Message')}

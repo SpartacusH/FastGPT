@@ -1,9 +1,10 @@
 import { Editor, Toolbar } from '@wangeditor/editor-for-react';
 import React, { useEffect, useState } from 'react';
 import '@wangeditor/editor/dist/css/style.css';
-export default function () {
+export default function (props) {
+  const { html, setHtml } = props;
   const [editor, setEditor] = useState(null);
-  const [html, setHtml] = useState(null);
+  // const [html, setHtml] = useState(null);
 
   const editorConfig = {
     placeholder: '富文本编辑器完成...'
