@@ -81,10 +81,14 @@ import VariableEdit from '@/components/core/module/Flow/components/modules/Varia
 import MyTextarea from '@/components/common/Textarea/MyTextarea';
 import EditForm from './components/EditForm';
 import { useSticky } from '@/web/common/hooks/useSticky';
+
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
 //import MyEditor from "@/components/MyEditor";
 import dynamic from 'next/dynamic';
 
+const axios = require('axios');
+const mammoth = require('mammoth');
+const fs = require('fs');
 const MyEditor = dynamic(() => import('../../components/MyEditor'), {
   ssr: false,
   loading: () => <p>Loading ...</p> //异步加载组件前的loading状态
@@ -517,12 +521,12 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                           onClick={() => {
                             setIsFlexVisible(!isFlexVisible);
                             setCurrentTemplate(template);
-                            // const fileUrl1 =  test("65e916a6c78ab9f0f940fa1c")
+                            // const fileUrl1 = test("65e916a6c78ab9f0f940fa1c")
                             //     .then((res) => {
-                            //       console.log('urldasdsadas:' + res);
+                            //         console.log('urldasdsadas:' + res);
                             //     })
                             //     .catch((err) => {
-                            //       console.log(err);
+                            //         console.log(err);
                             //     });
                             // const fileUrl2 =  getFileViewUrl("65f14e97c1c21a52520be302")
                             //     .then((res) => {
@@ -534,6 +538,35 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                             const fileUrl = getFileViewUrl(template.fileId)
                               .then((res) => {
                                 console.log('url:' + res);
+                                fetch(res)
+                                  .then((response) => {
+                                    // const arrayBuffer= response.arrayBuffer();
+                                    // const result = await mammoth.extractRawText({ arrayBuffer });
+                                    console.log(result.value);
+                                  })
+                                  .catch((error) => console.error(error));
+
+                                axios({
+                                  url: res,
+                                  method: 'GET',
+                                  responseType: 'arraybuffer' // 必须设置responseType为'arraybuffer'
+                                })
+                                  .then((response) => {
+                                    // 将Word文档写入到一个临时文件
+                                    fs.writeFileSync('/tmp/myfile.docx', response.data);
+
+                                    // 使用mammoth解析Word文档
+                                    mammoth
+                                      .extractRawText({ path: '/tmp/myfile.docx' })
+                                      .then((result) => {
+                                        let text = result.value; // Word文档的内容
+                                        console.log(text);
+                                      })
+                                      .done();
+                                  })
+                                  .catch((error) => {
+                                    console.error(error);
+                                  });
                               })
                               .catch((err) => {
                                 console.log(err);

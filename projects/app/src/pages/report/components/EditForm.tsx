@@ -60,7 +60,9 @@ import { chatContentReplaceBlock } from '@fastgpt/global/core/chat/utils';
 import { ChatHistoryItemType } from '@fastgpt/global/core/chat/type';
 import { customAlphabet } from 'nanoid';
 import { useChatStore } from '@/web/core/chat/storeChat';
+import { throttle } from 'lodash';
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
+type generatingMessageProps = { text?: string; name?: string; status?: 'running' | 'finish' };
 const EditForm = ({
   divRef,
   isSticky,
@@ -258,6 +260,18 @@ const EditForm = ({
     setChatData,
     delOneHistoryItem
   } = useChatStore();
+  const generatingScroll = useCallback(
+    throttle(() => {
+      console.log('hhhhhh');
+    }, 100),
+    []
+  );
+  const generatingMessage1 = useCallback(
+    ({ text = '', status, name }: generatingMessageProps) => {
+      console.log(text);
+    },
+    [generatingScroll]
+  );
 
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
@@ -276,7 +290,7 @@ const EditForm = ({
           messages: messages,
           reportId: appId
         },
-        onMessage: generatingMessage,
+        onMessage: generatingMessage1,
         abortCtrl: controller
       });
 
@@ -285,35 +299,35 @@ const EditForm = ({
         prompts[1]?.value?.slice(0, 20) ||
         t('core.chat.New Chat');
 
-      // new chat
-      if (completionChatId !== chatId) {
-        const newHistory: ChatHistoryItemType = {
-          chatId: completionChatId,
-          updateTime: new Date(),
-          title: newTitle,
-          appId,
-          top: false
-        };
-        pushHistory(newHistory);
-        if (controller.signal.reason !== 'leave') {
-          forbidRefresh.current = true;
-          router.replace({
-            query: {
-              chatId: completionChatId,
-              appId
-            }
-          });
-        }
-      } else {
-        // update chat
-        const currentChat = histories.find((item) => item.chatId === chatId);
-        currentChat &&
-          updateHistory({
-            ...currentChat,
-            updateTime: new Date(),
-            title: newTitle
-          });
-      }
+      // // new chat
+      // if (completionChatId !== chatId) {
+      //   const newHistory: ChatHistoryItemType = {
+      //     chatId: completionChatId,
+      //     updateTime: new Date(),
+      //     title: newTitle,
+      //     appId,
+      //     top: false
+      //   };
+      //   pushHistory(newHistory);
+      //   if (controller.signal.reason !== 'leave') {
+      //     forbidRefresh.current = true;
+      //     router.replace({
+      //       query: {
+      //         chatId: completionChatId,
+      //         appId
+      //       }
+      //     });
+      //   }
+      // } else {
+      //   // update chat
+      //   const currentChat = histories.find((item) => item.chatId === chatId);
+      //   currentChat &&
+      //     updateHistory({
+      //       ...currentChat,
+      //       updateTime: new Date(),
+      //       title: newTitle
+      //     });
+      // }
       setValue('response', responseText);
       console.log(responseText);
       return { responseText, responseData, isNewChat: forbidRefresh.current };
