@@ -275,14 +275,13 @@ const EditForm = ({
 
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
-      console.log(messages);
       const prompts = [];
       const completionChatId = chatId ? chatId : nanoid();
       controller = new AbortController();
       let inputText = getValues('userGuide.welcomeText');
       appId = getValues('id');
       console.log('appId:' + appId);
-      messages = [{ dataId: nanoid(), role: 'user', content: inputText }];
+      messages = [{ dataId: nanoid(), role: 'user', content: inputText }, {dataId: nanoid(), role: 'assistant', content: ''}];
       const { responseText, responseData } = await streamFetch({
         data: {
           history: [],
@@ -293,11 +292,10 @@ const EditForm = ({
         onMessage: generatingMessage1,
         abortCtrl: controller
       });
-
-      const newTitle =
-        chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
-        prompts[1]?.value?.slice(0, 20) ||
-        t('core.chat.New Chat');
+      // const newTitle =
+      //   chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
+      //   prompts[1]?.value?.slice(0, 20) ||
+      //   t('core.chat.New Chat');
 
       // // new chat
       // if (completionChatId !== chatId) {
