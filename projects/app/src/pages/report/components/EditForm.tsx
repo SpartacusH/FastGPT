@@ -274,7 +274,7 @@ const EditForm = ({
           history: [],
           prompt: '',
           messages: messages,
-          appId: appId
+          reportId: appId
         },
         onMessage: generatingMessage,
         abortCtrl: controller

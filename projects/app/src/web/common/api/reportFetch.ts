@@ -22,7 +22,7 @@ type StreamResponseType = {
   [ModuleOutputKeyEnum.responseData]: ChatHistoryItemResType[];
 };
 export const streamFetch = ({
-  url = '/api/v1/chat/completions',
+  url = '/api/v1/chat/report',
   data,
   onMessage,
   abortCtrl
@@ -31,14 +31,12 @@ export const streamFetch = ({
     const timeoutId = setTimeout(() => {
       abortCtrl.abort('Time out');
     }, 60000);
-
     // response data
     let responseText = '';
     let remainText = '';
     let errMsg = '';
     let responseData: ChatHistoryItemResType[] = [];
     let finished = false;
-
     const finish = () => {
       if (errMsg) {
         return failedFinish();
@@ -55,7 +53,6 @@ export const streamFetch = ({
         responseText
       });
     };
-
     // animate response to make it looks smooth
     function animateResponseText() {
       // abort message
@@ -64,7 +61,6 @@ export const streamFetch = ({
         responseText += remainText;
         return finish();
       }
-
       if (remainText) {
         const fetchCount = Math.max(1, Math.round(remainText.length / 60));
         const fetchText = remainText.slice(0, fetchCount);
@@ -74,21 +70,17 @@ export const streamFetch = ({
         responseText += fetchText;
         remainText = remainText.slice(fetchCount);
       }
-
       if (finished && !remainText) {
         return finish();
       }
-
       requestAnimationFrame(animateResponseText);
     }
     // start animation
     animateResponseText();
-
     try {
       // auto complete variables
       const variables = data?.variables || {};
       variables.cTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
-
       const requestData = {
         method: 'POST',
         headers: {
@@ -103,19 +95,16 @@ export const streamFetch = ({
           stream: true
         })
       };
-
       // send request
       await fetchEventSource(url, {
         ...requestData,
         async onopen(res) {
           clearTimeout(timeoutId);
           const contentType = res.headers.get('content-type');
-
           // not stream
           if (contentType?.startsWith('text/plain')) {
             return failedFinish(await res.clone().text());
           }
-
           // failed stream
           if (
             !res.ok ||
@@ -142,7 +131,6 @@ export const streamFetch = ({
               return {};
             }
           })();
-
           if (event === sseResponseEventEnum.answer) {
             const text: string = parseJson?.choices?.[0]?.delta?.content || '';
             remainText += text;
@@ -156,7 +144,7 @@ export const streamFetch = ({
             parseJson?.status
           ) {
             onMessage(parseJson);
-          } else if (event === sseResponseEventEnum.appStreamResponse && Array.isArray(parseJson)) {
+          } else if (event === sseResponseEventEnum.reportStreamResponse && Array.isArray(parseJson)) {
             responseData = parseJson;
           } else if (event === sseResponseEventEnum.error) {
             errMsg = getErrText(parseJson, '流响应错误');
@@ -173,7 +161,6 @@ export const streamFetch = ({
       });
     } catch (err: any) {
       clearTimeout(timeoutId);
-
       if (abortCtrl.signal.aborted) {
         finished = true;
 
