@@ -7,7 +7,6 @@ import { BucketNameEnum, FileBaseUrl } from '@fastgpt/global/common/file/constan
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
-    console.log('dataset 1 step');
     await connectToDatabase();
 
     const { fileId } = req.query as { fileId: string };

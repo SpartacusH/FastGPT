@@ -172,32 +172,16 @@ export async function authTemplateFile({
       fileId
     })
   ]);
-  console.log(BucketNameEnum.template + '   ' + fileId);
   if (!file) {
     return Promise.reject(CommonErrEnum.fileNotFound);
   }
-
-  if (!collection) {
-    return Promise.reject(TemplateErrEnum.unAuthTemplateFile);
-  }
-
-  // file role = collection role
-  try {
-    const { isOwner, canWrite } = await authTemplateCollection({
-      ...props,
-      collectionId: collection._id,
-      per
-    });
 
     return {
       userId,
       teamId,
       tmbId,
       file,
-      isOwner,
-      canWrite
+      isOwner:true,
+      canWrite:true,
     };
-  } catch (error) {
-    return Promise.reject(TemplateErrEnum.unAuthTemplateFile);
-  }
 }
