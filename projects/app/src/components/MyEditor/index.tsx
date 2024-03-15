@@ -7,7 +7,7 @@ export default function (props) {
   // const [html, setHtml] = useState(null);
 
   const editorConfig = {
-    placeholder: '富文本编辑器完成...'
+    placeholder: '富文本编辑器加载完成...'
   };
   // 及时销毁 editor ，重要！
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function (props) {
         onCreated={setEditor}
         onChange={(editor) => setHtml(editor.getHtml())}
         mode="default"
-        style={{ height: '500px', overflowY: 'hidden' }}
+        style={{ height: 'calc(100vh - 212px)', width: '32vw', overflowY: 'hidden' }}
       />
     </>
   );

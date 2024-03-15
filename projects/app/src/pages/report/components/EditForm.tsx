@@ -16,7 +16,6 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { useSystemStore } from '@/web/common/system/useSystemStore';
 import { reportModules2Form, getDefaultReportForm } from '@fastgpt/global/core/report/utils';
 import type { ReportSimpleEditFormType } from '@fastgpt/global/core/report/type.d';
-import { chatNodeSystemPromptTip, welcomeTextTip } from '@fastgpt/global/core/module/template/tip';
 import { useRequest } from '@/web/common/hooks/useRequest';
 import { useConfirm } from '@/web/common/hooks/useConfirm';
 import { useRouter } from 'next/router';
@@ -25,7 +24,6 @@ import { ReportTypeEnum } from '@fastgpt/global/core/report/constants';
 import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { useReportStore } from '@/web/core/report/store/useReportStore';
 import { postForm2Modules } from '@/web/core/report/utils';
-
 import dynamic from 'next/dynamic';
 import MyTooltip from '@/components/MyTooltip';
 import Avatar from '@/components/Avatar';
@@ -34,17 +32,8 @@ import VariableEdit from '@/components/core/module/Flow/components/modules/Varia
 import MyTextarea from '@/components/common/Textarea/MyTextarea/index';
 import { DatasetSearchModeMap } from '@fastgpt/global/core/dataset/constants';
 import SelectAiModel from '@/components/Select/SelectAiModel';
-import PromptEditor from '@fastgpt/web/components/common/Textarea/PromptEditor';
 import { formatEditorVariablePickerIcon } from '@fastgpt/global/core/module/utils';
 import SearchParamsTip from '@/components/core/dataset/SearchParamsTip';
-
-const DatasetSelectModal = dynamic(() => import('@/components/core/module/DatasetSelectModal'));
-const DatasetParamsModal = dynamic(() => import('@/components/core/module/DatasetParamsModal'));
-const AIChatSettingsModal = dynamic(() => import('@/components/core/module/AIChatSettingsModal'));
-const TTSSelect = dynamic(
-  () => import('@/components/core/module/Flow/components/modules/TTSSelect')
-);
-const QGSwitch = dynamic(() => import('@/components/core/module/Flow/components/modules/QGSwitch'));
 import { postCreateReport } from '@/web/core/report/api';
 import { reportTemplates } from '@/web/core/report/templates';
 import { useSelectFile } from '@/web/common/file/hooks/useSelectFile';
@@ -54,14 +43,15 @@ import { getErrText } from '@fastgpt/global/common/error/utils';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { PermissionTypeEnum } from '@fastgpt/global/support/permission/constant';
 import { StartChatFnProps, useChatBox } from '@/components/ChatBox';
-// import { streamFetch } from '@/web/common/api/fetch';
 import { streamFetch } from '@/web/common/api/reportFetch';
-import { chatContentReplaceBlock } from '@fastgpt/global/core/chat/utils';
-import { ChatHistoryItemType } from '@fastgpt/global/core/chat/type';
 import { customAlphabet } from 'nanoid';
 import { useChatStore } from '@/web/core/chat/storeChat';
 import { throttle } from 'lodash';
+const DatasetSelectModal = dynamic(() => import('@/components/core/module/DatasetSelectModal'));
+const DatasetParamsModal = dynamic(() => import('@/components/core/module/DatasetParamsModal'));
+const AIChatSettingsModal = dynamic(() => import('@/components/core/module/AIChatSettingsModal'));
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
+//生成信息属性定义
 type generatingMessageProps = { text?: string; name?: string; status?: 'running' | 'finish' };
 const EditForm = ({
   divRef,
@@ -75,176 +65,35 @@ const EditForm = ({
   isSticky: boolean;
   appId: String;
   chatId: String;
-  sourceHtml: String;
-  onButtonClick: void;
+  sourceHtml: String; //报告模版对应内容
+  onButtonClick: void; //保存报告配置回调
 }) => {
   const { toast } = useToast();
   const theme = useTheme();
   const router = useRouter();
   const { t } = useTranslation();
   const { reportDetail, updateReportDetail } = useReportStore();
+  //获取所有知识库，关联知识库时使用
   const { loadAllDatasets, allDatasets } = useDatasetStore();
+  //获取所有模型
   const { isPc, llmModelList, reRankModelList } = useSystemStore();
+  //是否刷新
   const [refresh, setRefresh] = useState(false);
-  const [, startTst] = useTransition();
-  const [reportId, setReportId] = useState('0');
-  const [name, setName] = useState('Hello World');
-  const [count, setCount] = useState(0);
+  //是否保存生成报告配置
+  const [isSaveConfig, setIsSaveConfig] = useState(false);
+  //模型问答返回值
   const [response, setResponse] = useState('');
+  //获取设置表单属性
   const { register, setValue, getValues, reset, handleSubmit, control, watch } =
     useForm<ReportSimpleEditFormType>({
       defaultValues: getDefaultReportForm()
     });
-
+  //知识库
   const { fields: datasets, replace: replaceKbList } = useFieldArray({
     control,
     name: 'dataset.datasets'
   });
-
-  const {
-    isOpen: isOpenAIChatSetting,
-    onOpen: onOpenAIChatSetting,
-    onClose: onCloseAIChatSetting
-  } = useDisclosure();
-  const {
-    isOpen: isOpenDatasetSelect,
-    onOpen: onOpenKbSelect,
-    onClose: onCloseKbSelect
-  } = useDisclosure();
-  const {
-    isOpen: isOpenDatasetParams,
-    onOpen: onOpenDatasetParams,
-    onClose: onCloseDatasetParams
-  } = useDisclosure();
-
-  const { openConfirm: openConfirmSave, ConfirmModal: ConfirmSaveModal } = useConfirm({
-    content: t('core.app.edit.Confirm Save Report Tip')
-  });
-
-  const { File, onOpen: onOpenSelectFile } = useSelectFile({
-    fileType: '.jpg,.png',
-    multiple: false
-  });
-  const onSelectFile = useCallback(
-    async (e: File[]) => {
-      const file = e[0];
-      if (!file) return;
-      try {
-        const src = await compressImgFileAndUpload({
-          type: MongoImageTypeEnum.reportAvatar,
-          file,
-          maxW: 300,
-          maxH: 300
-        });
-        console.log(src);
-        setValue('avatar', src);
-        setRefresh((state) => !state);
-      } catch (err: any) {
-        toast({
-          title: getErrText(err, t('common.error.Select avatar failed')),
-          status: 'warning'
-        });
-      }
-    },
-    [setValue, t, toast]
-  );
-
-  const aiSystemPrompt = watch('aiSettings.systemPrompt');
-  const selectLLMModel = watch('aiSettings.model');
-  const datasetSearchSetting = watch('dataset');
-  const variables = watch('userGuide.variables');
-  const formatVariables = useMemo(() => formatEditorVariablePickerIcon(variables), [variables]);
-  const searchMode = watch('dataset.searchMode');
-
-  const chatModelSelectList = (() =>
-    llmModelList.map((item) => ({
-      value: item.model,
-      label: item.name
-    })))();
-
-  const selectDatasets = useMemo(
-    () => allDatasets.filter((item) => datasets.find((dataset) => dataset.datasetId === item._id)),
-    [allDatasets, datasets]
-  );
-
-  const tokenLimit = useMemo(() => {
-    return llmModelList.find((item) => item.model === selectLLMModel)?.quoteMaxToken || 3000;
-  }, [selectLLMModel, llmModelList]);
-
-  const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
-    mutationFn: async (data: ReportSimpleEditFormType) => {
-      const modules = await postForm2Modules(data);
-      console.log(data);
-      const template = reportTemplates.find((item) => item.id === 'report-universal');
-      if (!data.avatar) data.avatar = '/icon/logo.svg';
-      const postData = {
-        avatar: data.avatar,
-        name: data.name,
-        modules: template?.modules
-      };
-      postCreateReport(postData)
-        .then(async (result) => {
-          console.log(result);
-          setValue('id', result);
-
-          const updateData = {
-            modules: template?.modules,
-            type: ReportTypeEnum.report,
-            permission: PermissionTypeEnum.private
-          };
-
-          await updateReportDetail(result, {
-            modules,
-            type: ReportTypeEnum.report,
-            permission: undefined
-          });
-
-          setValue('response', '');
-          const prompts = [];
-          const completionChatId = chatId ? chatId : nanoid();
-          const controller = new AbortController();
-          let inputText = sourceHtml;
-          appId = getValues('id');
-          console.log('appId:' + appId);
-          const messages = [
-            { dataId: nanoid(), role: 'user', content: inputText },
-            { dataId: nanoid(), role: 'assistant', content: '' }
-          ];
-          const { responseText, responseData } = await streamFetch({
-            data: {
-              history: [],
-              prompt: '你是一个人工智能撰写助手,根据传入的模板，补全里面的信息',
-              messages: messages,
-              reportId: appId
-            },
-            onMessage: generatingInitMessage,
-            abortCtrl: controller
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    successToast: t('common.Save Success'),
-    errorToast: t('common.Save Failed')
-  });
-
-  const { isSuccess: isInitd } = useQuery(
-    ['init', reportDetail],
-    () => {
-      const formatVal = reportModules2Form({
-        modules: reportDetail.modules
-      });
-      reset(formatVal);
-      setRefresh(!refresh);
-      return formatVal;
-    },
-    {
-      enabled: !!reportDetail._id
-    }
-  );
-  useQuery(['loadAllDatasets'], loadAllDatasets);
-
+  //box、btn、babel样式配置
   const BoxStyles: BoxProps = {
     px: 5,
     py: '16px',
@@ -265,6 +114,155 @@ const EditForm = ({
     flexShrink: 0,
     fontSize: ['sm', 'md']
   };
+  const {
+    isOpen: isOpenAIChatSetting,
+    onOpen: onOpenAIChatSetting,
+    onClose: onCloseAIChatSetting
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDatasetSelect,
+    onOpen: onOpenKbSelect,
+    onClose: onCloseKbSelect
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDatasetParams,
+    onOpen: onOpenDatasetParams,
+    onClose: onCloseDatasetParams
+  } = useDisclosure();
+
+  //保存报告配置确认
+  const { openConfirm: openConfirmSave, ConfirmModal: ConfirmSaveModal } = useConfirm({
+    content: t('core.app.edit.Confirm Save Report Tip')
+  });
+  //报告图标文件选择配置，单选，jpg、png
+  const { File, onOpen: onOpenSelectFile } = useSelectFile({
+    fileType: '.jpg,.png',
+    multiple: false
+  });
+  //选择报告图标回调
+  const onSelectFile = useCallback(
+    async (e: File[]) => {
+      const file = e[0];
+      if (!file) return;
+      try {
+        const src = await compressImgFileAndUpload({
+          type: MongoImageTypeEnum.reportAvatar,
+          file,
+          maxW: 300,
+          maxH: 300
+        });
+        setValue('avatar', src);
+        setRefresh((state) => !state);
+      } catch (err: any) {
+        toast({
+          title: getErrText(err, t('common.error.Select avatar failed')),
+          status: 'warning'
+        });
+      }
+    },
+    [setValue, t, toast]
+  );
+  //选择的模型
+  const selectLLMModel = watch('aiSettings.model');
+  //选择的知识库
+  const datasetSearchSetting = watch('dataset');
+  //选择的参数
+  const variables = watch('userGuide.variables');
+  //格式化参数
+  const formatVariables = useMemo(() => formatEditorVariablePickerIcon(variables), [variables]);
+  //搜索模式
+  const searchMode = watch('dataset.searchMode');
+  //要选择的模型集合
+  const chatModelSelectList = (() =>
+    llmModelList.map((item) => ({
+      value: item.model,
+      label: item.name
+    })))();
+  //选择知识库
+  const selectDatasets = useMemo(
+    () => allDatasets.filter((item) => datasets.find((dataset) => dataset.datasetId === item._id)),
+    [allDatasets, datasets]
+  );
+  //token上限
+  const tokenLimit = useMemo(() => {
+    return llmModelList.find((item) => item.model === selectLLMModel)?.quoteMaxToken || 3000;
+  }, [selectLLMModel, llmModelList]);
+
+  //保存生成报告配置
+  const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
+    mutationFn: async (data: ReportSimpleEditFormType) => {
+      const modules = await postForm2Modules(data);
+      console.log(data);
+      const template = reportTemplates.find((item) => item.id === 'report-universal');
+      if (!data.avatar) data.avatar = '/icon/logo.svg';
+      //组织创建报告所需参数
+      const postData = {
+        avatar: data.avatar,
+        name: data.name,
+        modules: template?.modules
+      };
+      //创建生成报告
+      postCreateReport(postData)
+        .then(async (result) => {
+          console.log(result);
+          setValue('id', result); //存储生成报告id
+          const updateData = {
+            modules: template?.modules,
+            type: ReportTypeEnum.report,
+            permission: PermissionTypeEnum.private
+          };
+          await updateReportDetail(result, {
+            modules,
+            type: ReportTypeEnum.report,
+            permission: undefined
+          });
+          setValue('response', '');
+          const controller = new AbortController();
+          let inputText = sourceHtml; //将传入的模版内容作为问答输入内容
+          appId = getValues('id'); //将生成的报告id设置为appId，后续聊天问答用
+          const messages = [
+            { dataId: nanoid(), role: 'user', content: inputText },
+            { dataId: nanoid(), role: 'assistant', content: '' }
+          ];
+          const { responseText, responseData } = await streamFetch({
+            data: {
+              history: [],
+              prompt: '你是一个人工智能撰写助手,根据传入的模板，补全里面的信息',
+              messages: messages,
+              reportId: appId
+            },
+            onMessage: generatingInitMessage, //回调生成报告返回内容
+            abortCtrl: controller
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      setIsSaveConfig(true); //设置为配置已保存，可以显示问答输入框，发送按钮，进行问答交互
+    },
+    successToast: t('common.Save Success'),
+    errorToast: t('common.Save Failed')
+  });
+  //生成结果滚动到底部（暂时无用）
+  const generatingScroll = useCallback(
+    throttle(() => {
+      //console.log('000');
+    }, 100),
+    []
+  );
+  //生成报告返回值，回调父页面方法渲染到富文本编辑框内
+  const generatingInitMessage = useCallback(
+    ({ text = '', status, name }: generatingMessageProps) => {
+      console.log(text);
+      // console.log(getValues('response'));
+      const str = getValues('response') + text;
+      setValue('response', str);
+      onButtonClick(str, true); //回调父页面方法，更新渲染到父文本编辑框
+    },
+    [generatingScroll]
+  );
+  //加载获取所有的知识库
+  useQuery(['loadAllDatasets'], loadAllDatasets);
 
   const forbidRefresh = useRef(false);
   const {
@@ -282,15 +280,11 @@ const EditForm = ({
     setChatData,
     delOneHistoryItem
   } = useChatStore();
-  const generatingScroll = useCallback(
-    throttle(() => {
-      console.log('hhhhhh');
-    }, 100),
-    []
-  );
-  const generatingMessage1 = useCallback(
+
+  //生成模型返回的内容（单次问答）
+  const generatingReturnMessage = useCallback(
     ({ text = '', status, name }: generatingMessageProps) => {
-      console.log(text);
+      //console.log(text);
       // console.log(getValues('response'));
       const str = getValues('response') + text;
       setValue('response', str);
@@ -298,44 +292,7 @@ const EditForm = ({
     },
     [generatingScroll]
   );
-  const generatingInitMessage = useCallback(
-    ({ text = '', status, name }: generatingMessageProps) => {
-      console.log(text);
-      // console.log(getValues('response'));
-      const str = getValues('response') + text;
-      setValue('response', str);
-      onButtonClick(str);
-    },
-    [generatingScroll]
-  );
-  const initReport = useCallback(
-    async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
-      setValue('response', '');
-      const prompts = [];
-      const completionChatId = chatId ? chatId : nanoid();
-      controller = new AbortController();
-      let inputText = sourceHtml;
-      appId = getValues('id');
-      console.log('appId:' + appId);
-      messages = [
-        { dataId: nanoid(), role: 'user', content: inputText },
-        { dataId: nanoid(), role: 'assistant', content: '' }
-      ];
-      const { responseText, responseData } = await streamFetch({
-        data: {
-          history: [],
-          prompt: '',
-          messages: messages,
-          reportId: appId
-        },
-        onMessage: generatingInitMessage,
-        abortCtrl: controller
-      });
-
-      return { responseText, responseData, isNewChat: forbidRefresh.current };
-    },
-    [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
-  );
+  //用户输入，发起问答
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
       setValue('response', '');
@@ -356,7 +313,7 @@ const EditForm = ({
           messages: messages,
           reportId: appId
         },
-        onMessage: generatingMessage1,
+        onMessage: generatingReturnMessage,
         abortCtrl: controller
       });
 
@@ -533,41 +490,44 @@ const EditForm = ({
               ))}
             </Grid>
           </Box>
+          {isSaveConfig && (
+            <>
+              {/* welcome */}
+              <Box {...BoxStyles}>
+                <Flex alignItems={'center'}>
+                  <MyIcon name={'core/app/simpleMode/chat'} w={'20px'} />
+                  <Box mx={2}>{t('core.report.Input Text')}</Box>
+                  <MyTooltip label={t('core.report.welcomeText')} forceShow>
+                    <QuestionOutlineIcon />
+                  </MyTooltip>
+                </Flex>
+                <MyTextarea
+                  mt={2}
+                  bg={'myWhite.400'}
+                  rows={5}
+                  placeholder={t('core.report.welcomeText')}
+                  onBlur={(e) => {
+                    setValue('userGuide.welcomeText', e.target.value || '');
+                  }}
+                />
+              </Box>
 
-          {/* welcome */}
-          <Box {...BoxStyles}>
-            <Flex alignItems={'center'}>
-              <MyIcon name={'core/app/simpleMode/chat'} w={'20px'} />
-              <Box mx={2}>{t('core.report.Input Text')}</Box>
-              <MyTooltip label={t('core.report.welcomeText')} forceShow>
-                <QuestionOutlineIcon />
-              </MyTooltip>
-            </Flex>
-            <MyTextarea
-              mt={2}
-              bg={'myWhite.400'}
-              rows={5}
-              placeholder={t('core.report.welcomeText')}
-              onBlur={(e) => {
-                setValue('userGuide.welcomeText', e.target.value || '');
-              }}
-            />
-          </Box>
+              {/* answer */}
+              <Box {...BoxStyles}>
+                <Flex alignItems={'center'}>
+                  <MyIcon name={'core/chat/chatLight'} w={'20px'} color={'#8774EE'} />
+                  <Box mx={2}>{t('core.report.Output Text')}</Box>
+                </Flex>
+                <MyTextarea mt={2} bg={'myWhite.400'} rows={5} value={response} />
 
-          {/* answer */}
-          <Box {...BoxStyles}>
-            <Flex alignItems={'center'}>
-              <MyIcon name={'core/chat/chatLight'} w={'20px'} color={'#8774EE'} />
-              <Box mx={2}>{t('core.report.Output Text')}</Box>
-            </Flex>
-            <MyTextarea mt={2} bg={'myWhite.400'} rows={5} value={response} />
-
-            <Flex alignItems={'center'} justifyContent={'right'} mt={2}>
-              <Button size={['sm', 'md']} variant={'primary'} onClick={startChat}>
-                {t('core.chat.Send Message')}
-              </Button>
-            </Flex>
-          </Box>
+                <Flex alignItems={'center'} justifyContent={'right'} mt={2}>
+                  <Button size={['sm', 'md']} variant={'primary'} onClick={startChat}>
+                    {t('core.chat.Send Message')}
+                  </Button>
+                </Flex>
+              </Box>
+            </>
+          )}
         </Box>
       </Box>
 

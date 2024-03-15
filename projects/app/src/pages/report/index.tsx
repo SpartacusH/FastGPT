@@ -81,11 +81,12 @@ import VariableEdit from '@/components/core/module/Flow/components/modules/Varia
 import MyTextarea from '@/components/common/Textarea/MyTextarea';
 import EditForm from './components/EditForm';
 import { useSticky } from '@/web/common/hooks/useSticky';
-
+import ReactMarkdown from 'react-markdown';
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
 //import MyEditor from "@/components/MyEditor";
 import dynamic from 'next/dynamic';
-
+import marked from 'marked';
+import ReactDOM from 'react-dom';
 const axios = require('axios');
 const mammoth = require('mammoth');
 const fs = require('fs');
@@ -105,7 +106,10 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const { userInfo } = useUserStore();
   const ChatBoxRef = useRef<ComponentRef>(null);
   const forbidRefresh = useRef(false);
+  //是否显示生成报告
   const [isFlexVisible, setIsFlexVisible] = useState(false);
+  //是否保存生成报告配置
+  const [isSaveConfig, setIsSaveConfig] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState();
   const [currentFile, setCurrentFile] = useState();
   const [html, setHtml] = useState('');
@@ -331,12 +335,16 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     fontSize: ['sm', 'md']
   };
   const { parentRef, divRef, isSticky } = useSticky();
+
+  const convertMarkdownToHtml = (markdownText) => {
+    return <ReactMarkdown source={markdownText}>{markdownText}</ReactMarkdown>;
+  };
   //获取word文本内容
   const fetchWordFile = async (url) => {
     try {
       const response = await fetch(url); // 替换为你要读取的 Word 文件的 URL
       const arrayBuffer = await response.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
+      const result = await mammoth.convertToHtml({ arrayBuffer });
       console.log(result.value);
       return result.value;
     } catch (error) {
@@ -344,8 +352,9 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     }
   };
 
-  const handleSaveConfig = (value) => {
+  const handleSaveConfig = (value, saveResult) => {
     setOutputHtml(value);
+    setIsSaveConfig(saveResult);
   };
 
   return (
@@ -475,6 +484,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                           }}
                           onClick={() => {
                             setIsFlexVisible(!isFlexVisible);
+                            setIsSaveConfig(false);
                             setCurrentTemplate(template);
 
                             const fileUrl = getFileViewUrl(template.fileId)
@@ -723,7 +733,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
             />
 
             <Flex position={'relative'} flex={'1 0 0'} flexDirection={'row'}>
-              <Box>
+              <Box borderRight={'1px solid #E8EBF0'}>
                 <MyEditor html={outputHtml} setHtml={setOutputHtml} />
               </Box>
               <Box>
@@ -732,6 +742,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
             </Flex>
           </Flex>
         </Flex>
+        {/*<ReactMarkdown source={html}>{html}</ReactMarkdown>*/}
         <Loading fixed={false} />
       </PageContainer>
     </Flex>
