@@ -118,7 +118,7 @@ const EditForm = ({
   } = useDisclosure();
 
   const { openConfirm: openConfirmSave, ConfirmModal: ConfirmSaveModal } = useConfirm({
-    content: t('core.report.edit.Confirm Save Report Tip')
+    content: t('core.app.edit.Confirm Save Report Tip')
   });
 
   const { File, onOpen: onOpenSelectFile } = useSelectFile({

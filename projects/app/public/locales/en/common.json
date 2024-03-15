@@ -278,7 +278,7 @@
       "deterministic": "Deterministic",
       "edit": {
         "Confirm Save App Tip": "The application may be in advanced orchestration mode, and the advanced orchestration configuration will be overwritten after saving, please confirm!",
-        "Confirm Save Report Tip": "Confirm Save Report?",
+        "Confirm Save Report Tip": "Confirm Save will regenerate the report. Confirm Save Report?",
         "Out Ad Edit": "You are about to exit the Advanced orchestration page, please confirm",
         "Prompt Editor": "Prompt Editor",
         "Query extension background prompt": "Chat background description",
