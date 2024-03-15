@@ -213,7 +213,7 @@ const EditForm = ({
           const { responseText, responseData } = await streamFetch({
             data: {
               history: [],
-              prompt: '',
+              prompt: '你是一个人工智能撰写助手,根据传入的模板，补全里面的信息',
               messages: messages,
               reportId: appId
             },
