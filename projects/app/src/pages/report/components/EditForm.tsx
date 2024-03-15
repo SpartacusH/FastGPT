@@ -67,12 +67,16 @@ const EditForm = ({
   divRef,
   isSticky,
   appId,
-  chatId
+  chatId,
+  sourceHtml,
+  onButtonClick
 }: {
   divRef: React.RefObject<HTMLDivElement>;
   isSticky: boolean;
   appId: String;
   chatId: String;
+  sourceHtml: String;
+  onButtonClick: void;
 }) => {
   const { toast } = useToast();
   const theme = useTheme();
@@ -86,6 +90,7 @@ const EditForm = ({
   const [reportId, setReportId] = useState('0');
   const [name, setName] = useState('Hello World');
   const [count, setCount] = useState(0);
+  const [response, setResponse] = useState('');
   const { register, setValue, getValues, reset, handleSubmit, control, watch } =
     useForm<ReportSimpleEditFormType>({
       defaultValues: getDefaultReportForm()
@@ -168,11 +173,6 @@ const EditForm = ({
 
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
     mutationFn: async (data: ReportSimpleEditFormType) => {
-      // const template = reportTemplates.find((item) => item.id === data.templateId);
-      // if (!template) {
-      //   return Promise.reject(t('core.dataset.error.Template does not exist'));
-      // }
-
       const modules = await postForm2Modules(data);
       console.log(data);
       const template = reportTemplates.find((item) => item.id === 'report-universal');
@@ -197,6 +197,28 @@ const EditForm = ({
             modules,
             type: ReportTypeEnum.report,
             permission: undefined
+          });
+
+          setValue('response', '');
+          const prompts = [];
+          const completionChatId = chatId ? chatId : nanoid();
+          const controller = new AbortController();
+          let inputText = sourceHtml;
+          appId = getValues('id');
+          console.log('appId:' + appId);
+          const messages = [
+            { dataId: nanoid(), role: 'user', content: inputText },
+            { dataId: nanoid(), role: 'assistant', content: '' }
+          ];
+          const { responseText, responseData } = await streamFetch({
+            data: {
+              history: [],
+              prompt: '',
+              messages: messages,
+              reportId: appId
+            },
+            onMessage: generatingInitMessage,
+            abortCtrl: controller
           });
         })
         .catch((error) => {
@@ -269,12 +291,51 @@ const EditForm = ({
   const generatingMessage1 = useCallback(
     ({ text = '', status, name }: generatingMessageProps) => {
       console.log(text);
-      console.log(getValues('response'));
-      setValue('response', getValues('response') + text);
+      // console.log(getValues('response'));
+      const str = getValues('response') + text;
+      setValue('response', str);
+      setResponse(str);
     },
     [generatingScroll]
   );
+  const generatingInitMessage = useCallback(
+    ({ text = '', status, name }: generatingMessageProps) => {
+      console.log(text);
+      // console.log(getValues('response'));
+      const str = getValues('response') + text;
+      setValue('response', str);
+      onButtonClick(str);
+    },
+    [generatingScroll]
+  );
+  const initReport = useCallback(
+    async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
+      setValue('response', '');
+      const prompts = [];
+      const completionChatId = chatId ? chatId : nanoid();
+      controller = new AbortController();
+      let inputText = sourceHtml;
+      appId = getValues('id');
+      console.log('appId:' + appId);
+      messages = [
+        { dataId: nanoid(), role: 'user', content: inputText },
+        { dataId: nanoid(), role: 'assistant', content: '' }
+      ];
+      const { responseText, responseData } = await streamFetch({
+        data: {
+          history: [],
+          prompt: '',
+          messages: messages,
+          reportId: appId
+        },
+        onMessage: generatingInitMessage,
+        abortCtrl: controller
+      });
 
+      return { responseText, responseData, isNewChat: forbidRefresh.current };
+    },
+    [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
+  );
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
       setValue('response', '');
@@ -499,7 +560,7 @@ const EditForm = ({
               <MyIcon name={'core/chat/chatLight'} w={'20px'} color={'#8774EE'} />
               <Box mx={2}>{t('core.report.Output Text')}</Box>
             </Flex>
-            <MyTextarea mt={2} bg={'myWhite.400'} rows={5} value={getValues('response')} />
+            <MyTextarea mt={2} bg={'myWhite.400'} rows={5} value={response} />
 
             <Flex alignItems={'center'} justifyContent={'right'} mt={2}>
               <Button size={['sm', 'md']} variant={'primary'} onClick={startChat}>

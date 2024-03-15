@@ -108,7 +108,8 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const [isFlexVisible, setIsFlexVisible] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState();
   const [currentFile, setCurrentFile] = useState();
-  const [html, setHtml] = useState('<p>hello</p>');
+  const [html, setHtml] = useState('');
+  const [outputHtml, setOutputHtml] = useState('');
   const DeleteTipsMap = useRef({
     [TemplateTypeEnum.folder]: t('template.deleteFolderTips'),
     [TemplateTypeEnum.template]: t('core.template.Delete Confirm'),
@@ -147,11 +148,10 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     successToast: t('common.Delete Success'),
     errorToast: t('template.Delete Template Error')
   });
-
+  //加载模版
   const { data, refetch, isFetching } = useQuery(
     ['loadTemplate', appId],
     () => {
-      //            return Promise.all([loadTemplates(appId), getTemplatePaths(appId)]);
       return Promise.all([loadTemplates(appId)]);
     },
     {
@@ -163,7 +163,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
       }
     }
   );
-  // const paths = data?.[1] || [];
+  //格式化模版
   const formatTemplates = useMemo(
     () =>
       myTemplates.map((item) => {
@@ -195,69 +195,6 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const { isPc } = useSystemStore();
   const { Loading, setIsLoading } = useLoading();
   const { isOpen: isOpenSlider, onClose: onCloseSlider, onOpen: onOpenSlider } = useDisclosure();
-
-  const startChat = useCallback(
-    async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
-      const prompts = messages.slice(-2);
-      console.log(prompts);
-      const completionChatId = chatId ? chatId : nanoid();
-
-      const { responseText, responseData } = await streamFetch({
-        data: {
-          messages: prompts,
-          variables,
-          appId,
-          chatId: completionChatId
-        },
-        onMessage: generatingMessage,
-        abortCtrl: controller
-      });
-
-      const newTitle =
-        chatContentReplaceBlock(prompts[0].content).slice(0, 20) ||
-        prompts[1]?.value?.slice(0, 20) ||
-        t('core.chat.New Chat');
-
-      // new chat
-      if (completionChatId !== chatId) {
-        const newHistory: ChatHistoryItemType = {
-          chatId: completionChatId,
-          updateTime: new Date(),
-          title: newTitle,
-          appId,
-          top: false
-        };
-        pushHistory(newHistory);
-        if (controller.signal.reason !== 'leave') {
-          forbidRefresh.current = true;
-          router.replace({
-            query: {
-              chatId: completionChatId,
-              appId
-            }
-          });
-        }
-      } else {
-        // update chat
-        const currentChat = histories.find((item) => item.chatId === chatId);
-        currentChat &&
-          updateHistory({
-            ...currentChat,
-            updateTime: new Date(),
-            title: newTitle
-          });
-      }
-      // update chat window
-      setChatData((state) => ({
-        ...state,
-        title: newTitle,
-        history: ChatBoxRef.current?.getChatHistories() || state.history
-      }));
-
-      return { responseText, responseData, isNewChat: forbidRefresh.current };
-    },
-    [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
-  );
 
   // get chat app info
   const loadChatInfo = useCallback(
@@ -394,6 +331,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     fontSize: ['sm', 'md']
   };
   const { parentRef, divRef, isSticky } = useSticky();
+  //获取word文本内容
   const fetchWordFile = async (url) => {
     try {
       const response = await fetch(url); // 替换为你要读取的 Word 文件的 URL
@@ -404,6 +342,10 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleSaveConfig = (value) => {
+    setOutputHtml(value);
   };
 
   return (
@@ -754,6 +696,8 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                     isSticky={isSticky}
                     appId={currentTemplate.id}
                     chatId={nanoid()}
+                    sourceHtml={html}
+                    onButtonClick={handleSaveConfig}
                   />
                 </>
               )}
@@ -777,7 +721,15 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
               onOpenSlider={onOpenSlider}
               showHistory
             />
-            <MyEditor html={html} setHtml={setHtml} />
+
+            <Flex position={'relative'} flex={'1 0 0'} flexDirection={'row'}>
+              <Box>
+                <MyEditor html={outputHtml} setHtml={setOutputHtml} />
+              </Box>
+              <Box>
+                <MyEditor html={html} setHtml={setHtml} />
+              </Box>
+            </Flex>
           </Flex>
         </Flex>
         <Loading fixed={false} />
