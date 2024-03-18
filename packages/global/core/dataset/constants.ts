@@ -115,9 +115,9 @@ export const TrainingTypeMap = {
 
 /* ------------ search -------------- */
 export enum DatasetSearchModeEnum {
+  mixedRecall = 'mixedRecall',
   embedding = 'embedding',
-  fullTextRecall = 'fullTextRecall',
-  mixedRecall = 'mixedRecall'
+  fullTextRecall = 'fullTextRecall'
 }
 
 export const DatasetSearchModeMap = {

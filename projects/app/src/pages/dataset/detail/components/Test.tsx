@@ -82,7 +82,7 @@ const Test = ({ datasetId }: { datasetId: string }) => {
     defaultValues: {
       inputText: '',
       searchParams: {
-        searchMode: DatasetSearchModeEnum.embedding,
+        searchMode: DatasetSearchModeEnum.mixedRecall,
         usingReRank: false,
         limit: 5000,
         similarity: 0,
@@ -92,9 +92,9 @@ const Test = ({ datasetId }: { datasetId: string }) => {
       }
     }
   });
-
+  console.log(getValues(`searchParams.searchMode`));
   const searchModeData = DatasetSearchModeMap[getValues(`searchParams.searchMode`)];
-
+  console.log(searchModeData);
   const {
     isOpen: isOpenSelectMode,
     onOpen: onOpenSelectMode,
