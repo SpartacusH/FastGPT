@@ -121,6 +121,12 @@ export enum DatasetSearchModeEnum {
 }
 
 export const DatasetSearchModeMap = {
+  [DatasetSearchModeEnum.mixedRecall]: {
+    icon: 'core/dataset/mixedRecall',
+    title: 'core.dataset.search.mode.mixedRecall',
+    desc: 'core.dataset.search.mode.mixedRecall desc',
+    value: DatasetSearchModeEnum.mixedRecall
+  },
   [DatasetSearchModeEnum.embedding]: {
     icon: 'core/dataset/modeEmbedding',
     title: 'core.dataset.search.mode.embedding',
@@ -132,12 +138,6 @@ export const DatasetSearchModeMap = {
     title: 'core.dataset.search.mode.fullTextRecall',
     desc: 'core.dataset.search.mode.fullTextRecall desc',
     value: DatasetSearchModeEnum.fullTextRecall
-  },
-  [DatasetSearchModeEnum.mixedRecall]: {
-    icon: 'core/dataset/mixedRecall',
-    title: 'core.dataset.search.mode.mixedRecall',
-    desc: 'core.dataset.search.mode.mixedRecall desc',
-    value: DatasetSearchModeEnum.mixedRecall
   }
 };
 

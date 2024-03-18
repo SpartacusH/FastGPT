@@ -1,11 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { useTemplateStore } from '@/web/core/template/store/template';
 import { getInitChatInfo } from '@/web/core/chat/api';
 import { getFileViewUrl } from '@/web/core/template/api';
-import { getFileViewUrl as test } from '@/web/core/dataset/api';
 import {
   Box,
   Flex,
@@ -21,72 +19,39 @@ import {
 } from '@chakra-ui/react';
 import { useSystemStore } from '@/web/common/system/useSystemStore';
 import { useQuery } from '@tanstack/react-query';
-import {
-  delDatasetById,
-  getDatasetPaths,
-  putDatasetById,
-  postCreateDataset
-} from '@/web/core/dataset/api';
-import {
-  delTemplateById,
-  getTemplatePaths,
-  putTemplateById,
-  postCreateTemplate
-} from '@/web/core/template/api';
-import { streamFetch } from '@/web/common/api/fetch';
+import { delTemplateById, putTemplateById } from '@/web/core/template/api';
 import { useChatStore } from '@/web/core/chat/storeChat';
 import { useLoading } from '@/web/common/hooks/useLoading';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { customAlphabet } from 'nanoid';
-import type { ChatHistoryItemType } from '@fastgpt/global/core/chat/type.d';
 import { useTranslation } from 'next-i18next';
 import ChatBox, { type ComponentRef, type StartChatFnProps } from '@/components/ChatBox';
 import PageContainer from '@/components/PageContainer';
 import SideBar from '@/components/SideBar';
-import ChatHistorySlider from './components/ChatHistorySlider';
 import SliderApps from './components/SliderApps';
 import ChatHeader from './components/ChatHeader';
 import { getErrText } from '@fastgpt/global/common/error/utils';
 import { useUserStore } from '@/web/support/user/useUserStore';
 import { serviceSideProps } from '@/web/common/utils/i18n';
-import { useAppStore } from '@/web/core/app/store/useAppStore';
-import { checkChatSupportSelectFileByChatModels } from '@/web/core/chat/utils';
-import { chatContentReplaceBlock } from '@fastgpt/global/core/chat/utils';
 import { ChatStatusEnum } from '@fastgpt/global/core/chat/constants';
 import MyTooltip from '@/components/MyTooltip';
 import CreateModal from './components/CreateModal';
 import Avatar from '@/components/Avatar';
 import MyIcon from '@fastgpt/web/components/common/Icon';
-import { AddIcon, QuestionOutlineIcon, SmallAddIcon } from '@chakra-ui/icons';
-import { DatasetTypeEnum } from '@fastgpt/global/core/dataset/constants';
+import { AddIcon } from '@chakra-ui/icons';
 import { useConfirm } from '@/web/common/hooks/useConfirm';
 import { useEditTitle } from '@/web/common/hooks/useEditTitle';
 import { useDrag } from '@/web/common/hooks/useDrag';
 import { useRequest } from '@/web/common/hooks/useRequest';
-import TemplateTypeTag from '@/components/core/template/TemplateTypeTag';
 import PermissionIconText from '@/components/support/permission/IconText';
 import { PermissionTypeEnum } from '@fastgpt/global/support/permission/constant';
-import {
-  TemplateTypeEnum,
-  TemplateTypeMap,
-  FolderIcon,
-  FolderImgUrl
-} from '@fastgpt/global/core/template/constants';
+import { TemplateTypeEnum, TemplateTypeMap } from '@fastgpt/global/core/template/constants';
 import MyMenu from '@/components/MyMenu';
-import SelectAiModel from '@/components/Select/SelectAiModel';
-import { chatNodeSystemPromptTip, welcomeTextTip } from '@fastgpt/global/core/module/template/tip';
-import PromptEditor from '@fastgpt/web/components/common/Textarea/PromptEditor';
-import SearchParamsTip from '@/components/core/dataset/SearchParamsTip';
-import VariableEdit from '@/components/core/module/Flow/components/modules/VariableEdit';
-import MyTextarea from '@/components/common/Textarea/MyTextarea';
 import EditForm from './components/EditForm';
 import { useSticky } from '@/web/common/hooks/useSticky';
-import ReactMarkdown from 'react-markdown';
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 12);
-//import MyEditor from "@/components/MyEditor";
 import dynamic from 'next/dynamic';
-import marked from 'marked';
-import ReactDOM from 'react-dom';
+
 const axios = require('axios');
 const mammoth = require('mammoth');
 const fs = require('fs');
@@ -335,10 +300,6 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     fontSize: ['sm', 'md']
   };
   const { parentRef, divRef, isSticky } = useSticky();
-
-  const convertMarkdownToHtml = (markdownText) => {
-    return <ReactMarkdown source={markdownText}>{markdownText}</ReactMarkdown>;
-  };
   //获取word文本内容
   const fetchWordFile = async (url) => {
     try {
@@ -445,7 +406,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                           minH={'130px'}
                           position={'relative'}
                           data-drag-id={
-                            template.type === DatasetTypeEnum.folder ? template._id : undefined
+                            template.type === TemplateTypeEnum.folder ? template._id : undefined
                           }
                           draggable
                           onDragStart={(e) => {
@@ -455,7 +416,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                             e.preventDefault();
                             const targetId = e.currentTarget.getAttribute('data-drag-id');
                             if (!targetId) return;
-                            DatasetTypeEnum.folder && setDragTargetId(targetId);
+                            TemplateTypeEnum.folder && setDragTargetId(targetId);
                           }}
                           onDragLeave={(e) => {
                             e.preventDefault();
@@ -467,7 +428,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                               return;
                             // update parentId
                             try {
-                              await putDatasetById({
+                              await putTemplateById({
                                 id: dragStartId,
                                 parentId: dragTargetId
                               });
@@ -742,7 +703,6 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
             </Flex>
           </Flex>
         </Flex>
-        {/*<ReactMarkdown source={html}>{html}</ReactMarkdown>*/}
         <Loading fixed={false} />
       </PageContainer>
     </Flex>
