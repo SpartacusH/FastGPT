@@ -18,7 +18,7 @@ export const SimpleModeTemplate_FastGPT_Universal: AppSimpleEditConfigTemplateTy
       datasets: true,
       similarity: true,
       limit: true,
-      searchMode: DatasetSearchModeEnum.embedding,
+      searchMode: DatasetSearchModeEnum.mixedRecall,
       usingReRank: true,
       searchEmptyText: true
     },
