@@ -47,7 +47,7 @@ enum SearchSettingTabEnum {
 }
 
 const DatasetParamsModal = ({
-  searchMode = DatasetSearchModeEnum.embedding,
+  searchMode = DatasetSearchModeEnum.mixedRecall,
   searchEmptyText,
   limit,
   similarity,
@@ -70,7 +70,7 @@ const DatasetParamsModal = ({
       searchEmptyText,
       limit,
       similarity,
-      searchMode,
+      searchMode: DatasetSearchModeEnum.mixedRecall,
       usingReRank,
       datasetSearchUsingExtensionQuery,
       datasetSearchExtensionModel: datasetSearchExtensionModel ?? llmModelList[0]?.model,
