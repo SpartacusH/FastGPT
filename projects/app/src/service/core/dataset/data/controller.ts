@@ -608,7 +608,7 @@ export async function searchDatasetData(props: SearchDatasetDataProps) {
   // embedding recall and fullText recall rrf concat
   const rrfConcatResults = datasetSearchResultConcat([
     { k: 60, list: embeddingRecallResults },
-    { k: 64, list: fullTextRecallResults },
+    { k: 30, list: fullTextRecallResults },
     { k: 60, list: reRankResults }
   ]);
 
