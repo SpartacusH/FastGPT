@@ -7,7 +7,7 @@ interface Props extends BoxProps {}
 
 const SideBar = (e?: Props) => {
   const {
-    w = ['100%', '0 0 250px', '0 0 270px', '0 0 290px', '0 0 310px','0 0 510px'],
+    w = ['100%', '0 0 250px', '0 0 270px', '0 0 290px', '0 0 310px', '0 0 510px'],
     children,
     ...props
   } = e || {};
@@ -16,7 +16,8 @@ const SideBar = (e?: Props) => {
   return (
     <Box
       position={'relative'}
-      flex={foldSideBar ? '0 0 0' : (e.flex? e.flex:w)}
+      // @ts-ignore
+      flex={foldSideBar ? '0 0 0' : e.flex ? e.flex : w}
       w={['100%', 0]}
       h={'100%'}
       zIndex={1}
@@ -57,7 +58,12 @@ const SideBar = (e?: Props) => {
           color={'white'}
         />
       </Flex>
-      <Box position={'relative'} h={'100%'} overflow={foldSideBar ? 'hidden' : 'visible'} overflowY={'auto'}>
+      <Box
+        position={'relative'}
+        h={'100%'}
+        overflow={foldSideBar ? 'hidden' : 'visible'}
+        overflowY={'auto'}
+      >
         {children}
       </Box>
     </Box>

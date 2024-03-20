@@ -15,19 +15,21 @@ export const defaultTemplateDetail: TemplateItemType = {
   type: 'template',
   avatar: '/icon/logo.svg',
   name: '',
-  fileName:'',
-  fileId:'',
+  // @ts-ignore
+  fileName: '',
+  fileId: '',
   intro: '',
   status: 'active',
   permission: 'private',
   isOwner: false,
-  canWrite: false,
+  canWrite: false
 };
 
 export const defaultCollectionDetail: TemplateCollectionItemType = {
   _id: '',
   teamId: '',
   tmbId: '',
+  // @ts-ignore
   templateId: {
     _id: '',
     parentId: '',

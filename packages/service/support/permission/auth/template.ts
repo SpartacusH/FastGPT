@@ -11,6 +11,8 @@ import {
   TemplateFileSchema,
   TemplateSchemaType
 } from '@fastgpt/global/core/template/type';
+
+import { DatasetFileSchema } from '@fastgpt/global/core/dataset/type';
 import { getFileById } from '../../../common/file/gridfs/controller';
 import { BucketNameEnum } from '@fastgpt/global/common/file/constants';
 import { getTmbInfoByTmbId } from '../../user/team/controller';
@@ -160,7 +162,7 @@ export async function authTemplateFile({
   fileId: string;
 }): Promise<
   AuthResponseType & {
-    file: TemplateFileSchema;
+    file: DatasetFileSchema;
   }
 > {
   const { userId, teamId, tmbId } = await parseHeaderCert(props);
@@ -176,12 +178,12 @@ export async function authTemplateFile({
     return Promise.reject(CommonErrEnum.fileNotFound);
   }
 
-    return {
-      userId,
-      teamId,
-      tmbId,
-      file,
-      isOwner:true,
-      canWrite:true,
-    };
+  return {
+    userId,
+    teamId,
+    tmbId,
+    file,
+    isOwner: true,
+    canWrite: true
+  };
 }

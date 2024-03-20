@@ -6,6 +6,7 @@ import { authTemplate } from '@fastgpt/service/support/permission/auth/template'
 import { MongoTemplateData } from '@fastgpt/service/core/template/data/schema';
 import { findTemplateAndAllChildren } from '@fastgpt/service/core/template/controller';
 import { withNextCors } from '@fastgpt/service/common/middle/cors';
+// @ts-ignore
 import {
   checkExportTemplateLimit,
   updateExportTemplateLimit
@@ -27,6 +28,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
 
     await checkExportTemplateLimit({
       teamId,
+      // @ts-ignore
       limitMinutes: global.feConfigs?.limit?.exportTemplateLimitMinutes
     });
 

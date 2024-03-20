@@ -38,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         canWrite,
         sourceName: collection?.name,
         sourceId: collection?.fileId || collection?.rawLink,
+        // @ts-ignore
         file
       }
     });

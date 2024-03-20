@@ -9,7 +9,7 @@ import MyTooltip from '@/components/MyTooltip';
 import dynamic from 'next/dynamic';
 import MyBox from '@/components/common/MyBox';
 import { SearchScoreTypeEnum, SearchScoreTypeMap } from '@fastgpt/global/core/template/constants';
-
+// @ts-ignore
 const InputDataModal = dynamic(() => import('@/pages/template/detail/components/InputDataModal'));
 
 type ScoreItemType = SearchDataResponseItemType['score'][0];
@@ -260,6 +260,7 @@ const QuoteItem = ({
 
       {editInputData && (
         <InputDataModal
+          // @ts-ignore
           onClose={() => setEditInputData(undefined)}
           onSuccess={() => {
             console.log('更新引用成功');

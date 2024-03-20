@@ -25,13 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       parentId: item.parentId,
       avatar: item.avatar,
       name: item.name,
-      // @ts-ignore
-      fileName: item.fileName,
-      // @ts-ignore
-      fileId: item.fileId,
       intro: item.intro,
       type: item.type,
       permission: item.permission,
+      vectorModel: getVectorModel(item.vectorModel),
       canWrite: String(item.tmbId) === tmbId,
       isOwner: teamOwner || String(item.tmbId) === tmbId
     }));

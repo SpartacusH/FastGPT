@@ -50,6 +50,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'systemInput',
           valueType: 'string',
           label: 'core.module.input.label.user question',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -86,6 +87,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'target',
           label: 'core.module.input.label.switch',
           valueType: 'any',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: false
@@ -96,6 +98,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: 'core.module.input.label.aiModel',
           required: true,
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: formData.aiSettings.model,
@@ -120,6 +123,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
               value: 10
             }
           ],
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -143,6 +147,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
               value: 4000
             }
           ],
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -153,6 +158,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: '返回AI内容',
           value: true,
           valueType: 'boolean',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -162,6 +168,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'hidden',
           label: '引用内容模板',
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: formData.aiSettings.quoteTemplate,
@@ -172,6 +179,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'hidden',
           label: '引用内容提示词',
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: formData.aiSettings.quotePrompt,
@@ -182,6 +190,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'aiSettings',
           label: '',
           valueType: 'any',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -196,6 +205,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
             '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
           placeholder:
             '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           value: formData.aiSettings.systemPrompt,
@@ -210,6 +220,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           max: 30,
           valueType: 'chatHistory',
           value: 8,
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: false
@@ -220,6 +231,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: '引用内容',
           description: "对象数组格式，结构：\n [{q:'问题',a:'回答'}]",
           valueType: 'datasetQuote',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: false
@@ -230,6 +242,7 @@ function simpleChatTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: 'core.module.input.label.user question',
           required: true,
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: true
@@ -281,6 +294,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'systemInput',
           valueType: 'string',
           label: 'core.module.input.label.user question',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -317,6 +331,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'target',
           label: 'core.module.input.label.switch',
           valueType: 'any',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: false
@@ -329,6 +344,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           valueType: 'selectDataset',
           list: [],
           required: true,
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: true,
           connected: false
@@ -352,6 +368,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
               value: 1
             }
           ],
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -363,6 +380,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           description: '单次搜索最大的 Tokens 数量，中文约1字=1.7Tokens，英文约1字=1Tokens',
           value: 2000,
           valueType: 'number',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -372,6 +390,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'hidden',
           label: '',
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: DatasetSearchModeEnum.mixedRecall,
@@ -382,6 +401,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'hidden',
           label: '',
           valueType: 'boolean',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: true,
@@ -393,6 +413,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: 'core.module.input.label.user question',
           required: true,
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: true
@@ -465,6 +486,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'target',
           label: 'core.module.input.label.switch',
           valueType: 'any',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: false
@@ -475,6 +497,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: 'core.module.input.label.aiModel',
           required: true,
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: formData.aiSettings.model,
@@ -486,6 +509,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: '温度',
           value: 0,
           valueType: 'number',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -496,6 +520,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: '回复上限',
           value: maxToken,
           valueType: 'number',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -506,6 +531,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: '返回AI内容',
           value: true,
           valueType: 'boolean',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -515,6 +541,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'hidden',
           label: '引用内容模板',
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: '',
@@ -525,6 +552,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'hidden',
           label: '引用内容提示词',
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           value: '',
@@ -535,6 +563,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           type: 'aiSettings',
           label: '',
           valueType: 'any',
+          // @ts-ignore
           showTargetInReport: false,
           showTargetInPlugin: false,
           connected: false
@@ -549,6 +578,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
             '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
           placeholder:
             '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           value: formData.aiSettings.systemPrompt,
@@ -563,6 +593,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           max: 30,
           valueType: 'chatHistory',
           value: 6,
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: false
@@ -573,6 +604,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: '引用内容',
           description: "对象数组格式，结构：\n [{q:'问题',a:'回答'}]",
           valueType: 'datasetQuote',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: true
@@ -583,6 +615,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
           label: 'core.module.input.label.user question',
           required: true,
           valueType: 'string',
+          // @ts-ignore
           showTargetInReport: true,
           showTargetInPlugin: true,
           connected: true

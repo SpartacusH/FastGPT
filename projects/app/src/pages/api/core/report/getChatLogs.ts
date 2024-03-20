@@ -6,6 +6,7 @@ import type { PagingData } from '@/types';
 import { ReportLogsListItemType } from '@/types/report';
 import { Types } from '@fastgpt/service/common/mongo';
 import { addDays } from 'date-fns';
+// @ts-ignore
 import type { GetReportChatLogsParams } from '@/global/core/api/reportReq.d';
 import { authReport } from '@fastgpt/service/support/permission/auth/report';
 import { ChatItemCollectionName } from '@fastgpt/service/core/chat/chatItemSchema';

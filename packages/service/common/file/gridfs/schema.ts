@@ -10,6 +10,10 @@ try {
   console.log(error);
 }
 
-export const MongoFileSchema = models['dataset.files'] || model('dataset.files', FileSchema) || models('template.files') || model('template.files', FileSchema);
+export const MongoFileSchema =
+  models['dataset.files'] ||
+  model('dataset.files', FileSchema) ||
+  models['template.files'] ||
+  model('template.files', FileSchema);
 
 MongoFileSchema.syncIndexes();

@@ -6,6 +6,7 @@ import type { CreateTemplateParams } from '@/global/core/template/api.d';
 import { createDefaultCollection } from '@fastgpt/service/core/template/collection/controller';
 import { authUserNotVisitor } from '@fastgpt/service/support/permission/auth/user';
 import { TemplateTypeEnum } from '@fastgpt/global/core/template/constants';
+// @ts-ignore
 import { getLLMModel, getVectorModel, getTemplateModel } from '@/service/core/ai/model';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -18,12 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       intro,
       avatar,
       fileId,
-      fileName,
+      fileName
     } = req.body as CreateTemplateParams;
 
     // auth
     const { teamId, tmbId } = await authUserNotVisitor({ req, authToken: true, authApiKey: true });
-
 
     // check limit
     const authCount = await MongoTemplate.countDocuments({
@@ -35,15 +35,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     const { _id } = await MongoTemplate.create({
-      name:name,
-      teamId:teamId,
-      tmbId:tmbId,
-      avatar:avatar,
+      name: name,
+      teamId: teamId,
+      tmbId: tmbId,
+      avatar: avatar,
       intro: intro,
-      fileId:fileId,
-      fileName:fileName,
+      fileId: fileId,
+      fileName: fileName,
       parentId: parentId || null,
-      type:type
+      type: type
     });
 
     if (type === TemplateTypeEnum.template) {

@@ -11,6 +11,7 @@ import {
   TrainingModeEnum,
   TemplateCollectionTypeEnum
 } from '@fastgpt/global/core/template/constants';
+// @ts-ignore
 import { checkTemplateLimit } from '@fastgpt/service/support/permission/limit/template';
 import { predictDataLimitLength } from '@fastgpt/global/core/template/utils';
 import { createTrainingBill } from '@fastgpt/service/support/wallet/bill/controller';

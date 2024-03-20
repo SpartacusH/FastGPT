@@ -5,6 +5,7 @@ import type { CreateReportParams } from '@fastgpt/global/core/report/api.d';
 import { ReportTypeEnum } from '@fastgpt/global/core/report/constants';
 import { MongoReport } from '@fastgpt/service/core/report/schema';
 import { authUserNotVisitor } from '@fastgpt/service/support/permission/auth/user';
+// @ts-ignore
 import { SimpleModeTemplate_FastGPT_Universal } from '@/global/core/report/constants';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -13,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const {
       name = 'APP',
       avatar,
+      // @ts-ignore
       type = ReportTypeEnum.advanced,
       modules,
       simpleTemplateId
@@ -42,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       modules,
       type,
       simpleTemplateId
-     // simpleTemplateId: SimpleModeTemplate_FastGPT_Universal.id
+      // simpleTemplateId: SimpleModeTemplate_FastGPT_Universal.id
     });
 
     jsonRes(res, {

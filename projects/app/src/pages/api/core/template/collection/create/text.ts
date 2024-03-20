@@ -12,6 +12,7 @@ import {
   TemplateCollectionTypeEnum
 } from '@fastgpt/global/core/template/constants';
 import { splitText2Chunks } from '@fastgpt/global/common/string/textSplitter';
+// @ts-ignore
 import { checkTemplateLimit } from '@fastgpt/service/support/permission/limit/template';
 import { predictDataLimitLength } from '@fastgpt/global/core/template/utils';
 import { pushDataToTrainingQueue } from '@/service/core/template/data/controller';
