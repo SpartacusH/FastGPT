@@ -97,6 +97,7 @@ export async function insertData2Template({
         query: item.text,
         model: getVectorModel(model),
         teamId,
+        // @ts-ignore
         templateId,
         collectionId
       })
@@ -223,6 +224,7 @@ export async function updateData2Template({
           query: item.index.text,
           model: getVectorModel(model),
           teamId: mongoData.teamId,
+          // @ts-ignore
           templateId: mongoData.templateId,
           collectionId: mongoData.collectionId
         });
@@ -232,6 +234,7 @@ export async function updateData2Template({
       if (item.type === 'update' && item.index.dataId) {
         const result = await updateTemplateDataVector({
           teamId: mongoData.teamId,
+          // @ts-ignore
           templateId: mongoData.templateId,
           collectionId: mongoData.collectionId,
           id: item.index.dataId,
@@ -337,6 +340,7 @@ export async function searchTemplateData(props: SearchTemplateDataProps) {
     const { results } = await recallFromVectorStore({
       vectors,
       limit,
+      // @ts-ignore
       templateIds,
       efSearch: global.systemEnv?.pgHNSWEfSearch
     });

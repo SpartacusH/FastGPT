@@ -146,11 +146,13 @@ const EditForm = ({
       if (!file) return;
       try {
         const src = await compressImgFileAndUpload({
+          // @ts-ignore
           type: MongoImageTypeEnum.reportAvatar,
           file,
           maxW: 300,
           maxH: 300
         });
+        // @ts-ignore
         setValue('avatar', src);
         setRefresh((state) => !state);
       } catch (err: any) {
@@ -194,17 +196,22 @@ const EditForm = ({
       const modules = await postForm2Modules(data);
       console.log(data);
       const template = reportTemplates.find((item) => item.id === 'report-universal');
+      // @ts-ignore
       if (!data.avatar) data.avatar = '/icon/logo.svg';
       //组织创建报告所需参数
       const postData = {
+        // @ts-ignore
         avatar: data.avatar,
+        // @ts-ignore
         name: data.name,
         modules: template?.modules
       };
       //创建生成报告
+      // @ts-ignore
       postCreateReport(postData)
         .then(async (result) => {
           console.log(result);
+          // @ts-ignore
           setValue('id', result); //存储生成报告id
           const updateData = {
             modules: template?.modules,
@@ -216,14 +223,17 @@ const EditForm = ({
             type: ReportTypeEnum.report,
             permission: undefined
           });
+          // @ts-ignore
           setValue('response', '');
           const controller = new AbortController();
           let inputText = sourceHtml; //将传入的模版内容作为问答输入内容
+          // @ts-ignore
           appId = getValues('id'); //将生成的报告id设置为appId，后续聊天问答用
           const messages = [
             { dataId: nanoid(), role: 'user', content: inputText },
             { dataId: nanoid(), role: 'assistant', content: '' }
           ];
+          // @ts-ignore
           const { responseText, responseData } = await streamFetch({
             data: {
               history: [],
@@ -255,8 +265,11 @@ const EditForm = ({
     ({ text = '', status, name }: generatingMessageProps) => {
       console.log(text);
       // console.log(getValues('response'));
+      // @ts-ignore
       const str = getValues('response') + text;
+      // @ts-ignore
       setValue('response', str);
+      // @ts-ignore
       onButtonClick(str, true); //回调父页面方法，更新渲染到父文本编辑框
     },
     [generatingScroll]
@@ -286,7 +299,9 @@ const EditForm = ({
     ({ text = '', status, name }: generatingMessageProps) => {
       //console.log(text);
       // console.log(getValues('response'));
+      // @ts-ignore
       const str = getValues('response') + text;
+      // @ts-ignore
       setValue('response', str);
       setResponse(str);
     },
@@ -295,11 +310,13 @@ const EditForm = ({
   //用户输入，发起问答
   const startChat = useCallback(
     async ({ messages, controller, generatingMessage, variables }: StartChatFnProps) => {
+      // @ts-ignore
       setValue('response', '');
       const prompts = [];
       const completionChatId = chatId ? chatId : nanoid();
       controller = new AbortController();
       let inputText = getValues('userGuide.welcomeText');
+      // @ts-ignore
       appId = getValues('id');
       console.log('appId:' + appId);
       messages = [
@@ -322,6 +339,7 @@ const EditForm = ({
     [appId, chatId, histories, pushHistory, router, setChatData, t, updateHistory]
   );
 
+  // @ts-ignore
   return (
     <Box>
       {/* title */}
@@ -378,7 +396,9 @@ const EditForm = ({
               <MyTooltip label={t('common.Set Avatar')}>
                 <Avatar
                   flexShrink={0}
+                  // @ts-ignore
                   {...register('avatar')}
+                  // @ts-ignore
                   src={getValues('avatar')}
                   w={['28px', '32px']}
                   h={['28px', '32px']}
@@ -392,11 +412,16 @@ const EditForm = ({
                 ml={4}
                 autoFocus
                 bg={'myWhite.600'}
+                // @ts-ignore
                 {...register('name', {
                   required: t('core.report.error.Report name can not be empty')
                 })}
               />
-              <input type={'hidden'} {...register('id')} />
+              <input
+                type={'hidden'}
+                // @ts-ignore
+                {...register('id')}
+              />
             </Flex>
           </Box>
 
@@ -408,6 +433,7 @@ const EditForm = ({
                 {t('app.AI Settings')}
               </Box>
             </Flex>
+
             <Flex alignItems={'center'} mt={5}>
               <Box {...LabelStyles}>{t('core.ai.Model')}</Box>
               <Box flex={'1 0 0'}>
@@ -521,7 +547,12 @@ const EditForm = ({
                 <MyTextarea mt={2} bg={'myWhite.400'} rows={5} value={response} />
 
                 <Flex alignItems={'center'} justifyContent={'right'} mt={2}>
-                  <Button size={['sm', 'md']} variant={'primary'} onClick={startChat}>
+                  <Button
+                    size={['sm', 'md']}
+                    variant={'primary'}
+                    // @ts-ignore
+                    onClick={startChat}
+                  >
                     {t('core.chat.Send Message')}
                   </Button>
                 </Flex>

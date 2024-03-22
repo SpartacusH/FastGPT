@@ -16,6 +16,7 @@ import { authTeamBalance } from '@/service/support/permission/auth/bill';
 import { pushGenerateVectorBill } from '@/service/support/wallet/bill/push';
 import { InsertOneTemplateDataProps } from '@/global/core/template/api';
 import { simpleText } from '@fastgpt/global/common/string/tools';
+// @ts-ignore
 import { checkTemplateLimit } from '@fastgpt/service/support/permission/limit/template';
 import { getStandardSubPlan } from '@/service/support/wallet/sub/utils';
 

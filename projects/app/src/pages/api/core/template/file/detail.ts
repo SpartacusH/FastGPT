@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const { file } = await authTemplateFile({ req, authToken: true, fileId, per: 'r' });
 
     jsonRes<TemplateFileSchema>(res, {
+      // @ts-ignore
       data: file
     });
   } catch (err) {

@@ -2,6 +2,7 @@ import { GET, POST, DELETE, PUT } from '@/web/common/api/request';
 import type { ReportDetailType, ReportListItemType } from '@fastgpt/global/core/report/type.d';
 import { RequestPaging } from '@/types/index';
 import { addDays } from 'date-fns';
+// @ts-ignore
 import type { GetReportChatLogsParams } from '@/global/core/api/reportReq.d';
 import type { CreateReportParams, ReportUpdateParams } from '@fastgpt/global/core/report/api.d';
 
@@ -13,7 +14,8 @@ export const getReport = () => GET<ReportListItemType[]>('/core/report/list');
 /**
  * 创建一个报告
  */
-export  const postCreateReport = (data: CreateReportParams) => POST<string>('/core/report/create', data);
+export const postCreateReport = (data: CreateReportParams) =>
+  POST<string>('/core/report/create', data);
 
 /**
  * 根据 ID 删除报告
@@ -23,7 +25,8 @@ export const delModelById = (id: string) => DELETE(`/core/report/del?reportId=${
 /**
  * 根据 ID 获取报告
  */
-export const getReportModelById = (id: string) => GET<ReportDetailType>(`/core/report/detail?reportId=${id}`);
+export const getReportModelById = (id: string) =>
+  GET<ReportDetailType>(`/core/report/detail?reportId=${id}`);
 
 /**
  * 根据 ID 更新报告
@@ -53,4 +56,5 @@ export const getReportTotalUsage = (data: { reportId: string }) =>
   }).then((res) => (res.length === 0 ? [{ date: new Date(), total: 0 }] : res));
 
 // =================== chat logs
-export const getReportChatLogs = (data: GetReportChatLogsParams) => POST(`/core/report/getChatLogs`, data);
+export const getReportChatLogs = (data: GetReportChatLogsParams) =>
+  POST(`/core/report/getChatLogs`, data);

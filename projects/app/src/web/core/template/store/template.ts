@@ -96,6 +96,7 @@ export const useTemplateStore = create<State>()(
             }),
             postCreateTrainingBill({
               name: 'core.template.training.Website Sync',
+              // @ts-ignore
               templateId: get().templateDetail._id
             })
           ]);

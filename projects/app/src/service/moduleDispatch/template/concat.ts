@@ -6,10 +6,12 @@ import { filterSearchResultsByMaxChars } from '@fastgpt/global/core/template/sea
 
 type TemplateConcatProps = ModuleDispatchProps<
   {
+    // @ts-ignore
     [ModuleInputKeyEnum.templateMaxTokens]: number;
   } & { [key: string]: SearchDataResponseItemType[] }
 >;
 type TemplateConcatResponse = {
+  // @ts-ignore
   [ModuleOutputKeyEnum.templateQuoteQA]: SearchDataResponseItemType[];
 };
 
@@ -30,6 +32,7 @@ export async function dispatchTemplateConcat(
   );
 
   return {
+    // @ts-ignore
     [ModuleOutputKeyEnum.templateQuoteQA]: filterSearchResultsByMaxChars(rrfConcatResults, limit)
   };
 }

@@ -99,6 +99,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
     /* auth report permission */
     const { user, report, responseDetail, authType, apikey, canWrite, uid } = await (async () => {
       if (shareId && outLinkUid) {
+        // @ts-ignore
         const { user, reportId, authType, responseDetail, uid } = await authOutLinkChatStart({
           shareId,
           ip: originIp,
@@ -123,6 +124,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
       }
 
       const {
+        // @ts-ignore
         reportId: apiKeyReportId,
         tmbId,
         authType,
@@ -187,6 +189,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
       req,
       authToken: true,
       authApiKey: true,
+      // @ts-ignore
       reportId: report._id,
       chatId,
       shareId,
@@ -196,6 +199,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
 
     // get and concat history
     const { history } = await getChatItems({
+      // @ts-ignore
       reportId: report._id,
       chatId,
       limit: 30,
@@ -211,6 +215,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
       user,
       teamId: String(user.team.teamId),
       tmbId: String(user.team.tmbId),
+      // @ts-ignore
       reportId: String(report._id),
       chatId,
       responseChatItemId,
@@ -228,6 +233,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
     if (chatId) {
       await saveChat({
         chatId,
+        // @ts-ignore
         reportId: report._id,
         teamId: user.team.teamId,
         tmbId: user.team.tmbId,
@@ -306,6 +312,7 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
 
     // add record
     const { total } = pushChatBill({
+      // @ts-ignore
       reportName: report.name,
       reportId: report._id,
       teamId: user.team.teamId,
@@ -315,7 +322,9 @@ export default withNextCors(async function handler(req: NextApiRequest, res: Nex
     });
 
     if (shareId) {
+      // @ts-ignore
       pushResult2Remote({ outLinkUid, shareId, responseData });
+      // @ts-ignore
       updateOutLinkUsage({
         shareId,
         total

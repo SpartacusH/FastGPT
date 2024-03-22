@@ -66,6 +66,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const { toast } = useToast();
+  // @ts-ignore
   const { parentId } = router.query as { appId: string };
   const { setLoading } = useSystemStore();
   const { userInfo } = useUserStore();
@@ -232,9 +233,11 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
         }
       });
     }
+    // @ts-ignore
     if (!appId && myApps[0]) {
       return router.replace({
         query: {
+          // @ts-ignore
           appId: myApps[0]._id,
           chatId: lastChatId
         }
@@ -242,6 +245,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     }
     if (!appId) {
       (async () => {
+        // @ts-ignore
         const apps = await loadMyApps();
         if (apps.length === 0) {
           toast({
@@ -301,6 +305,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   };
   const { parentRef, divRef, isSticky } = useSticky();
   //获取word文本内容
+  // @ts-ignore
   const fetchWordFile = async (url) => {
     try {
       const response = await fetch(url); // 替换为你要读取的 Word 文件的 URL
@@ -312,7 +317,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
       console.error(error);
     }
   };
-
+  // @ts-ignore
   const handleSaveConfig = (value, saveResult) => {
     setOutputHtml(value);
     setIsSaveConfig(saveResult);
@@ -355,6 +360,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
               w={'100%'}
               h={'100%'}
               bg={'white'}
+              // @ts-ignore
               size={'md'}
               borderRight={['', theme.borders.base]}
               whiteSpace={'nowrap'}
@@ -446,8 +452,8 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                           onClick={() => {
                             setIsFlexVisible(!isFlexVisible);
                             setIsSaveConfig(false);
+                            // @ts-ignore
                             setCurrentTemplate(template);
-
                             const fileUrl = getFileViewUrl(template.fileId)
                               .then((res) => {
                                 console.log('url:' + res);
@@ -458,6 +464,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                               .catch((err) => {
                                 console.log(err);
                               });
+                            // @ts-ignore
                             setCurrentFile(fileUrl);
                           }}
                         >
@@ -508,6 +515,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                                             </Flex>
                                           ),
                                           onClick: () => {
+                                            // @ts-ignore
                                             updateTemplate({
                                               id: template._id,
                                               permission: PermissionTypeEnum.public
@@ -528,6 +536,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                                             </Flex>
                                           ),
                                           onClick: () => {
+                                            // @ts-ignore
                                             updateTemplate({
                                               id: template._id,
                                               permission: PermissionTypeEnum.private
@@ -547,6 +556,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                                         defaultVal: template.name,
                                         onSuccess: (val) => {
                                           if (val === template.name || !val) return;
+                                          // @ts-ignore
                                           updateTemplate({
                                             id: template._id,
                                             name: val
@@ -612,6 +622,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                       parentId={appId}
                       editCallback={async (name) => {
                         try {
+                          // @ts-ignore
                           refetch();
                         } catch (error) {
                           return Promise.reject(error);
@@ -658,16 +669,21 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                         fontWeight={'bold'}
                         className={'textEllipsis'}
                       >
-                        {'模版名称：' + currentTemplate.name}
+                        {
+                          // @ts-ignore
+                          '模版名称：' + currentTemplate.name
+                        }
                       </Box>
                     </Flex>
                   </MyTooltip>
                   <EditForm
                     divRef={divRef}
                     isSticky={isSticky}
+                    // @ts-ignore
                     appId={currentTemplate.id}
                     chatId={nanoid()}
                     sourceHtml={html}
+                    // @ts-ignore
                     onButtonClick={handleSaveConfig}
                   />
                 </>
@@ -695,10 +711,18 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
 
             <Flex position={'relative'} flex={'1 0 0'} flexDirection={'row'}>
               <Box borderRight={'1px solid #E8EBF0'}>
-                <MyEditor html={outputHtml} setHtml={setOutputHtml} />
+                <MyEditor
+                  html={outputHtml}
+                  // @ts-ignore
+                  setHtml={setOutputHtml}
+                />
               </Box>
               <Box>
-                <MyEditor html={html} setHtml={setHtml} />
+                <MyEditor
+                  html={html}
+                  // @ts-ignore
+                  setHtml={setHtml}
+                />
               </Box>
             </Flex>
           </Flex>

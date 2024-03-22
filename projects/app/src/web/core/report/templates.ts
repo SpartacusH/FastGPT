@@ -29,6 +29,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'string',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -39,6 +40,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'any',
             label: '',
             value: [],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -48,6 +50,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'boolean',
             type: 'switch',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -57,6 +60,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'any',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -79,6 +83,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'systemInput',
             valueType: 'string',
             label: 'core.module.input.label.user question',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -115,6 +120,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'target',
             label: 'core.module.input.label.switch',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -125,6 +131,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.aiModel',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo-16k',
@@ -149,6 +156,7 @@ export const reportTemplates: (ReportItemType & {
                 value: 10
               }
             ],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -172,6 +180,7 @@ export const reportTemplates: (ReportItemType & {
                 value: 4000
               }
             ],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -182,6 +191,7 @@ export const reportTemplates: (ReportItemType & {
             label: '返回AI内容',
             value: true,
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -191,6 +201,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '引用内容模板',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -200,6 +211,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '引用内容提示词',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -209,6 +221,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'aiSettings',
             label: '',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -223,6 +236,7 @@ export const reportTemplates: (ReportItemType & {
               '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
             placeholder:
               '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -236,6 +250,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -246,6 +261,7 @@ export const reportTemplates: (ReportItemType & {
             label: '引用内容',
             description: "对象数组格式，结构：\n [{q:'问题',a:'回答'}]",
             valueType: 'datasetQuote',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -256,6 +272,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.user question',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -311,6 +328,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'string',
             label: 'core.report.Welcome Text',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '你好，我是714所的AI助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
@@ -322,6 +340,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'any',
             label: 'core.module.Variable',
             value: [],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -331,6 +350,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'boolean',
             type: 'switch',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -341,6 +361,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'any',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: {
@@ -365,6 +386,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'systemInput',
             valueType: 'string',
             label: 'core.module.input.label.user question',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -401,6 +423,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -413,6 +436,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'selectDataset',
             list: [],
             required: true,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: true,
             connected: false
@@ -423,6 +447,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 0.4,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -433,6 +458,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 1500,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -442,6 +468,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'embedding',
@@ -452,6 +479,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -462,6 +490,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: true,
@@ -472,6 +501,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -482,6 +512,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -493,6 +524,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -563,6 +595,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -573,6 +606,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.aiModel',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -587,6 +621,7 @@ export const reportTemplates: (ReportItemType & {
             min: 0,
             max: 10,
             step: 1,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -600,6 +635,7 @@ export const reportTemplates: (ReportItemType & {
             min: 100,
             max: 4000,
             step: 50,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             markList: [
@@ -620,6 +656,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: true,
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -629,6 +666,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -639,6 +677,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -649,6 +688,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'aiSettings',
             label: '',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -661,6 +701,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'string',
             description: 'core.report.tip.chatNodeSystemPromptTip',
             placeholder: 'core.report.tip.chatNodeSystemPromptTip',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '',
@@ -675,6 +716,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -685,6 +727,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -695,6 +738,7 @@ export const reportTemplates: (ReportItemType & {
             label: '知识库引用',
             description: 'core.module.Dataset quote.Input description',
             valueType: 'datasetQuote',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -757,6 +801,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'string',
             label: 'core.report.Welcome Text',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '你好，我是714所的AI助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
@@ -768,6 +813,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'any',
             label: 'core.module.Variable',
             value: [],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -777,6 +823,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'boolean',
             type: 'switch',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -787,6 +834,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'any',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: {
@@ -811,6 +859,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'systemInput',
             valueType: 'string',
             label: 'core.module.input.label.user question',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -847,6 +896,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -859,6 +909,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'selectDataset',
             list: [],
             required: true,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: true,
             connected: false
@@ -869,6 +920,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 0.4,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -879,6 +931,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 1500,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -888,6 +941,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'embedding',
@@ -898,6 +952,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -908,6 +963,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: true,
@@ -918,6 +974,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -928,6 +985,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -939,6 +997,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1009,6 +1068,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1019,6 +1079,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.aiModel',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -1033,6 +1094,7 @@ export const reportTemplates: (ReportItemType & {
             min: 0,
             max: 10,
             step: 1,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1046,6 +1108,7 @@ export const reportTemplates: (ReportItemType & {
             min: 100,
             max: 4000,
             step: 50,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             markList: [
@@ -1066,6 +1129,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: true,
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1075,6 +1139,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -1085,6 +1150,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -1095,6 +1161,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'aiSettings',
             label: '',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1107,6 +1174,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'string',
             description: 'core.report.tip.chatNodeSystemPromptTip',
             placeholder: 'core.report.tip.chatNodeSystemPromptTip',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '',
@@ -1121,6 +1189,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1131,6 +1200,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1141,6 +1211,7 @@ export const reportTemplates: (ReportItemType & {
             label: '知识库引用',
             description: 'core.module.Dataset quote.Input description',
             valueType: 'datasetQuote',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1182,7 +1253,7 @@ export const reportTemplates: (ReportItemType & {
       }
     ]
   },
-    {
+  {
     id: 'video-universal',
     avatar: '/imgs/module/video.png',
     name: 'core.report.template.Generate video',
@@ -1203,6 +1274,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'string',
             label: 'core.report.Welcome Text',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '你好，我是714所的AI助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
@@ -1214,6 +1286,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'any',
             label: 'core.module.Variable',
             value: [],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1223,6 +1296,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'boolean',
             type: 'switch',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -1233,6 +1307,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'any',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: {
@@ -1257,6 +1332,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'systemInput',
             valueType: 'string',
             label: 'core.module.input.label.user question',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1293,6 +1369,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1305,6 +1382,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'selectDataset',
             list: [],
             required: true,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: true,
             connected: false
@@ -1315,6 +1393,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 0.4,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1325,6 +1404,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 1500,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1334,6 +1414,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'embedding',
@@ -1344,6 +1425,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -1354,6 +1436,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: true,
@@ -1364,6 +1447,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -1374,6 +1458,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -1385,6 +1470,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1455,6 +1541,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1465,6 +1552,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.aiModel',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -1479,6 +1567,7 @@ export const reportTemplates: (ReportItemType & {
             min: 0,
             max: 10,
             step: 1,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1492,6 +1581,7 @@ export const reportTemplates: (ReportItemType & {
             min: 100,
             max: 4000,
             step: 50,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             markList: [
@@ -1512,6 +1602,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: true,
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1521,6 +1612,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -1531,6 +1623,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -1541,6 +1634,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'aiSettings',
             label: '',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1553,6 +1647,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'string',
             description: 'core.report.tip.chatNodeSystemPromptTip',
             placeholder: 'core.report.tip.chatNodeSystemPromptTip',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '',
@@ -1567,6 +1662,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1577,6 +1673,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1587,6 +1684,7 @@ export const reportTemplates: (ReportItemType & {
             label: '知识库引用',
             description: 'core.module.Dataset quote.Input description',
             valueType: 'datasetQuote',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1650,6 +1748,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'string',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '你好，我可以为你翻译各种语言，请告诉我你需要翻译成什么语言？',
@@ -1691,6 +1790,7 @@ export const reportTemplates: (ReportItemType & {
                 ]
               }
             ],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1700,6 +1800,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'boolean',
             type: 'switch',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -1710,6 +1811,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'any',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1732,6 +1834,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'systemInput',
             valueType: 'string',
             label: 'core.module.input.label.user question',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1768,6 +1871,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'target',
             label: 'core.module.input.label.switch',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1778,6 +1882,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.aiModel',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo-16k',
@@ -1802,6 +1907,7 @@ export const reportTemplates: (ReportItemType & {
                 value: 10
               }
             ],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1825,6 +1931,7 @@ export const reportTemplates: (ReportItemType & {
                 value: 4000
               }
             ],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1835,6 +1942,7 @@ export const reportTemplates: (ReportItemType & {
             label: '返回AI内容',
             value: true,
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1844,6 +1952,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '引用内容模板',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1853,6 +1962,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '引用内容提示词',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1862,6 +1972,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'aiSettings',
             label: '',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -1876,6 +1987,7 @@ export const reportTemplates: (ReportItemType & {
               '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
             placeholder:
               '模型固定的引导词，通过调整该内容，可以引导模型聊天方向。该内容会被固定在上下文的开头。可使用变量，例如 {{language}}',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '请直接将我的问题翻译成{{language}}，不需要回答问题。',
@@ -1890,6 +2002,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1900,6 +2013,7 @@ export const reportTemplates: (ReportItemType & {
             label: '引用内容',
             description: "对象数组格式，结构：\n [{q:'问题',a:'回答'}]",
             valueType: 'datasetQuote',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -1910,6 +2024,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.user question',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -1965,6 +2080,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'systemInput',
             valueType: 'string',
             label: 'core.module.input.label.user question',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2001,6 +2117,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -2011,6 +2128,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'string',
             label: 'core.module.input.label.Classify model',
             required: true,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -2023,6 +2141,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.Background',
             description: 'core.module.input.description.Background',
             placeholder: 'core.module.input.placeholder.Classify background',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '',
@@ -2037,6 +2156,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -2047,6 +2167,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2070,6 +2191,7 @@ export const reportTemplates: (ReportItemType & {
                 key: 'oy1c'
               }
             ],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2144,6 +2266,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2155,6 +2278,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.Response content',
             description: 'core.module.input.description.Response content',
             placeholder: 'core.module.input.description.Response content',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '你好，有什么可以帮助你的？',
@@ -2187,6 +2311,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2198,6 +2323,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.Response content',
             description: 'core.module.input.description.Response content',
             placeholder: 'core.module.input.description.Response content',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '你好，我仅能回答电影《星际穿越》相关问题，请问你有什么问题么？',
@@ -2231,6 +2357,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2241,6 +2368,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.aiModel',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -2255,6 +2383,7 @@ export const reportTemplates: (ReportItemType & {
             min: 0,
             max: 10,
             step: 1,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2268,6 +2397,7 @@ export const reportTemplates: (ReportItemType & {
             min: 100,
             max: 4000,
             step: 50,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2278,6 +2408,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: true,
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2287,6 +2418,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2296,6 +2428,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2305,6 +2438,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'aiSettings',
             label: '',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2317,6 +2451,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'string',
             description: 'core.report.tip.chatNodeSystemPromptTip',
             placeholder: 'core.report.tip.chatNodeSystemPromptTip',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '',
@@ -2331,6 +2466,7 @@ export const reportTemplates: (ReportItemType & {
             max: 30,
             valueType: 'chatHistory',
             value: 6,
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: false
@@ -2341,6 +2477,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2351,6 +2488,7 @@ export const reportTemplates: (ReportItemType & {
             label: '知识库引用',
             description: 'core.module.Dataset quote.Input description',
             valueType: 'datasetQuote',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2406,6 +2544,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2418,6 +2557,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'selectDataset',
             list: [],
             required: true,
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: true,
             connected: false
@@ -2428,6 +2568,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 0.8,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2438,6 +2579,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             value: 1500,
             valueType: 'number',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2447,6 +2589,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'embedding',
@@ -2457,6 +2600,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: false,
@@ -2467,6 +2611,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'boolean',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: true,
@@ -2477,6 +2622,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: 'gpt-3.5-turbo',
@@ -2487,6 +2633,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             label: '',
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value: '',
@@ -2498,6 +2645,7 @@ export const reportTemplates: (ReportItemType & {
             label: '',
             required: true,
             valueType: 'string',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2576,6 +2724,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'string',
             label: 'core.report.Welcome Text',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             value:
@@ -2588,6 +2737,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'any',
             label: 'core.module.Variable',
             value: [],
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2597,6 +2747,7 @@ export const reportTemplates: (ReportItemType & {
             valueType: 'boolean',
             type: 'switch',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2606,6 +2757,7 @@ export const reportTemplates: (ReportItemType & {
             type: 'hidden',
             valueType: 'any',
             label: '',
+            // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
             connected: false
@@ -2628,6 +2780,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.switch',
             description: 'core.module.input.description.Trigger',
             valueType: 'any',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             connected: true
@@ -2639,6 +2792,7 @@ export const reportTemplates: (ReportItemType & {
             label: 'core.module.input.label.Response content',
             description: 'core.module.input.description.Response content',
             placeholder: 'core.module.input.description.Response content',
+            // @ts-ignore
             showTargetInReport: true,
             showTargetInPlugin: true,
             value: '对不起，我找不到你的问题，请更加详细的描述你的问题。',

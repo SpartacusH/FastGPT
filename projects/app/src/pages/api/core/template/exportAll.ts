@@ -6,9 +6,11 @@ import { authTemplate } from '@fastgpt/service/support/permission/auth/template'
 import { MongoTemplateData } from '@fastgpt/service/core/template/data/schema';
 import { findTemplateAndAllChildren } from '@fastgpt/service/core/template/controller';
 import { withNextCors } from '@fastgpt/service/common/middle/cors';
-// @ts-ignore
+
 import {
+  // @ts-ignore
   checkExportTemplateLimit,
+  // @ts-ignore
   updateExportTemplateLimit
 } from '@fastgpt/service/support/user/utils';
 

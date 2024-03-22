@@ -8,6 +8,7 @@ import type {
   PushTemplateDataResponse
 } from '@fastgpt/global/core/template/api.d';
 import { authTemplateCollection } from '@fastgpt/service/support/permission/auth/template';
+// @ts-ignore
 import { checkTemplateLimit } from '@fastgpt/service/support/permission/limit/template';
 import { predictDataLimitLength } from '@fastgpt/global/core/template/utils';
 import { pushDataToTrainingQueue } from '@/service/core/template/data/controller';

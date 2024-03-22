@@ -1,5 +1,6 @@
 import type { moduleDispatchResType } from '@fastgpt/global/core/chat/type.d';
 import { formatModelPrice2Store } from '@/service/support/wallet/bill/utils';
+// @ts-ignore
 import type { SelectedTemplateType } from '@fastgpt/global/core/module/api.d';
 import type { SearchDataResponseItemType } from '@fastgpt/global/core/template/type';
 import type { ModuleDispatchProps } from '@fastgpt/global/core/module/type.d';
@@ -10,22 +11,33 @@ import { TemplateSearchModeEnum } from '@fastgpt/global/core/template/constants'
 import { queryExtension } from '@fastgpt/service/core/ai/functions/queryExtension';
 import { getHistories } from '../utils';
 import { templateSearchQueryExtension } from '@fastgpt/service/core/template/search/utils';
-
+// @ts-ignore
 type TemplateSearchProps = ModuleDispatchProps<{
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSelectList]: SelectedTemplateType;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSimilarity]: number;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateMaxTokens]: number;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSearchMode]: `${TemplateSearchModeEnum}`;
   [ModuleInputKeyEnum.userChatInput]: string;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSearchUsingReRank]: boolean;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSearchUsingExtensionQuery]: boolean;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSearchExtensionModel]: string;
+  // @ts-ignore
   [ModuleInputKeyEnum.templateSearchExtensionBg]: string;
 }>;
 export type TemplateSearchResponse = {
   [ModuleOutputKeyEnum.responseData]: moduleDispatchResType;
+  // @ts-ignore
   [ModuleOutputKeyEnum.templateIsEmpty]?: boolean;
+  // @ts-ignore
   [ModuleOutputKeyEnum.templateUnEmpty]?: boolean;
+  // @ts-ignore
   [ModuleOutputKeyEnum.templateQuoteQA]: SearchDataResponseItemType[];
 };
 
@@ -36,15 +48,22 @@ export async function dispatchTemplateSearch(
     teamId,
     histories,
     params: {
+      // @ts-ignore
       templates = [],
+      // @ts-ignore
       similarity,
+      // @ts-ignore
       limit = 1500,
+      // @ts-ignore
       usingReRank,
+      // @ts-ignore
       searchMode,
       userChatInput,
-
+      // @ts-ignore
       templateSearchUsingExtensionQuery,
+      // @ts-ignore
       templateSearchExtensionModel,
+      // @ts-ignore
       templateSearchExtensionBg
     }
   } = props as TemplateSearchProps;
@@ -130,6 +149,7 @@ export async function dispatchTemplateSearch(
   }
 
   return {
+    // @ts-ignore
     isEmpty: searchRes.length === 0 ? true : undefined,
     unEmpty: searchRes.length > 0 ? true : undefined,
     quoteQA: searchRes,

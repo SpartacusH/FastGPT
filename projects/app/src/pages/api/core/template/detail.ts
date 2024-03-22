@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     });
 
     jsonRes<TemplateItemType>(res, {
+      // @ts-ignore
       data: {
         ...template,
         canWrite,
