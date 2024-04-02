@@ -22,7 +22,7 @@ export const getDefaultAppForm = (): AppSimpleEditFormType => {
       similarity: 0.4,
       limit: 1500,
       searchEmptyText: '',
-      searchMode: DatasetSearchModeEnum.embedding,
+      searchMode: DatasetSearchModeEnum.mixedRecall,
       usingReRank: false,
       datasetSearchUsingExtensionQuery: true,
       datasetSearchExtensionBg: ''
@@ -87,7 +87,8 @@ export const appModules2Form = ({ modules }: { modules: ModuleItemType[] }) => {
       );
       defaultAppForm.dataset.searchMode =
         findInputValueByKey(module.inputs, ModuleInputKeyEnum.datasetSearchMode) ||
-        DatasetSearchModeEnum.embedding;
+        DatasetSearchModeEnum.mixedRecall;
+      console.log(defaultAppForm.dataset.searchMode);
       defaultAppForm.dataset.usingReRank = !!findInputValueByKey(
         module.inputs,
         ModuleInputKeyEnum.datasetSearchUsingReRank

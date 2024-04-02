@@ -12,7 +12,6 @@ const MyEditor = ({ html, setHtml }: { html: string; setHtml: () => void }) => {
   };
   // 及时销毁 editor ，重要！
   useEffect(() => {
-    console.log('editor', editor);
     return () => {
       if (editor == null) return;
       // @ts-ignore
@@ -20,9 +19,7 @@ const MyEditor = ({ html, setHtml }: { html: string; setHtml: () => void }) => {
       setEditor(null);
     };
   }, [editor]);
-  useEffect(() => {
-    console.log('html', html);
-  }, [html]);
+  useEffect(() => {}, [html]);
   // @ts-ignore
   return (
     <>

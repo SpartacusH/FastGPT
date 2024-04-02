@@ -154,18 +154,18 @@ const LoginForm = ({ setPageType, loginSuccess }: Props) => {
             })}
           ></Input>
         </FormControl>
-        {feConfigs?.docUrl && (
-          <Box mt={7} fontSize={'sm'}>
-            使用即代表你同意我们的{' '}
-            <Link
-              href={''}
-              target={'_blank'}
-              color={'primary.500'}
-            >
-              免责声明
-            </Link>
-          </Box>
-        )}
+        {/*{feConfigs?.docUrl && (*/}
+        {/*  <Box mt={7} fontSize={'sm'}>*/}
+        {/*    使用即代表你同意我们的{' '}*/}
+        {/*    <Link*/}
+        {/*      href={''}*/}
+        {/*      target={'_blank'}*/}
+        {/*      color={'primary.500'}*/}
+        {/*    >*/}
+        {/*      免责声明*/}
+        {/*    </Link>*/}
+        {/*  </Box>*/}
+        {/*)}*/}
 
         <Button
           type="submit"

@@ -92,9 +92,7 @@ const Test = ({ datasetId }: { datasetId: string }) => {
       }
     }
   });
-  console.log(getValues(`searchParams.searchMode`));
   const searchModeData = DatasetSearchModeMap[getValues(`searchParams.searchMode`)];
-  console.log(searchModeData);
   const {
     isOpen: isOpenSelectMode,
     onOpen: onOpenSelectMode,

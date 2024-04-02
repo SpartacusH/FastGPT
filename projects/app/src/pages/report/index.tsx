@@ -311,7 +311,6 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
       const response = await fetch(url); // 替换为你要读取的 Word 文件的 URL
       const arrayBuffer = await response.arrayBuffer();
       const result = await mammoth.convertToHtml({ arrayBuffer });
-      console.log(result.value);
       return result.value;
     } catch (error) {
       console.error(error);
@@ -456,7 +455,6 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
                             setCurrentTemplate(template);
                             const fileUrl = getFileViewUrl(template.fileId)
                               .then((res) => {
-                                console.log('url:' + res);
                                 fetchWordFile(res).then((re) => {
                                   setHtml(re);
                                 });

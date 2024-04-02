@@ -36,6 +36,7 @@ import SelectAiModel from '@/components/Select/SelectAiModel';
 import PromptEditor from '@fastgpt/web/components/common/Textarea/PromptEditor';
 import { formatEditorVariablePickerIcon } from '@fastgpt/global/core/module/utils';
 import SearchParamsTip from '@/components/core/dataset/SearchParamsTip';
+import dataset from '@fastgpt/global/common/error/code/dataset';
 
 const DatasetSelectModal = dynamic(() => import('@/components/core/module/DatasetSelectModal'));
 const DatasetParamsModal = dynamic(() => import('@/components/core/module/DatasetParamsModal'));
@@ -94,10 +95,11 @@ const EditForm = ({
   const aiSystemPrompt = watch('aiSettings.systemPrompt');
   const selectLLMModel = watch('aiSettings.model');
   const datasetSearchSetting = watch('dataset');
+  console.log(datasetSearchSetting);
   const variables = watch('userGuide.variables');
   const formatVariables = useMemo(() => formatEditorVariablePickerIcon(variables), [variables]);
   const searchMode = watch('dataset.searchMode');
-
+  console.log(searchMode);
   const chatModelSelectList = (() =>
     llmModelList.map((item) => ({
       value: item.model,
@@ -115,9 +117,7 @@ const EditForm = ({
 
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
     mutationFn: async (data: AppSimpleEditFormType) => {
-      console.log(data);
       const modules = await postForm2Modules(data);
-      console.log(modules);
       await updateAppDetail(appDetail._id, {
         modules,
         type: AppTypeEnum.simple,

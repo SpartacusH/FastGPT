@@ -60,15 +60,15 @@ const AppDetail = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
         id: TabEnum.simpleEdit,
         icon: 'common/overviewLight'
       },
-      ...(feConfigs?.hide_app_flow
-        ? []
-        : [
-            {
-              label: t('core.app.navbar.Flow mode'),
-              id: TabEnum.adEdit,
-              icon: 'core/modules/flowLight'
-            }
-          ]),
+      // ...(feConfigs?.hide_app_flow
+      //   ? []
+      //   : [
+      //       {
+      //         label: t('core.app.navbar.Flow mode'),
+      //         id: TabEnum.adEdit,
+      //         icon: 'core/modules/flowLight'
+      //       }
+      //     ]),
       {
         label: t('core.app.navbar.Publish app'),
         id: TabEnum.publish,

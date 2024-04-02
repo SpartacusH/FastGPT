@@ -22,7 +22,7 @@ export const getDefaultReportForm = (): ReportSimpleEditFormType => {
       similarity: 0.4,
       limit: 1500,
       searchEmptyText: '',
-      searchMode: DatasetSearchModeEnum.embedding,
+      searchMode: DatasetSearchModeEnum.mixedRecall,
       usingReRank: false,
       datasetSearchUsingExtensionQuery: true,
       datasetSearchExtensionBg: ''
@@ -87,7 +87,7 @@ export const reportModules2Form = ({ modules }: { modules: ModuleItemType[] }) =
       );
       defaultReportForm.dataset.searchMode =
         findInputValueByKey(module.inputs, ModuleInputKeyEnum.datasetSearchMode) ||
-        DatasetSearchModeEnum.embedding;
+        DatasetSearchModeEnum.mixedRecall;
       defaultReportForm.dataset.usingReRank = !!findInputValueByKey(
         module.inputs,
         ModuleInputKeyEnum.datasetSearchUsingReRank

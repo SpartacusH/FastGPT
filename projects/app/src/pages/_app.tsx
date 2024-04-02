@@ -50,19 +50,9 @@ function App({ Component, pageProps }: AppProps) {
         feConfigs: { scripts, isPlus, show_git, systemTitle }
       } = await clientInitData();
 
-      setTitle(systemTitle || 'AlKit:714所私域大模型智能底座柔性集成平台');
+      setTitle(systemTitle || '海鲲大模型Pro');
 
       // log fastgpt
-      if (!isPlus) {
-        console.log(
-          '%cWelcome to FastGPT',
-          'font-family:Arial; color:#3370ff ; font-size:18px; font-weight:bold;',
-          `GitHub：https://github.com/labring/FastGPT`
-        );
-      }
-      if (show_git) {
-        loadGitStar();
-      }
 
       setScripts(scripts || []);
       setInitd();

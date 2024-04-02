@@ -194,7 +194,6 @@ const EditForm = ({
   const { mutate: onSubmitSave, isLoading: isSaving } = useRequest({
     mutationFn: async (data: ReportSimpleEditFormType) => {
       const modules = await postForm2Modules(data);
-      console.log(data);
       const template = reportTemplates.find((item) => item.id === 'report-universal');
       // @ts-ignore
       if (!data.avatar) data.avatar = '/icon/logo.svg';
@@ -210,7 +209,6 @@ const EditForm = ({
       // @ts-ignore
       postCreateReport(postData)
         .then(async (result) => {
-          console.log(result);
           // @ts-ignore
           setValue('id', result); //存储生成报告id
           const updateData = {
@@ -263,7 +261,6 @@ const EditForm = ({
   //生成报告返回值，回调父页面方法渲染到富文本编辑框内
   const generatingInitMessage = useCallback(
     ({ text = '', status, name }: generatingMessageProps) => {
-      console.log(text);
       // console.log(getValues('response'));
       // @ts-ignore
       const str = getValues('response') + text;
