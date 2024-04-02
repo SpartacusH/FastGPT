@@ -95,11 +95,9 @@ const EditForm = ({
   const aiSystemPrompt = watch('aiSettings.systemPrompt');
   const selectLLMModel = watch('aiSettings.model');
   const datasetSearchSetting = watch('dataset');
-  console.log(datasetSearchSetting);
   const variables = watch('userGuide.variables');
   const formatVariables = useMemo(() => formatEditorVariablePickerIcon(variables), [variables]);
   const searchMode = watch('dataset.searchMode');
-  console.log(searchMode);
   const chatModelSelectList = (() =>
     llmModelList.map((item) => ({
       value: item.model,
