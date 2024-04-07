@@ -142,7 +142,7 @@ const ApiKeyTable = ({ tips, appId }: { tips: string; appId?: string }) => {
               <Th>{t('support.openapi.Usage')}</Th>
               {feConfigs?.isPlus && (
                 <>
-                  <Th>{t('support.openapi.Max usage')}</Th>
+                  {/*<Th>{t('support.openapi.Max usage')}</Th>*/}
                   <Th>{t('common.Expired Time')}</Th>
                 </>
               )}
@@ -160,11 +160,11 @@ const ApiKeyTable = ({ tips, appId }: { tips: string; appId?: string }) => {
                 <Td>{usage}</Td>
                 {feConfigs?.isPlus && (
                   <>
-                    <Td>
-                      {limit?.credit && limit?.credit > -1
-                        ? `${limit?.credit}`
-                        : t('common.Unlimited')}
-                    </Td>
+                    {/*<Td>*/}
+                    {/*  {limit?.credit && limit?.credit > -1*/}
+                    {/*    ? `${limit?.credit}`*/}
+                    {/*    : t('common.Unlimited')}*/}
+                    {/*</Td>*/}
                     <Td whiteSpace={'pre-wrap'}>
                       {limit?.expiredTime
                         ? dayjs(limit?.expiredTime).format('YYYY/MM/DD\nHH:mm')

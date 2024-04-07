@@ -376,7 +376,7 @@ function datasetTemplate({ formData, maxToken }: Props): ModuleItemType[] {
         {
           key: 'limit',
           type: 'hidden',
-          label: '引用上限',
+          label: '引用上限（条）',
           description: '单次搜索最大的 Tokens 数量，中文约1字=1.7Tokens，英文约1字=1Tokens',
           value: 2000,
           valueType: 'number',

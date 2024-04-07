@@ -56,7 +56,7 @@ https://github.com/labring/FastGPT/assets/15308462/7d3a38df-eb0e-4388-9250-2409b
    - [x] 工作流编排
    - [x] 源文件引用追踪
    - [x] 模块封装，实现多级复用
-   - [x] 混合检索 & 重排
+   - [x] 高级检索 & 重排
    - [ ] Tool 模块
    - [ ] 嵌入 [Laf](https://github.com/labring/laf)，实现在线编写 HTTP 模块
    - [ ] 插件封装功能

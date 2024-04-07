@@ -40,3 +40,5 @@ docSite/.vercel
 
 
 .idea/
+
+.husky/
