@@ -117,7 +117,7 @@ const LoginForm = ({ setPageType, loginSuccess }: Props) => {
           alignItems={'center'}
           justifyContent={'center'}
         >
-          <Avatar src={LOGO_ICON} w={'30px'} />
+          <Avatar src={LOGO_ICON} w={'50px'} h={'50px'} />
         </Flex>
         <Box ml={3} fontSize={['2xl', '3xl']} fontWeight={'bold'}>
           {feConfigs?.systemTitle}

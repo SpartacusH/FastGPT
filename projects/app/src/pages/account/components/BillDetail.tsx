@@ -131,7 +131,7 @@ const BillDetail = ({ bill, onClose }: { bill: BillItemType; onClose: () => void
                   {hasDatasetSize && (
                     <Th>{t('support.wallet.subscription.type.extraDatasetSize')}</Th>
                   )}
-                  <Th>费用(￥)</Th>
+                  <Th>费用</Th>
                 </Tr>
               </Thead>
               <Tbody>

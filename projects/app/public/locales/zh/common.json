@@ -100,8 +100,8 @@
     "Last use time": "最后使用时间",
     "Load Failed": "加载失败",
     "Loading": "加载中...",
-    "Max credit": "最大金额",
-    "Max credit tips": "该链接最大可消耗多少金额，超出后链接将被禁止使用。-1 代表无限制。",
+    "Max credit": "最大模型使用量",
+    "Max credit tips": "该链接最大可消耗多少模型使用量，超出后链接将被禁止使用。-1 代表无限制。",
     "More settings": "更多设置",
     "Name": "名称",
     "Name Can": "名称不能为空",
@@ -116,7 +116,7 @@
     "Params": "参数",
     "Password inconsistency": "两次密码不一致",
     "Please Input Name": "请输入名称",
-    "Price used": "金额消耗",
+    "Price used": "模型使用量消耗",
     "Read document": "查看文档",
     "Read intro": "查看说明",
     "Rename": "重命名",
@@ -1182,10 +1182,10 @@
       "Api baseurl": "API根地址",
       "Api manager": "API 秘钥管理",
       "Copy success": "已复制 API 地址",
-      "Max usage": "最大额度(￥)",
+      "Max usage": "最大额度",
       "New api key": "新的 API 秘钥",
       "New api key tip": "请保管好你的秘钥，秘钥不会再次展示~",
-      "Usage": "已用额度(￥)"
+      "Usage": "已用额度"
     },
     "outlink": {
       "share": {
@@ -1316,7 +1316,7 @@
     "Team": "团队",
     "Time": "时间",
     "Timezone": "时区",
-    "Total Amount": "总金额",
+    "Total Amount": "总模型使用量",
     "Update Password": "修改密码",
     "Update password failed": "修改密码异常",
     "Update password successful": "修改密码成功",
@@ -1409,7 +1409,7 @@
       "Text Length": "文本长度",
       "Time": "生成时间",
       "Token Length": "Token长度",
-      "Total": "总金额",
+      "Total": "总模型使用量",
       "Whisper": "语音输入",
       "bill username": "用户"
     },

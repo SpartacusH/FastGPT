@@ -87,7 +87,7 @@ const PayModal = ({ onClose }: { onClose: () => void }) => {
                 value={inputVal}
                 type={'number'}
                 step={1}
-                placeholder={'其他金额，请取整数'}
+                placeholder={'其他模型使用量，请取整数'}
                 onChange={(e) => {
                   setInputVal(Math.floor(+e.target.value));
                 }}

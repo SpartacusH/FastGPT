@@ -73,7 +73,7 @@ const PayRecordTable = () => {
               <Tr>
                 <Th>订单号</Th>
                 <Th>时间</Th>
-                <Th>金额</Th>
+                <Th>模型使用量</Th>
                 <Th>状态</Th>
                 <Th></Th>
               </Tr>

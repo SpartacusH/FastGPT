@@ -13,7 +13,7 @@ const Price = ({ onClose }: { onClose: () => void }) => {
       title: 'AI语言模型',
       describe: '',
       md: `
-| 模型 | 输入价格(￥) | 输出价格(￥) |
+| 模型 | 输入价格 | 输出价格 |
 | --- | --- | --- |
 ${llmModelList
   ?.map((item) => `| ${item.name} | ${item.inputPrice}/1k tokens | ${item.outputPrice}/1k tokens |`)
@@ -23,7 +23,7 @@ ${llmModelList
       title: '索引模型(文档训练 & 文档检索)',
       describe: '',
       md: `
-| 模型 | 价格(￥) |
+| 模型 | 价格 |
 | --- | --- |
 ${vectorModelList?.map((item) => `| ${item.name} | ${item.inputPrice}/1k 字符 |`).join('\n')}
       `
@@ -32,7 +32,7 @@ ${vectorModelList?.map((item) => `| ${item.name} | ${item.inputPrice}/1k 字符 
       title: '语音播放',
       describe: '',
       md: `
-| 模型 | 价格(￥) |
+| 模型 | 价格 |
 | --- | --- |
 ${audioSpeechModelList
   ?.map((item) => `| ${item.name} | ${item.inputPrice}/1k 字符 | - |`)
@@ -44,7 +44,7 @@ ${audioSpeechModelList
             title: '语音输入',
             describe: '',
             md: `
-| 模型 | 价格(￥) |
+| 模型 | 价格 |
 | --- | --- |
 | ${whisperModel.name} | ${whisperModel.inputPrice}/分钟 | - |`
           }
