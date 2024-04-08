@@ -109,7 +109,9 @@ const CollectionCard = () => {
   const { onOpenModal: onOpenEditTitleModal, EditModal: EditTitleModal } = useEditTitle({
     title: t('Rename')
   });
-
+  //是否显示预估时间提示
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState(0);
   const { editFolderData, setEditFolderData } = useEditFolder();
   const [moveCollectionData, setMoveCollectionData] = useState<{ collectionId: string }>();
 
@@ -149,37 +151,48 @@ const CollectionCard = () => {
   );
 
   // add file icon
-  const formatCollections = useMemo(
-    () =>
-      collections.map((collection) => {
-        const icon = getCollectionIcon(collection.type, collection.name);
-        const status = (() => {
-          if (collection.trainingAmount > 0) {
-            return {
-              statusText: t('dataset.collections.Collection Embedding', {
-                total: collection.trainingAmount
-              }),
-              color: 'myGray.600',
-              bg: 'myGray.50',
-              borderColor: 'borderColor.low'
-            };
-          }
+  const formatCollections = useMemo(() => {
+    var total = 0;
+    var result = collections.map((collection) => {
+      const icon = getCollectionIcon(collection.type, collection.name);
+      const status = (() => {
+        if (collection.trainingAmount > 0) {
+          var tempCount = 5; //默认每组索引5秒
+          if (collection.name.indexOf('.doc') >= 0)
+            //doc、docx耗时比较长每组60秒
+            tempCount = 60;
+          total += tempCount * collection.trainingAmount;
           return {
-            statusText: t('core.dataset.collection.status.active'),
-            color: 'green.600',
-            bg: 'green.50',
-            borderColor: 'green.300'
+            statusText: t('dataset.collections.Collection Embedding', {
+              total: collection.trainingAmount
+            }),
+            color: 'myGray.600',
+            bg: 'myGray.50',
+            borderColor: 'borderColor.low'
           };
-        })();
-
+        }
         return {
-          ...collection,
-          icon,
-          ...status
+          statusText: t('core.dataset.collection.status.active'),
+          color: 'green.600',
+          bg: 'green.50',
+          borderColor: 'green.300'
         };
-      }),
-    [collections, t]
-  );
+      })();
+      if (total > 0) {
+        setEstimatedTime(total);
+        setShowCountdown(true);
+      } else {
+        setShowCountdown(false);
+      }
+      return {
+        ...collection,
+        icon,
+        ...status
+      };
+    });
+    console.log('total:' + total);
+    return result;
+  }, [collections, t]);
 
   const { mutate: onCreateCollection, isLoading: isCreating } = useRequest({
     mutationFn: async ({
@@ -305,7 +318,7 @@ const CollectionCard = () => {
       <Flex ref={BoxRef} flexDirection={'column'} py={[1, 3]} h={'100%'}>
         {/* header */}
         <Flex px={[2, 6]} alignItems={'flex-start'} h={'35px'}>
-          <Box flex={1}>
+          <Box flex={1} display={'flex'}>
             <ParentPath
               paths={paths.map((path, i) => ({
                 parentId: path.parentId,
@@ -316,6 +329,13 @@ const CollectionCard = () => {
                   <Box fontWeight={'bold'} fontSize={['sm', 'lg']}>
                     {t(DatasetTypeMap[datasetDetail?.type]?.collectionLabel)}({total})
                   </Box>
+                  {showCountdown && (
+                    <Box textAlign={'center'} flex={1} fontWeight={'bold'} fontSize={['sm', 'lg']}>
+                      {'预估所需时间为' +
+                        estimatedTime +
+                        '秒，文档创建索引速度比PDF慢，请耐心等待！'}
+                    </Box>
+                  )}
                   {datasetDetail?.websiteConfig?.url && (
                     <Flex fontSize={'sm'}>
                       {t('core.dataset.website.Base Url')}:
