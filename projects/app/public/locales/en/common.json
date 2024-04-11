@@ -182,6 +182,7 @@
       "Filename Can not Be Empty": "Filename Can not Be Empty",
       "Read File Error": "Read file error",
       "Select and drag file tip": "Click or drag the file here to upload",
+      "Select folder": "Select folder",
       "Select failed": "Select file failed",
       "Select file amount limit": "A maximum of {{max}} files can be selected",
       "Select file amount limit 100": "You can select a maximum of 100 files at a time",

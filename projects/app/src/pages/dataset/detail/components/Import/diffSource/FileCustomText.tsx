@@ -14,7 +14,7 @@ const DataProcess = dynamic(() => import('../commonProgress/DataProcess'), {
 });
 const Upload = dynamic(() => import('../commonProgress/Upload'));
 
-const CustomTet = ({ activeStep, goToNext }: ImportDataComponentProps) => {
+const CustomTet = ({ type, activeStep, goToNext }: ImportDataComponentProps) => {
   return (
     <>
       {activeStep === 0 && <CustomTextInput goToNext={goToNext} />}

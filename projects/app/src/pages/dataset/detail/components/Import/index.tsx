@@ -16,6 +16,7 @@ const TableLocal = dynamic(() => import('./diffSource/TableLocal'));
 
 export enum ImportDataSourceEnum {
   fileLocal = 'fileLocal',
+  folderLocal = 'folderLocal',
   fileLink = 'fileLink',
   fileCustom = 'fileCustom',
 
@@ -26,13 +27,29 @@ const ImportDataset = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { datasetDetail } = useDatasetStore();
-  const { source = ImportDataSourceEnum.fileLocal, parentId } = (router.query || {}) as {
+  const {
+    source = ImportDataSourceEnum.fileLocal,
+    parentId,
+    type
+  } = (router.query || {}) as {
     source: `${ImportDataSourceEnum}`;
     parentId?: string;
+    type?: string;
   };
 
   const modeSteps: Record<`${ImportDataSourceEnum}`, { title: string }[]> = {
     [ImportDataSourceEnum.fileLocal]: [
+      {
+        title: t('core.dataset.import.Select file')
+      },
+      {
+        title: t('core.dataset.import.Data Preprocessing')
+      },
+      {
+        title: t('core.dataset.import.Upload data')
+      }
+    ],
+    [ImportDataSourceEnum.folderLocal]: [
       {
         title: t('core.dataset.import.Select file')
       },
@@ -91,6 +108,7 @@ const ImportDataset = () => {
     if (source === ImportDataSourceEnum.tableLocal) return TableLocal;
   }, [source]);
 
+  // @ts-ignore
   return ImportComponent ? (
     <Flex flexDirection={'column'} bg={'white'} h={'100%'} px={[2, 9]} py={[2, 5]}>
       <Flex>
@@ -144,7 +162,7 @@ const ImportDataset = () => {
       </Box>
       <Provider dataset={datasetDetail} parentId={parentId}>
         <Box flex={'1 0 0'} overflow={'auto'} position={'relative'}>
-          <ImportComponent activeStep={activeStep} goToNext={goToNext} />
+          <ImportComponent activeStep={activeStep} goToNext={goToNext} type={type || ''} />
         </Box>
       </Provider>
     </Flex>

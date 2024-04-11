@@ -24,7 +24,7 @@ type FileItemType = ImportSourceItemType & { file: File };
 const fileType = '.csv';
 const maxSelectFileCount = 1000;
 
-const FileLocal = ({ activeStep, goToNext }: ImportDataComponentProps) => {
+const FileLocal = ({ type, activeStep, goToNext }: ImportDataComponentProps) => {
   return (
     <>
       {activeStep === 0 && <SelectFile goToNext={goToNext} />}

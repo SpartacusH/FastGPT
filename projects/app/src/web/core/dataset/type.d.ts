@@ -4,6 +4,7 @@ import { ImportProcessWayEnum } from './constants';
 import { UseFormReturn } from 'react-hook-form';
 
 export type ImportDataComponentProps = {
+  type: string;
   activeStep: number;
   goToNext: () => void;
 };

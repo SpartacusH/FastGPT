@@ -29,6 +29,11 @@ const FileModeSelector = ({ onClose }: { onClose: () => void }) => {
               value: ImportDataSourceEnum.fileLocal
             },
             {
+              title: t('core.dataset.import.Local folder'),
+              desc: t('core.dataset.import.Local folder desc'),
+              value: ImportDataSourceEnum.folderLocal
+            },
+            {
               title: t('core.dataset.import.Web link'),
               desc: t('core.dataset.import.Web link desc'),
               value: ImportDataSourceEnum.fileLink
@@ -45,15 +50,22 @@ const FileModeSelector = ({ onClose }: { onClose: () => void }) => {
       </ModalBody>
       <ModalFooter>
         <Button
-          onClick={() =>
+          onClick={() => {
+            var tempValue = value;
+            var type = '';
+            if (value == ImportDataSourceEnum.folderLocal) {
+              tempValue = ImportDataSourceEnum.fileLocal;
+              type = 'folder';
+            }
             router.replace({
               query: {
                 ...router.query,
                 currentTab: TabEnum.import,
-                source: value
+                source: tempValue,
+                type: type
               }
-            })
-          }
+            });
+          }}
         >
           {t('common.Confirm')}
         </Button>

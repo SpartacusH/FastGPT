@@ -3,6 +3,7 @@ import { ImportDataComponentProps } from '@/web/core/dataset/type.d';
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { ImportSourceItemType } from '@/web/core/dataset/type.d';
 import FileSelector, { type SelectFileItemType } from '@/web/core/dataset/components/FileSelector';
+import FolderUploader from '@/web/core/dataset/components/FolderUploader';
 import { getFileIcon } from '@fastgpt/global/common/file/icon';
 import MyIcon from '@fastgpt/web/components/common/Icon';
 import { formatFileSize } from '@fastgpt/global/common/file/tools';
@@ -29,11 +30,10 @@ const PreviewRawText = dynamic(() => import('../components/PreviewRawText'));
 type FileItemType = ImportSourceItemType & { file: File };
 const fileType = '.txt, .docx, .csv, .pdf, .md, .html, .doc';
 const maxSelectFileCount = 1000;
-
-const FileLocal = ({ activeStep, goToNext }: ImportDataComponentProps) => {
+const FileLocal = ({ type, activeStep, goToNext }: ImportDataComponentProps) => {
   return (
     <>
-      {activeStep === 0 && <SelectFile goToNext={goToNext} />}
+      {activeStep === 0 && <SelectFile goToNext={goToNext} type={type} />}
       {activeStep === 1 && <DataProcess showPreviewChunks goToNext={goToNext} />}
       {activeStep === 2 && <Upload showPreviewChunks />}
     </>
@@ -42,7 +42,13 @@ const FileLocal = ({ activeStep, goToNext }: ImportDataComponentProps) => {
 
 export default React.memo(FileLocal);
 
-const SelectFile = React.memo(function SelectFile({ goToNext }: { goToNext: () => void }) {
+const SelectFile = React.memo(function SelectFile({
+  goToNext,
+  type
+}: {
+  goToNext: () => void;
+  type: any;
+}) {
   const { t } = useTranslation();
   const { feConfigs } = useSystemStore();
   const { sources, setSources } = useImportStore();
@@ -105,14 +111,26 @@ const SelectFile = React.memo(function SelectFile({ goToNext }: { goToNext: () =
 
   return (
     <Box>
-      <FileSelector
-        isLoading={isLoading}
-        fileType={fileType}
-        multiple
-        maxCount={maxSelectFileCount}
-        maxSize={(feConfigs?.uploadFileMaxSize || 500) * 1024 * 1024}
-        onSelectFile={onSelectFile}
-      />
+      {type == 'folder' && (
+        <FolderUploader
+          isLoading={isLoading}
+          fileType={fileType}
+          multiple
+          maxCount={maxSelectFileCount}
+          maxSize={(feConfigs?.uploadFileMaxSize || 500) * 1024 * 1024}
+          onSelectFile={onSelectFile}
+        />
+      )}
+      {type != 'folder' && (
+        <FileSelector
+          isLoading={isLoading}
+          fileType={fileType}
+          multiple
+          maxCount={maxSelectFileCount}
+          maxSize={(feConfigs?.uploadFileMaxSize || 500) * 1024 * 1024}
+          onSelectFile={onSelectFile}
+        />
+      )}
 
       {/* render files */}
       <Flex my={4} flexWrap={'wrap'} gap={5} alignItems={'center'}>

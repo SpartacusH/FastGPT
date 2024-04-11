@@ -18,7 +18,7 @@ const DataProcess = dynamic(() => import('../commonProgress/DataProcess'), {
 });
 const Upload = dynamic(() => import('../commonProgress/Upload'));
 
-const LinkCollection = ({ activeStep, goToNext }: ImportDataComponentProps) => {
+const LinkCollection = ({ type, activeStep, goToNext }: ImportDataComponentProps) => {
   return (
     <>
       {activeStep === 0 && <CustomLinkImport goToNext={goToNext} />}
