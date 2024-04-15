@@ -3,6 +3,7 @@ import { readCsvContent } from './csv';
 import { readHtmlFile } from './html';
 import { readMdFile } from './md';
 import { readPdfFile } from './pdf';
+import { readDocContent} from './doc';
 import { readFileRawText } from './rawText';
 import { readWordFile } from './word';
 
@@ -35,6 +36,11 @@ export const readFileRawContent = async ({
     case 'pdf':
       const pdf = await loadFile2Buffer({ file });
       return readPdfFile({ pdf });
+    case 'ofd':
+    case 'doc':
+    case 'wps':
+      // @ts-ignore
+      return readDocContent({ file });
     case 'docx':
       return readWordFile({
         file,
