@@ -83,6 +83,8 @@ const EditForm = ({
   const [isSaveConfig, setIsSaveConfig] = useState(false);
   //模型问答返回值
   const [response, setResponse] = useState('');
+  //生成报告主题
+  const [reportTheme, setReportTheme] = useState('');
   //获取设置表单属性
   const { register, setValue, getValues, reset, handleSubmit, control, watch } =
     useForm<ReportSimpleEditFormType>({
@@ -197,7 +199,7 @@ const EditForm = ({
       const template = reportTemplates.find((item) => item.id === 'report-universal');
       // @ts-ignore
       if (!data.avatar) data.avatar = '/icon/logo.svg';
-      console.log('报告主题' + data.aiSettings.quotePrompt);
+      console.log('报告主题' + reportTheme);
       //组织创建报告所需参数
       const postData = {
         // @ts-ignore
@@ -438,7 +440,8 @@ const EditForm = ({
               rows={5}
               placeholder={t('core.report.themeText')}
               onBlur={(e) => {
-                setValue('aiSettings.quotePrompt', e.target.value || '');
+                setReportTheme(e.target.value || '');
+                //setValue('aiSettings.quotePrompt', e.target.value || '');
               }}
             />
           </Box>
