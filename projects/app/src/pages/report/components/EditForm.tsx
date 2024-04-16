@@ -197,6 +197,7 @@ const EditForm = ({
       const template = reportTemplates.find((item) => item.id === 'report-universal');
       // @ts-ignore
       if (!data.avatar) data.avatar = '/icon/logo.svg';
+      console.log('报告主题' + data.aiSettings.quotePrompt);
       //组织创建报告所需参数
       const postData = {
         // @ts-ignore
@@ -231,6 +232,7 @@ const EditForm = ({
             { dataId: nanoid(), role: 'user', content: inputText },
             { dataId: nanoid(), role: 'assistant', content: '' }
           ];
+
           // @ts-ignore
           const { responseText, responseData } = await streamFetch({
             data: {
@@ -421,7 +423,25 @@ const EditForm = ({
               />
             </Flex>
           </Box>
-
+          {/* theme */}
+          <Box {...BoxStyles}>
+            <Flex alignItems={'center'}>
+              <MyIcon name={'core/app/questionGuide'} mr={2} w={'20px'} />
+              <Box mx={2}>{t('core.report.Theme Text')}</Box>
+              <MyTooltip label={t('core.report.themeDescriptionText')} forceShow>
+                <QuestionOutlineIcon />
+              </MyTooltip>
+            </Flex>
+            <MyTextarea
+              mt={2}
+              bg={'myWhite.400'}
+              rows={5}
+              placeholder={t('core.report.themeText')}
+              onBlur={(e) => {
+                setValue('aiSettings.quotePrompt', e.target.value || '');
+              }}
+            />
+          </Box>
           {/* ai */}
           <Box {...BoxStyles}>
             <Flex alignItems={'center'}>

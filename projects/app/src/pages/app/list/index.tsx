@@ -108,6 +108,8 @@ const MyApps = () => {
               onClick={() => {
                 let url;
                 if (userInfo?.team.canWrite) {
+                  url = `/report?appId=${app._id}`;
+                } else if (userInfo?.team.canWrite) {
                   url = `/app/detail?appId=${app._id}`;
                   //router.push(`/app/detail?appId=${app._id}`);
                 } else {

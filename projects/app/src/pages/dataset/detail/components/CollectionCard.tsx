@@ -157,10 +157,10 @@ const CollectionCard = () => {
       const icon = getCollectionIcon(collection.type, collection.name);
       const status = (() => {
         if (collection.trainingAmount > 0) {
-          var tempCount = 5; //默认每组索引5秒
+          var tempCount = 1; //默认每组索引1秒
           if (collection.name.indexOf('.doc') >= 0)
-            //doc、docx耗时比较长每组60秒
-            tempCount = 60;
+            //doc、docx耗时比较长每组2秒
+            tempCount = 2;
           total += tempCount * collection.trainingAmount;
           return {
             statusText: t('dataset.collections.Collection Embedding', {

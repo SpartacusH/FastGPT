@@ -491,8 +491,11 @@
     },
     "report":{
        "welcomeText":"输入问题",
+       "themeText":"输入报告主题",
+       "themeDescriptionText":"生成报告的主题",
        "Report params config": "报告配置",
        "Input Text": "问答",
+       "Theme Text": "报告主题",
        "Output Text": "输出",
        "Input Name": "报告名称",
        "Save Config": "保存配置"
