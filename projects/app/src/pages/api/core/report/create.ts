@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       throw new Error('每个团队上限 50000000 个应用');
     }
 
-    // 创建模型
+    // 创建模型 微调
     const response = await MongoReport.create({
       avatar,
       name,
