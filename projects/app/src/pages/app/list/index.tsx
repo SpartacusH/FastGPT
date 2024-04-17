@@ -107,18 +107,19 @@ const MyApps = () => {
               }}
               onClick={() => {
                 let url;
-                if (userInfo?.team.canWrite) {
+                if (app.simpleTemplateId == 'report-universal') {
+                  //报告
                   url = `/report?appId=${app._id}`;
-                } else if (userInfo?.team.canWrite) {
-                  url = `/app/detail?appId=${app._id}`;
-                  //router.push(`/app/detail?appId=${app._id}`);
-                } else {
-                  url = `/chat?appId=${app._id}`;
-                  // router.push(`/chat?appId=${app._id}`);
-                  if (app.simpleTemplateId == 'report-universal') {
-                    url = `/report?appId=${app._id}`;
-                  } else if (app.simpleTemplateId == 'video-universal') {
-                    url = `/video?appId=${app._id}`;
+                }
+                // else if (app.simpleTemplateId == 'video-universal') {//视频
+                //     url = `/video?appId=${app._id}`;
+                // }
+                else {
+                  if (userInfo?.team.canWrite) {
+                    //私人APP，直接进入设置界面
+                    url = `/app/detail?appId=${app._id}`;
+                  } else {
+                    url = `/chat?appId=${app._id}`; //公共的APP直接进入聊天界面
                   }
                 }
                 router.push(url);
