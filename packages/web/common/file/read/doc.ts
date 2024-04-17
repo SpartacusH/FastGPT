@@ -1,13 +1,29 @@
-
-import {loadFile2Buffer} from "../utils";
+import { loadFile2Buffer } from '../utils';
 import * as pdfjsLib from 'pdfjs-dist';
 // 假设FastAPI服务运行在 http://localhost:8000
 
-const use_ip =  "192.168.31.161"
-const apiUrl1 = 'http://'+use_ip+':3088/api/convert2'; // doc和wps的
-const apiUrl2 = 'http://'+use_ip+':3089/api/convert2'; // ofd的
-//const apiUrl = '/api/convert2'; // 替换为你的FastAPI服务实际地址
+let ipAddress;
+if (typeof window !== 'undefined') {
+  let thisurl = window.location.href;
 
+  // 考虑localhost的情况
+  if (thisurl.indexOf('localhost') > -1) {
+    ipAddress = 'localhost';
+  } else {
+    const matchResult = thisurl.match(/http:\/\/(\d+\.\d+\.\d+\.\d+)/);
+    if (matchResult && matchResult[1]) {
+      ipAddress = matchResult[1];
+    } else {
+      // 如果没有匹配到 IP 地址，可以提供默认值或处理异常情况
+      ipAddress = 'localhost';
+    }
+  }
+  console.log('url:', ipAddress);
+}
+
+const use_ip = ipAddress;
+const apiUrl1 = 'http://' + use_ip + ':3088/api/convert2'; // doc和wps的
+const apiUrl2 = 'http://' + use_ip + ':3089/api/convert2'; // ofd的
 type TokenType = {
   str: string;
   dir: string;
@@ -18,9 +34,7 @@ type TokenType = {
   hasEOL: boolean;
 };
 
-export const readDocContent = async ({ file }: {
-  file: File;
-}) =>{
+export const readDocContent = async ({ file }: { file: File }) => {
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/js/pdf.worker.js';
   const readPDFPage = async (doc: any, pageNo: number) => {
     const page = await doc.getPage(pageNo);
@@ -60,49 +74,48 @@ export const readDocContent = async ({ file }: {
   };
 
   if (file) {
-     try {
-        console.log('apiUrl',file.name,file.type)
-        const arrayBuffer = await loadFile2Buffer({ file }); // ArrayBuffer数据
+    try {
+      console.log('apiUrl', file.name, file.type);
+      const arrayBuffer = await loadFile2Buffer({ file }); // ArrayBuffer数据
 
-        // 将ArrayBuffer转换为Base64字符串
-        const base64String = btoa(
-          new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-        );
+      // 将ArrayBuffer转换为Base64字符串
+      const base64String = btoa(
+        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
 
-        // 构建请求体为JSON格式，包含type和base64数据
-        const requestBody = {
-          file_name: file.name,
-          data: base64String
-        };
-        let apiUrl = apiUrl1
-        //  判断后缀
-        if (file.name.endsWith('.ofd')) {
-             apiUrl = apiUrl2
-         }
-        // JSON.stringify将请求体对象转换为JSON字符串
-        const bodyAsJsonString = JSON.stringify(requestBody);
-        try {
+      // 构建请求体为JSON格式，包含type和base64数据
+      const requestBody = {
+        file_name: file.name,
+        data: base64String
+      };
+      let apiUrl = apiUrl1;
+      //  判断后缀
+      if (file.name.endsWith('.ofd')) {
+        apiUrl = apiUrl2;
+      }
+      // JSON.stringify将请求体对象转换为JSON字符串
+      const bodyAsJsonString = JSON.stringify(requestBody);
+      try {
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'text/plain'
           },
-          body: bodyAsJsonString, // 将JSON字符串作为请求体
+          body: bodyAsJsonString // 将JSON字符串作为请求体
         });
 
-          const data = await response.json();
-          let binaryString = atob(data.pdf_file);
+        const data = await response.json();
+        let binaryString = atob(data.pdf_file);
 
+        // 创建适当大小的ArrayBuffer
+        let len = binaryString.length;
+        let buffer = new ArrayBuffer(len);
+        let view = new Uint8Array(buffer);
 
-          // 创建适当大小的ArrayBuffer
-          let len = binaryString.length;
-          let buffer = new ArrayBuffer(len);
-          let view = new Uint8Array(buffer);
-
-          // 将每个字符转换为字节并填充到ArrayBuffer中
-          for (let i = 0; i < len; i++) {
-            view[i] = binaryString.charCodeAt(i);
-          }
+        // 将每个字符转换为字节并填充到ArrayBuffer中
+        for (let i = 0; i < len; i++) {
+          view[i] = binaryString.charCodeAt(i);
+        }
         const doc = await pdfjsLib.getDocument(buffer).promise;
         const pageTextPromises = [];
         for (let pageNo = 1; pageNo <= doc.numPages; pageNo++) {
@@ -115,19 +128,15 @@ export const readDocContent = async ({ file }: {
           rawText: pageTexts.join('')
         };
 
-          // resolve(buffer);
-        } catch (postRequestError) {
-          console.error('An error occurred during the POST request:', postRequestError);
-
-        }
-      } catch (loadFileError) {
-        console.error('An error occurred while loading the file:', loadFileError);
-
+        // resolve(buffer);
+      } catch (postRequestError) {
+        console.error('An error occurred during the POST request:', postRequestError);
       }
-    } else {
-      // 如果没有文件，可以添加一个错误处理
-      console.error('No file selected.');
+    } catch (loadFileError) {
+      console.error('An error occurred while loading the file:', loadFileError);
     }
-  };
-
-
+  } else {
+    // 如果没有文件，可以添加一个错误处理
+    console.error('No file selected.');
+  }
+};
