@@ -231,7 +231,12 @@ const EditForm = ({
           // @ts-ignore
           appId = getValues('id'); //将生成的报告id设置为appId，后续聊天问答用
           const messages = [
-            { dataId: nanoid(), role: 'user', content: inputText },
+            {
+              dataId: nanoid(),
+              role: 'user',
+              content:
+                '请根据如下主题和模板，补全相关信息。\n主题：[' + reportTheme + ']\n' + inputText
+            },
             { dataId: nanoid(), role: 'assistant', content: '' }
           ];
 
@@ -239,7 +244,7 @@ const EditForm = ({
           const { responseText, responseData } = await streamFetch({
             data: {
               history: [],
-              prompt: '你是一个人工智能撰写助手,根据传入的模板，补全里面的信息',
+              prompt: '你是一个人工智能撰写助手,根据传入的模板和主题，补全里面的信息。\n',
               messages: messages,
               reportId: appId
             },
