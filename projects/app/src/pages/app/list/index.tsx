@@ -1,5 +1,15 @@
 import React, { useCallback } from 'react';
-import { Box, Grid, Flex, IconButton, Button, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Grid,
+  Flex,
+  IconButton,
+  Button,
+  Divider,
+  Heading,
+  Badge,
+  useDisclosure
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { AddIcon } from '@chakra-ui/icons';
@@ -71,124 +81,263 @@ const MyApps = () => {
           </Button>
         )}
       </Flex>
-      <Grid
-        py={[4, 6]}
-        gridTemplateColumns={['1fr', 'repeat(2,1fr)', 'repeat(3,1fr)', 'repeat(4,1fr)']}
-        gridGap={5}
-      >
-        {myApps.map((app) => (
-          <MyTooltip
-            key={app._id}
-            label={userInfo?.team.canWrite ? t('app.To Settings') : t('app.To Chat')}
-          >
-            <Box
-              lineHeight={1.5}
-              h={'100%'}
-              py={3}
-              px={5}
-              cursor={'pointer'}
-              borderWidth={'1.5px'}
-              borderColor={'borderColor.low'}
-              bg={'white'}
-              borderRadius={'md'}
-              userSelect={'none'}
-              position={'relative'}
-              display={'flex'}
-              flexDirection={'column'}
-              _hover={{
-                borderColor: 'primary.300',
-                boxShadow: '1.5',
-                '& .delete': {
-                  display: 'flex'
-                },
-                '& .chat': {
-                  display: 'flex'
-                }
-              }}
-              onClick={() => {
-                let url;
-                if (app.simpleTemplateId == 'report-universal') {
-                  //报告
-                  url = `/report?appId=${app._id}`;
-                }
-                // else if (app.simpleTemplateId == 'video-universal') {//视频
-                //     url = `/video?appId=${app._id}`;
-                // }
-                else {
-                  if (userInfo?.team.canWrite) {
-                    //私人APP，直接进入设置界面
-                    url = `/app/detail?appId=${app._id}`;
-                  } else {
-                    url = `/chat?appId=${app._id}`; //公共的APP直接进入聊天界面
-                  }
-                }
-                router.push(url);
-              }}
-            >
-              <Flex alignItems={'center'} h={'38px'}>
-                <Avatar src={app.avatar} borderRadius={'md'} w={'28px'} />
-                <Box ml={3}>{app.name}</Box>
-                {app.isOwner && userInfo?.team.canWrite && (
-                  <IconButton
-                    className="delete"
-                    position={'absolute'}
-                    top={4}
-                    right={4}
-                    size={'xsSquare'}
-                    variant={'whiteDanger'}
-                    icon={<MyIcon name={'delete'} w={'14px'} />}
-                    aria-label={'delete'}
-                    display={['', 'none']}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openConfirm(() => onclickDelApp(app._id))();
-                    }}
-                  />
-                )}
-              </Flex>
-              <Box
-                flex={1}
-                className={'textEllipsis3'}
-                py={2}
-                wordBreak={'break-all'}
-                fontSize={'sm'}
-                color={'myGray.600'}
+      <Box height={'calc((100vh - 100px)/2)'} marginTop={'10px'} overflowY={'auto'}>
+        <Badge padding={'10px'} fontSize="18px">
+          {'私有应用'}
+        </Badge>
+        <Grid
+          paddingTop={'10px'}
+          py={[4, 6]}
+          gridTemplateColumns={['1fr', 'repeat(2,1fr)', 'repeat(3,1fr)', 'repeat(4,1fr)']}
+          gridGap={5}
+        >
+          {myApps
+            .filter(function (cur) {
+              return cur.permission == 'private';
+            })
+            .map((app) => (
+              <MyTooltip
+                key={app._id}
+                label={userInfo?.team.canWrite ? t('app.To Settings') : t('app.To Chat')}
               >
-                {app.intro || '这个应用还没写介绍~'}
-              </Box>
-              <Flex h={'34px'} alignItems={'flex-end'}>
-                <Box flex={1}>
-                  <PermissionIconText permission={app.permission} color={'myGray.600'} />
-                </Box>
-                {userInfo?.team.canWrite && (
-                  <IconButton
-                    className="chat"
-                    size={'xsSquare'}
-                    variant={'whitePrimary'}
-                    icon={
-                      <MyTooltip label={'去聊天'}>
-                        <MyIcon name={'core/chat/chatLight'} w={'14px'} />
-                      </MyTooltip>
+                <Box
+                  lineHeight={1.5}
+                  h={'100%'}
+                  py={3}
+                  px={5}
+                  cursor={'pointer'}
+                  borderWidth={'1.5px'}
+                  borderColor={'borderColor.low'}
+                  bg={'white'}
+                  borderRadius={'md'}
+                  userSelect={'none'}
+                  position={'relative'}
+                  display={'flex'}
+                  flexDirection={'column'}
+                  _hover={{
+                    borderColor: 'primary.300',
+                    boxShadow: '1.5',
+                    '& .delete': {
+                      display: 'flex'
+                    },
+                    '& .chat': {
+                      display: 'flex'
                     }
-                    aria-label={'chat'}
-                    display={['', 'none']}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      let url = `/chat?appId=${app._id}`;
-                      if (app.simpleTemplateId == 'report-universal') {
-                        url = `/report?appId=${app._id}`;
-                      } else if (app.simpleTemplateId == 'video-universal') {
-                        url = `/video?appId=${app._id}`;
+                  }}
+                  onClick={() => {
+                    let url;
+                    if (app.simpleTemplateId == 'report-universal') {
+                      //报告
+                      url = `/report?appId=${app._id}`;
+                    }
+                    // else if (app.simpleTemplateId == 'video-universal') {//视频
+                    //     url = `/video?appId=${app._id}`;
+                    // }
+                    else {
+                      if (userInfo?.team.canWrite) {
+                        //私人APP，直接进入设置界面
+                        url = `/app/detail?appId=${app._id}`;
+                      } else {
+                        url = `/chat?appId=${app._id}`; //公共的APP直接进入聊天界面
                       }
-                      router.push(url);
-                    }}
-                  />
-                )}
-              </Flex>
-            </Box>
-          </MyTooltip>
-        ))}
-      </Grid>
+                    }
+                    router.push(url);
+                  }}
+                >
+                  <Flex alignItems={'center'} h={'38px'}>
+                    <Avatar src={app.avatar} borderRadius={'md'} w={'28px'} />
+                    <Box ml={3}>{app.name}</Box>
+                    {app.isOwner && userInfo?.team.canWrite && (
+                      <IconButton
+                        className="delete"
+                        position={'absolute'}
+                        top={4}
+                        right={4}
+                        size={'xsSquare'}
+                        variant={'whiteDanger'}
+                        icon={<MyIcon name={'delete'} w={'14px'} />}
+                        aria-label={'delete'}
+                        display={['', 'none']}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openConfirm(() => onclickDelApp(app._id))();
+                        }}
+                      />
+                    )}
+                  </Flex>
+                  <Box
+                    flex={1}
+                    className={'textEllipsis3'}
+                    py={2}
+                    wordBreak={'break-all'}
+                    fontSize={'sm'}
+                    color={'myGray.600'}
+                  >
+                    {app.intro || '这个应用还没写介绍~'}
+                  </Box>
+                  <Flex h={'34px'} alignItems={'flex-end'}>
+                    <Box flex={1}>
+                      <PermissionIconText permission={app.permission} color={'myGray.600'} />
+                    </Box>
+                    {userInfo?.team.canWrite && (
+                      <IconButton
+                        className="chat"
+                        size={'xsSquare'}
+                        variant={'whitePrimary'}
+                        icon={
+                          <MyTooltip label={'去聊天'}>
+                            <MyIcon name={'core/chat/chatLight'} w={'14px'} />
+                          </MyTooltip>
+                        }
+                        aria-label={'chat'}
+                        display={['', 'none']}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          let url = `/chat?appId=${app._id}`;
+                          if (app.simpleTemplateId == 'report-universal') {
+                            url = `/report?appId=${app._id}`;
+                          } else if (app.simpleTemplateId == 'video-universal') {
+                            url = `/video?appId=${app._id}`;
+                          }
+                          router.push(url);
+                        }}
+                      />
+                    )}
+                  </Flex>
+                </Box>
+              </MyTooltip>
+            ))}
+        </Grid>
+      </Box>
+      <Divider />
+      <Box height={'calc((100vh - 200px)/2)'} marginTop={'10px'} overflowY={'auto'}>
+        <Badge padding={'10px'} fontSize="18px">
+          {'团队应用'}
+        </Badge>
+        <Grid
+          paddingTop={'10px'}
+          py={[4, 6]}
+          gridTemplateColumns={['1fr', 'repeat(2,1fr)', 'repeat(3,1fr)', 'repeat(4,1fr)']}
+          gridGap={5}
+        >
+          {myApps
+            .filter(function (cur) {
+              return cur.permission == 'public';
+            })
+            .map((app) => (
+              <MyTooltip
+                key={app._id}
+                label={userInfo?.team.canWrite ? t('app.To Settings') : t('app.To Chat')}
+              >
+                <Box
+                  lineHeight={1.5}
+                  h={'100%'}
+                  py={3}
+                  px={5}
+                  cursor={'pointer'}
+                  borderWidth={'1.5px'}
+                  borderColor={'borderColor.low'}
+                  bg={'white'}
+                  borderRadius={'md'}
+                  userSelect={'none'}
+                  position={'relative'}
+                  display={'flex'}
+                  flexDirection={'column'}
+                  _hover={{
+                    borderColor: 'primary.300',
+                    boxShadow: '1.5',
+                    '& .delete': {
+                      display: 'flex'
+                    },
+                    '& .chat': {
+                      display: 'flex'
+                    }
+                  }}
+                  onClick={() => {
+                    let url;
+                    if (app.simpleTemplateId == 'report-universal') {
+                      //报告
+                      url = `/report?appId=${app._id}`;
+                    }
+                    // else if (app.simpleTemplateId == 'video-universal') {//视频
+                    //     url = `/video?appId=${app._id}`;
+                    // }
+                    else {
+                      if (userInfo?.team.canWrite) {
+                        //私人APP，直接进入设置界面
+                        url = `/app/detail?appId=${app._id}`;
+                      } else {
+                        url = `/chat?appId=${app._id}`; //公共的APP直接进入聊天界面
+                      }
+                    }
+                    router.push(url);
+                  }}
+                >
+                  <Flex alignItems={'center'} h={'38px'}>
+                    <Avatar src={app.avatar} borderRadius={'md'} w={'28px'} />
+                    <Box ml={3}>{app.name}</Box>
+                    {app.isOwner && userInfo?.team.canWrite && (
+                      <IconButton
+                        className="delete"
+                        position={'absolute'}
+                        top={4}
+                        right={4}
+                        size={'xsSquare'}
+                        variant={'whiteDanger'}
+                        icon={<MyIcon name={'delete'} w={'14px'} />}
+                        aria-label={'delete'}
+                        display={['', 'none']}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openConfirm(() => onclickDelApp(app._id))();
+                        }}
+                      />
+                    )}
+                  </Flex>
+                  <Box
+                    flex={1}
+                    className={'textEllipsis3'}
+                    py={2}
+                    wordBreak={'break-all'}
+                    fontSize={'sm'}
+                    color={'myGray.600'}
+                  >
+                    {app.intro || '这个应用还没写介绍~'}
+                  </Box>
+                  <Flex h={'34px'} alignItems={'flex-end'}>
+                    <Box flex={1}>
+                      <PermissionIconText permission={app.permission} color={'myGray.600'} />
+                    </Box>
+                    {userInfo?.team.canWrite && (
+                      <IconButton
+                        className="chat"
+                        size={'xsSquare'}
+                        variant={'whitePrimary'}
+                        icon={
+                          <MyTooltip label={'去聊天'}>
+                            <MyIcon name={'core/chat/chatLight'} w={'14px'} />
+                          </MyTooltip>
+                        }
+                        aria-label={'chat'}
+                        display={['', 'none']}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          let url = `/chat?appId=${app._id}`;
+                          if (app.simpleTemplateId == 'report-universal') {
+                            url = `/report?appId=${app._id}`;
+                          } else if (app.simpleTemplateId == 'video-universal') {
+                            url = `/video?appId=${app._id}`;
+                          }
+                          router.push(url);
+                        }}
+                      />
+                    )}
+                  </Flex>
+                </Box>
+              </MyTooltip>
+            ))}
+        </Grid>
+      </Box>
       {myApps.length === 0 && (
         <Flex mt={'35vh'} flexDirection={'column'} alignItems={'center'}>
           <MyIcon name="empty" w={'48px'} h={'48px'} color={'transparent'} />

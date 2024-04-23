@@ -1,5 +1,6 @@
 import type { UserModelSchema } from '../type';
 import type { TeamMemberRoleEnum, TeamMemberStatusEnum } from './constant';
+import { PermissionTypeEnum } from '../../permission/constant';
 
 export type TeamSchema = {
   _id: string;
@@ -24,6 +25,13 @@ export type TeamMemberSchema = {
   role: `${TeamMemberRoleEnum}`;
   status: `${TeamMemberStatusEnum}`;
   defaultTeam: boolean;
+};
+
+export type TeamListItemType = {
+  _id: string;
+  teamName: string;
+  avatar: string;
+  ownerId: string;
 };
 
 export type TeamMemberWithUserSchema = TeamMemberSchema & {

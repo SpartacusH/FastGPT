@@ -16,11 +16,10 @@ import {
 
 /* --------------- team  ---------------- */
 export const getTeamList = (status: `${TeamMemberSchema['status']}`) =>
-  GET<TeamItemType[]>(`/proApi/support/user/team/list`, { status });
+  GET<TeamItemType[]>(`/support/user/team/list`, { status });
 export const postCreateTeam = (data: CreateTeamProps) =>
-  POST<string>(`/proApi/support/user/team/create`, data);
-export const putUpdateTeam = (data: UpdateTeamProps) =>
-  PUT(`/proApi/support/user/team/update`, data);
+  POST<string>(`/support/user/team/create`, data);
+export const putUpdateTeam = (data: UpdateTeamProps) => PUT(`/support/user/team/update`, data);
 export const putSwitchTeam = (teamId: string) =>
   PUT<string>(`/proApi/support/user/team/switch`, { teamId });
 
@@ -28,7 +27,7 @@ export const putSwitchTeam = (teamId: string) =>
 export const getTeamMembers = (teamId: string) =>
   GET<TeamMemberItemType[]>(`/proApi/support/user/team/member/list`, { teamId });
 export const postInviteTeamMember = (data: InviteMemberProps) =>
-  POST<InviteMemberResponse>(`/proApi/support/user/team/member/invite`, data);
+  POST<InviteMemberResponse>(`/support/user/team/member/invite`, data);
 export const putUpdateMember = (data: UpdateTeamMemberProps) =>
   PUT(`/proApi/support/user/team/member/update`, data);
 export const putUpdateMemberName = (name: string) =>
