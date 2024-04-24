@@ -148,7 +148,7 @@ const TeamManageModal = ({ onClose }: { onClose: () => void }) => {
               <Box flex={['0 0 auto', 1]} fontWeight={'bold'} fontSize={['md', 'lg']}>
                 {t('common.Team')}
               </Box>
-              {myTeams.length < 1 && (
+              {myTeams.length >= 0 && (
                 <IconButton
                   variant={'ghost'}
                   border={'none'}

@@ -1,4 +1,6 @@
 import { OAuthEnum } from './constant';
+import { AppTypeEnum } from '../../core/app/constants';
+import { AppSchema } from '../../core/app/type';
 
 export type PostLoginProps = {
   username: string;
@@ -17,3 +19,17 @@ export type FastLoginProps = {
   token: string;
   code: string;
 };
+
+/*创建团队*/
+export type CreateTeamParams = {
+  name?: string;
+  avatar?: string;
+  balance?: bigint;
+};
+/*修改团队*/
+export interface TeamUpdateParams {
+  teamId: string;
+  name?: string;
+  avatar?: string;
+  balance?: bigint;
+}
