@@ -530,6 +530,7 @@
       "Select dataset": "选择知识库",
       "Set Empty Result Tip": ",未搜索到内容时回复指定内容",
       "Set Website Config": "开始配置网站信息",
+      "Batch Delete": "批量删除",
       "Similarity": "相关度",
       "Sync Time": "最后更新时间",
       "Table collection": "表格数据集",
@@ -1130,7 +1131,7 @@
   "navbar": {
     "Account": "账号",
     "Apps": "AI助手",
-    "Chat": "聊天",
+    "Chat": "对话",
     "Datasets": "知识库",
     "Module": "模块",
     "Plugin": "插件",
