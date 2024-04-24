@@ -531,6 +531,7 @@
       "Set Empty Result Tip": ",未搜索到内容时回复指定内容",
       "Set Website Config": "开始配置网站信息",
       "Batch Delete": "批量删除",
+      "Delete Tip": "请选择至少一个文件",
       "Similarity": "相关度",
       "Sync Time": "最后更新时间",
       "Table collection": "表格数据集",
