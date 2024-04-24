@@ -14,11 +14,13 @@ import {
   useDisclosure,
   Button,
   Link,
-  useTheme
+  useTheme,
+  Checkbox
 } from '@chakra-ui/react';
 import {
   getDatasetCollections,
   delDatasetCollectionById,
+  delDatasetCollectionByIds,
   putDatasetCollectionById,
   postDatasetCollection,
   getDatasetCollectionPathById,
@@ -194,6 +196,60 @@ const CollectionCard = () => {
     return result;
   }, [collections, t]);
 
+  // 批量删除
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
+
+  const handleHeaderCheckboxChange = () => {
+    if (isAllSelected) {
+      // 如果当前是全选状态，则取消所有选中
+      setSelectedItems([]);
+    } else {
+      // 否则，全选所有项目
+      setSelectedItems(formatCollections.map((collection) => collection._id));
+    }
+    setIsAllSelected(!isAllSelected);
+  };
+  // 监听collections的变化，取消选择状态
+  useEffect(() => {
+    setSelectedItems([]);
+    setIsAllSelected(false);
+  }, [collections]);
+
+  const handleCheckboxChange = (collectionId) => {
+    if (selectedItems.includes(collectionId)) {
+      // 如果已选中，从列表中移除
+      setSelectedItems(selectedItems.filter((id) => id !== collectionId));
+    } else {
+      // 如果未选中，添加到列表中
+      setSelectedItems([...selectedItems, collectionId]);
+    }
+    console.log('selectedItems:' + selectedItems.length);
+    console.log('formatCollections:' + formatCollections.length);
+    // 更新全选状态
+    // setIsAllSelected(selectedItems.length === formatCollections.length);
+  };
+  const handleBatchDelete = () => {
+    // 先展示一个确认对话框，确认后再进行删除操作
+    if (selectedItems.length > 0) {
+      onDelCollections(selectedItems);
+    }
+  };
+
+  // 批量删除
+  const { mutate: onDelCollections, isLoading: isDeletings } = useRequest({
+    mutationFn: (selectedIds: string[]) => {
+      // 调整mutationFn以接受一个id数组
+      return delDatasetCollectionByIds({ ids: selectedIds });
+    },
+    onSuccess: () => {
+      // 删除成功后刷新数据
+      getData(pageNum);
+    },
+    successToast: t('common.Delete Success'),
+    errorToast: t('common.Delete Failed')
+  });
+
   const { mutate: onCreateCollection, isLoading: isCreating } = useRequest({
     mutationFn: async ({
       name,
@@ -288,10 +344,11 @@ const CollectionCard = () => {
     () =>
       isCreating ||
       isDeleting ||
+      isDeletings ||
       isUpdating ||
       isSyncing ||
       (isGetting && collections.length === 0),
-    [collections.length, isCreating, isDeleting, isGetting, isSyncing, isUpdating]
+    [collections.length, isCreating, isDeleting, isDeletings, isGetting, isSyncing, isUpdating]
   );
 
   useQuery(
@@ -529,6 +586,39 @@ const CollectionCard = () => {
           <Table variant={'simple'} fontSize={'sm'} draggable={false}>
             <Thead draggable={false}>
               <Tr bg={'myGray.100'} mb={2}>
+                <Th w={'150px'} display="flex" alignItems="center">
+                  <Checkbox
+                    w={'40px'}
+                    sx={{
+                      '.chakra-checkbox__control': {
+                        width: '20px',
+                        height: '20px'
+                      }
+                    }}
+                    isChecked={isAllSelected}
+                    onChange={handleHeaderCheckboxChange}
+                  />
+                  <Button
+                    w={'100px'}
+                    mx={4}
+                    onClick={() => {
+                      if (selectedItems.length > 0) {
+                        openDeleteConfirm(() => {
+                          handleBatchDelete();
+                        }, undefined)();
+                      } else {
+                        // 这里弹窗提示
+                        // message.warning(t('core.dataset.Please select at least one dataset'));
+                        toast({
+                          status: 'warning',
+                          title: t('core.dataset.Delete Tip')
+                        });
+                      }
+                    }}
+                  >
+                    {t('core.dataset.Batch Delete')}
+                  </Button>
+                </Th>
                 <Th borderLeftRadius={'md'} overflow={'hidden'} borderBottom={'none'} py={4}>
                   #
                 </Th>
@@ -605,6 +695,20 @@ const CollectionCard = () => {
                     }
                   }}
                 >
+                  <Td w={'50px'} onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      isChecked={selectedItems.includes(collection._id)}
+                      onChange={() => {
+                        handleCheckboxChange(collection._id);
+                      }}
+                      sx={{
+                        '.chakra-checkbox__control': {
+                          width: '20px',
+                          height: '20px'
+                        }
+                      }}
+                    />
+                  </Td>
                   <Td w={'50px'}>{index + 1}</Td>
                   <Td minW={'150px'} maxW={['200px', '300px']} draggable>
                     <Flex alignItems={'center'}>
