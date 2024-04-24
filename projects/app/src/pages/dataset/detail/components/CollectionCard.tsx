@@ -215,7 +215,10 @@ const CollectionCard = () => {
     setSelectedItems([]);
     setIsAllSelected(false);
   }, [collections]);
-
+  // 监听selectedItems，更新全选状态
+  useEffect(() => {
+    setIsAllSelected(selectedItems.length === formatCollections.length);
+  }, [selectedItems]);
   const handleCheckboxChange = (collectionId) => {
     if (selectedItems.includes(collectionId)) {
       // 如果已选中，从列表中移除
@@ -224,10 +227,6 @@ const CollectionCard = () => {
       // 如果未选中，添加到列表中
       setSelectedItems([...selectedItems, collectionId]);
     }
-    console.log('selectedItems:' + selectedItems.length);
-    console.log('formatCollections:' + formatCollections.length);
-    // 更新全选状态
-    // setIsAllSelected(selectedItems.length === formatCollections.length);
   };
   const handleBatchDelete = () => {
     // 先展示一个确认对话框，确认后再进行删除操作
