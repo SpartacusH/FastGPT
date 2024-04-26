@@ -69,7 +69,7 @@ const Layout = ({ children }: { children: JSX.Element }) => {
       window.removeEventListener('resize', resize);
     };
   }, [setScreenWidth]);
-
+  /* 临时注释每隔10秒请求获取未读信息数 */
   // const { data: unread = 0 } = useQuery(['getUnreadCount'], getUnreadCount, {
   //   enabled: !!userInfo && !!feConfigs.isPlus,
   //   refetchInterval: 10000
