@@ -133,6 +133,7 @@
     "Select One Folder": "选择一个目录",
     "Select template": "选择模板",
     "Set Avatar": "点击设置头像",
+    "Set Account": "创建账号",
     "Set Name": "取个名字",
     "Setting": "设置",
     "Status": "状态",
@@ -1205,6 +1206,7 @@
       "Cancel subscription": "取消订阅"
     },
     "user": {
+      "Create Account":"账号",
       "Need to login": "请先登录",
       "Price": "计费标准",
       "auth": {
@@ -1312,6 +1314,7 @@
     "Pay": "充值",
     "Permission": "使用权限",
     "Personal Information": "个人信息",
+    "User List": "用户列表",
     "Promotion": "",
     "Promotion Rate": "返现比例",
     "Promotion Record": "推广记录",

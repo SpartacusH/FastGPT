@@ -133,6 +133,7 @@
     "Select template": "Select template",
     "Set Avatar": "Set Avatar",
     "Set Name": "Make a nice name",
+    "Set Account": "Make a nice account",
     "Setting": "Setting",
     "Status": "Status",
     "Submit failed": "Submit failed",
@@ -1196,6 +1197,7 @@
       "Cancel subscription": "Cancel"
     },
     "user": {
+      "Create Account":"Create Account",
       "Need to login": "Please log in first",
       "Price": "Price",
       "auth": {
@@ -1303,6 +1305,7 @@
     "Pay": "Pay",
     "Permission": "Permission",
     "Personal Information": "Personal",
+    "User List": "User List",
     "Promotion": "Promotion",
     "Promotion Rate": "Promotion Rate",
     "Promotion Record": "Promotion",

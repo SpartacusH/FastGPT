@@ -159,6 +159,7 @@ export const iconPaths = {
   'support/user/informLight': () => import('./icons/support/user/informLight.svg'),
   'support/user/userFill': () => import('./icons/support/user/userFill.svg'),
   'support/user/userLight': () => import('./icons/support/user/userLight.svg'),
+  'support/user/userList': () => import('./icons/support/team/memberLight.svg'),
   text: () => import('./icons/text.svg'),
   user: () => import('./icons/user.svg'),
   wx: () => import('./icons/wx.svg')

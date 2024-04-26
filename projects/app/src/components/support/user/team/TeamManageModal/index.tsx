@@ -59,6 +59,15 @@ const TeamManageModal = ({ onClose }: { onClose: () => void }) => {
   });
 
   const { userInfo, initUserInfo } = useUserStore();
+  const {
+    data: myTeams = [],
+    isFetching: isLoadingTeams,
+    refetch: refetchTeam
+  } = useQuery(['getTeams', userInfo?._id], () => getTeamList(TeamMemberStatusEnum.active));
+  const defaultTeam = useMemo(
+    () => myTeams.find((item) => item.defaultTeam) || myTeams[0],
+    [myTeams]
+  );
   const [editTeamData, setEditTeamData] = useState<FormDataType>();
   const { isOpen: isOpenInvite, onOpen: onOpenInvite, onClose: onCloseInvite } = useDisclosure();
 

@@ -7,13 +7,17 @@ import { connectToDatabase } from '@/service/mongo';
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
     await connectToDatabase();
-    const { oldPsw, newPsw } = req.body as { oldPsw: string; newPsw: string };
+    const { oldPsw, newPsw, userId } = req.body as {
+      oldPsw: string;
+      newPsw: string;
+      userId: string;
+    };
 
     if (!oldPsw || !newPsw) {
       throw new Error('Params is missing');
     }
 
-    const { userId } = await authCert({ req, authToken: true });
+    //    const { userId } = await authCert({ req, authToken: true });
 
     // auth old password
     const user = await MongoUser.findOne({
