@@ -70,11 +70,11 @@ const Layout = ({ children }: { children: JSX.Element }) => {
     };
   }, [setScreenWidth]);
 
-  const { data: unread = 0 } = useQuery(['getUnreadCount'], getUnreadCount, {
-    enabled: !!userInfo && !!feConfigs.isPlus,
-    refetchInterval: 10000
-  });
-
+  // const { data: unread = 0 } = useQuery(['getUnreadCount'], getUnreadCount, {
+  //   enabled: !!userInfo && !!feConfigs.isPlus,
+  //   refetchInterval: 10000
+  // });
+  const unread = 0;
   const isHideNavbar = !!pcUnShowLayoutRoute[router.pathname];
 
   return (
