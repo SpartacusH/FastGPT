@@ -13,10 +13,12 @@ import {
   TeamMemberItemType,
   TeamMemberSchema
 } from '@fastgpt/global/support/user/team/type.d';
-
+import { TeamListItemType } from '@fastgpt/global/support/user/team/type';
 /* --------------- team  ---------------- */
 export const getTeamList = (status: `${TeamMemberSchema['status']}`) =>
   GET<TeamItemType[]>(`/support/user/team/list`, { status });
+export const getTeamItemList = (status: `${TeamMemberSchema['status']}`) =>
+  GET<TeamListItemType[]>(`/support/user/team/itemlist`, { status });
 export const postCreateTeam = (data: CreateTeamProps) =>
   POST<string>(`/support/user/team/create`, data);
 export const putUpdateTeam = (data: UpdateTeamProps) => PUT(`/support/user/team/update`, data);

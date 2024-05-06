@@ -3,7 +3,7 @@ import { jsonRes } from '@fastgpt/service/common/response';
 import { connectToDatabase } from '@/service/mongo';
 import { MongoTeam } from '@fastgpt/service/support/user/team/teamSchema';
 import { mongoRPermission } from '@fastgpt/global/support/permission/utils';
-import { TeamItemType, TeamListItemType } from '@fastgpt/global/support/user/team/type';
+import { TeamListItemType } from '@fastgpt/global/support/user/team/type';
 import { authUserRole } from '@fastgpt/service/support/permission/auth/user';
 import { TeamUpdateParams } from '@fastgpt/global/support/user/api';
 import { GetTeamProps } from '@/global/support/api/teamReq';
@@ -24,23 +24,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     ).sort({
       updateTime: -1
     });
-    // @ts-ignore
-    jsonRes<TeamItemType[]>(res, {
+    jsonRes<TeamListItemType[]>(res, {
       data:
         status != 'waiting'
           ? myTeams.map((team) => ({
-              userId: team.ownerId,
-              teamId: team._id,
-              teamName: team.name,
+              _id: team._id,
               avatar: team.avatar,
-              balance: team.balance,
-              defaultTeam: true,
-              memberName: '',
-              tmbId: '',
-              role: 'admin',
-              status: 'active',
-              canWrite: true,
-              maxSize: 999
+              teamName: team.name,
+              ownerId: team.ownerId
             }))
           : []
     });

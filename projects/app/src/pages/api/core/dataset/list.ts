@@ -22,6 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const datasets = await MongoDataset.find({
       ...mongoRPermission({ teamId, tmbId, role }),
       ...(parentId !== undefined && { parentId: parentId || null }),
+      $or: [{ permission: 'public' }, { permission: 'private', tmbId: tmbId }],
       ...(type && { type })
     })
       .sort({ updateTime: -1 })

@@ -29,7 +29,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import MySelect from '@/components/Select';
 import { timezoneList } from '@fastgpt/global/common/time/timezone';
 import { useQuery } from '@tanstack/react-query';
-import { getTeamList } from '@/web/support/user/team/api';
+import { getTeamItemList } from '@/web/support/user/team/api';
 import { TeamMemberStatusEnum } from '@fastgpt/global/support/user/team/constant';
 import { useUserStore } from '@/web/support/user/useUserStore';
 
@@ -99,11 +99,10 @@ const CreateUserModal = ({
     data: myTeams = [],
     isFetching: isLoadingTeams,
     refetch: refetchTeam
-  } = useQuery(['getTeams', userInfo?._id], () => getTeamList(TeamMemberStatusEnum.active));
-  const defaultTeam = useMemo(
-    () => myTeams.find((item) => item.defaultTeam) || myTeams[0],
-    [myTeams]
-  );
+  } = useQuery(['getTeams', userInfo?._id], () => getTeamItemList(TeamMemberStatusEnum.active));
+  const defaultTeam = useMemo(() => myTeams[0], [myTeams]);
+  console.log(defaultTeam);
+  //console.log(defaultTeam._id);
   if (defaultTeam) setValue('teamId', defaultTeam._id);
   console.log(myTeams);
   console.log(defaultTeam);

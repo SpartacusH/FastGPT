@@ -3,14 +3,10 @@ import { jsonRes } from '@fastgpt/service/common/response';
 import { connectToDatabase } from '@/service/mongo';
 import { MongoUser } from '@fastgpt/service/support/user/schema';
 import { mongoRPermission } from '@fastgpt/global/support/permission/utils';
-import { TeamListItemType } from '@fastgpt/global/support/user/team/type';
 import { authUserRole } from '@fastgpt/service/support/permission/auth/user';
-import { TeamUpdateParams } from '@fastgpt/global/support/user/api';
 import { GetUserProps } from '@/global/support/api/userReq';
-import { GetDatasetCollectionsProps } from '@/global/core/api/datasetReq';
 import { PagingData } from '@/types';
-import { UserType } from '@/global/core/support/user/type';
-import { MongoDatasetCollection } from '@fastgpt/service/core/dataset/collection/schema';
+import { UserType } from '@fastgpt/global/support/user/type';
 import { getUserDetail } from '@fastgpt/service/support/user/controller';
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {

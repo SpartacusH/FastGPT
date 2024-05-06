@@ -59,15 +59,6 @@ const TeamManageModal = ({ onClose }: { onClose: () => void }) => {
   });
 
   const { userInfo, initUserInfo } = useUserStore();
-  const {
-    data: myTeams = [],
-    isFetching: isLoadingTeams,
-    refetch: refetchTeam
-  } = useQuery(['getTeams', userInfo?._id], () => getTeamList(TeamMemberStatusEnum.active));
-  const defaultTeam = useMemo(
-    () => myTeams.find((item) => item.defaultTeam) || myTeams[0],
-    [myTeams]
-  );
   const [editTeamData, setEditTeamData] = useState<FormDataType>();
   const { isOpen: isOpenInvite, onOpen: onOpenInvite, onClose: onCloseInvite } = useDisclosure();
 
@@ -157,7 +148,7 @@ const TeamManageModal = ({ onClose }: { onClose: () => void }) => {
               <Box flex={['0 0 auto', 1]} fontWeight={'bold'} fontSize={['md', 'lg']}>
                 {t('common.Team')}
               </Box>
-              {myTeams.length >= 0 && (
+              {myTeams.length >= 0 && userInfo?.username == 'root' && (
                 <IconButton
                   variant={'ghost'}
                   border={'none'}
@@ -241,7 +232,7 @@ const TeamManageModal = ({ onClose }: { onClose: () => void }) => {
               <Box fontSize={['lg', 'xl']} fontWeight={'bold'}>
                 {userInfo.team.teamName}
               </Box>
-              {userInfo.team.role === TeamMemberRoleEnum.owner && (
+              {userInfo.username == 'root' && userInfo.team.role === TeamMemberRoleEnum.owner && (
                 <MyIcon
                   name="edit"
                   w={'14px'}

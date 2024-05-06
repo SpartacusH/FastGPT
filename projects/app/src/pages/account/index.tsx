@@ -38,17 +38,23 @@ const Account = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
   const { userInfo, setUserInfo } = useUserStore();
   const { feConfigs, isPc } = useSystemStore();
 
+  // @ts-ignore
   const tabList = [
     {
       icon: 'support/user/userLight',
       label: t('user.Personal Information'),
       id: TabEnum.info
     },
-    {
-      icon: 'support/user/userList',
-      label: t('user.User List'),
-      id: TabEnum.userlist
-    },
+    //管理员root，可以管理用户
+    ...(userInfo?.username == 'root'
+      ? [
+          {
+            icon: 'support/user/userList',
+            label: t('user.User List'),
+            id: TabEnum.userlist
+          }
+        ]
+      : []),
     ...(feConfigs?.isPlus
       ? [
           {
