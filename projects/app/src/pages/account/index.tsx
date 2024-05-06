@@ -55,43 +55,6 @@ const Account = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
           }
         ]
       : []),
-    ...(feConfigs?.isPlus
-      ? [
-          {
-            icon: 'support/bill/billRecordLight',
-            label: t('user.Usage Record'),
-            id: TabEnum.bill
-          }
-        ]
-      : []),
-    ...(feConfigs?.show_pay && userInfo?.team.canWrite
-      ? [
-          {
-            icon: 'support/pay/payRecordLight',
-            label: t('user.Recharge Record'),
-            id: TabEnum.pay
-          }
-        ]
-      : []),
-    ...(feConfigs?.show_pay
-      ? [
-          {
-            icon: 'support/pay/priceLight',
-            label: t('support.user.Price'),
-            id: TabEnum.price
-          }
-        ]
-      : []),
-
-    ...(feConfigs?.show_promotion
-      ? [
-          {
-            icon: 'support/account/promotionLight',
-            label: t('user.Promotion Record'),
-            id: TabEnum.promotion
-          }
-        ]
-      : []),
     ...(userInfo?.team.canWrite
       ? [
           {
@@ -101,15 +64,53 @@ const Account = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
           }
         ]
       : []),
-    ...(feConfigs.isPlus
-      ? [
-          {
-            icon: 'support/user/informLight',
-            label: t('user.Notice'),
-            id: TabEnum.inform
-          }
-        ]
-      : []),
+    // ...(feConfigs?.isPlus
+    //   ? [
+    //       {
+    //         icon: 'support/bill/billRecordLight',
+    //         label: t('user.Usage Record'),
+    //         id: TabEnum.bill
+    //       }
+    //     ]
+    //   : []),
+    // ...(feConfigs?.show_pay && userInfo?.team.canWrite
+    //   ? [
+    //       {
+    //         icon: 'support/pay/payRecordLight',
+    //         label: t('user.Recharge Record'),
+    //         id: TabEnum.pay
+    //       }
+    //     ]
+    //   : []),
+    // ...(feConfigs?.show_pay
+    //   ? [
+    //       {
+    //         icon: 'support/pay/priceLight',
+    //         label: t('support.user.Price'),
+    //         id: TabEnum.price
+    //       }
+    //     ]
+    //   : []),
+    //
+    // ...(feConfigs?.show_promotion
+    //   ? [
+    //       {
+    //         icon: 'support/account/promotionLight',
+    //         label: t('user.Promotion Record'),
+    //         id: TabEnum.promotion
+    //       }
+    //     ]
+    //   : []),
+
+    // ...(feConfigs.isPlus
+    //   ? [
+    //       {
+    //         icon: 'support/user/informLight',
+    //         label: t('user.Notice'),
+    //         id: TabEnum.inform
+    //       }
+    //     ]
+    //   : []),
 
     {
       icon: 'support/account/loginoutLight',
