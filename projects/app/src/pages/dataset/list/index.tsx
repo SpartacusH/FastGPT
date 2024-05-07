@@ -330,51 +330,63 @@ const Kb = () => {
                             }
                           }
                         ]
-                      : [
+                      : dataset.tmbId == userInfo.team.tmbId
+                        ? [
+                            {
+                              label: (
+                                <Flex alignItems={'center'}>
+                                  <MyIcon
+                                    name={'support/permission/privateLight'}
+                                    w={'14px'}
+                                    mr={2}
+                                  />
+                                  {t('permission.Set Private')}
+                                </Flex>
+                              ),
+                              onClick: () => {
+                                updateDataset({
+                                  id: dataset._id,
+                                  permission: PermissionTypeEnum.private
+                                });
+                              }
+                            }
+                          ]
+                        : []),
+                    ...(dataset.permission === PermissionTypeEnum.private ||
+                    dataset.tmbId === userInfo.team.tmbId
+                      ? [
                           {
                             label: (
                               <Flex alignItems={'center'}>
-                                <MyIcon
-                                  name={'support/permission/privateLight'}
-                                  w={'14px'}
-                                  mr={2}
-                                />
-                                {t('permission.Set Private')}
+                                <MyIcon name={'edit'} w={'14px'} mr={2} />
+                                {t('Rename')}
                               </Flex>
                             ),
-                            onClick: () => {
-                              updateDataset({
-                                id: dataset._id,
-                                permission: PermissionTypeEnum.private
-                              });
-                            }
+                            onClick: () =>
+                              onOpenTitleModal({
+                                defaultVal: dataset.name,
+                                onSuccess: (val) => {
+                                  if (val === dataset.name || !val) return;
+                                  updateDataset({ id: dataset._id, name: val });
+                                }
+                              })
                           }
-                        ]),
-                    {
-                      label: (
-                        <Flex alignItems={'center'}>
-                          <MyIcon name={'edit'} w={'14px'} mr={2} />
-                          {t('Rename')}
-                        </Flex>
-                      ),
-                      onClick: () =>
-                        onOpenTitleModal({
-                          defaultVal: dataset.name,
-                          onSuccess: (val) => {
-                            if (val === dataset.name || !val) return;
-                            updateDataset({ id: dataset._id, name: val });
+                        ]
+                      : []),
+                    ...(dataset.permission === PermissionTypeEnum.private ||
+                    dataset.tmbId == userInfo.team.tmbId
+                      ? [
+                          {
+                            label: (
+                              <Flex alignItems={'center'}>
+                                <MyIcon name={'common/file/move'} w={'14px'} mr={2} />
+                                {t('Move')}
+                              </Flex>
+                            ),
+                            onClick: () => setMoveDataId(dataset._id)
                           }
-                        })
-                    },
-                    {
-                      label: (
-                        <Flex alignItems={'center'}>
-                          <MyIcon name={'common/file/move'} w={'14px'} mr={2} />
-                          {t('Move')}
-                        </Flex>
-                      ),
-                      onClick: () => setMoveDataId(dataset._id)
-                    },
+                        ]
+                      : []),
                     {
                       label: (
                         <Flex alignItems={'center'}>
@@ -386,21 +398,26 @@ const Kb = () => {
                         exportDataset(dataset);
                       }
                     },
-                    {
-                      label: (
-                        <Flex alignItems={'center'}>
-                          <MyIcon name={'delete'} w={'14px'} mr={2} />
-                          {t('common.Delete')}
-                        </Flex>
-                      ),
-                      onClick: () => {
-                        openConfirm(
-                          () => onclickDelDataset(dataset._id),
-                          undefined,
-                          DeleteTipsMap.current[dataset.type]
-                        )();
-                      }
-                    }
+                    ...(dataset.permission === PermissionTypeEnum.private ||
+                    dataset.tmbId == userInfo.team.tmbId
+                      ? [
+                          {
+                            label: (
+                              <Flex alignItems={'center'}>
+                                <MyIcon name={'delete'} w={'14px'} mr={2} />
+                                {t('common.Delete')}
+                              </Flex>
+                            ),
+                            onClick: () => {
+                              openConfirm(
+                                () => onclickDelDataset(dataset._id),
+                                undefined,
+                                DeleteTipsMap.current[dataset.type]
+                              )();
+                            }
+                          }
+                        ]
+                      : [])
                   ]}
                 />
               </Box>

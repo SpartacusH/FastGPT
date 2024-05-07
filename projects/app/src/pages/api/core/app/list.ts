@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         name: app.name,
         intro: app.intro,
         simpleTemplateId: app.simpleTemplateId,
-        isOwner: teamOwner || String(app.tmbId) === tmbId,
+        isOwner: String(app.tmbId) === tmbId,
         permission: app.permission
       }))
     });

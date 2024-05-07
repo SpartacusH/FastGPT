@@ -31,6 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const data = await Promise.all(
       datasets.map<DatasetListItemType>((item) => ({
         _id: item._id,
+        tmbId: item.tmbId,
         parentId: item.parentId,
         avatar: item.avatar,
         name: item.name,
