@@ -220,65 +220,67 @@ const Upload = ({ showPreviewChunks }: { showPreviewChunks: boolean }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {uploadList.map((item) => (
-              <Tr key={item.id}>
-                <Td display={'flex'} alignItems={'center'}>
-                  <MyIcon name={item.icon as any} w={'16px'} mr={1} />
-                  {item.sourceName}
-                </Td>
-                {showPreviewChunks ? (
-                  <>
-                    <Td>{item.chunks.length}</Td>
-                    <Td>
-                      {item.uploadedFileRate === -1 ? (
-                        '-'
-                      ) : (
+            {uploadList
+              .filter((item) => item.chunks.length > 0)
+              .map((item) => (
+                <Tr key={item.id}>
+                  <Td display={'flex'} alignItems={'center'}>
+                    <MyIcon name={item.icon as any} w={'16px'} mr={1} />
+                    {item.sourceName}
+                  </Td>
+                  {showPreviewChunks ? (
+                    <>
+                      <Td>{item.chunks.length}</Td>
+                      <Td>
+                        {item.uploadedFileRate === -1 ? (
+                          '-'
+                        ) : (
+                          <Flex alignItems={'center'} fontSize={'xs'}>
+                            <Progress
+                              value={item.uploadedFileRate}
+                              h={'6px'}
+                              w={'100%'}
+                              maxW={'210px'}
+                              size="sm"
+                              borderRadius={'20px'}
+                              colorScheme={'blue'}
+                              bg="myGray.200"
+                              hasStripe
+                              isAnimated
+                              mr={2}
+                            />
+                            {`${item.uploadedFileRate}%`}
+                          </Flex>
+                        )}
+                      </Td>
+                      <Td>
                         <Flex alignItems={'center'} fontSize={'xs'}>
                           <Progress
-                            value={item.uploadedFileRate}
+                            value={item.uploadedChunksRate}
                             h={'6px'}
                             w={'100%'}
                             maxW={'210px'}
                             size="sm"
                             borderRadius={'20px'}
-                            colorScheme={'blue'}
+                            colorScheme={'purple'}
                             bg="myGray.200"
                             hasStripe
                             isAnimated
                             mr={2}
                           />
-                          {`${item.uploadedFileRate}%`}
+                          {`${item.uploadedChunksRate}%`}
                         </Flex>
-                      )}
-                    </Td>
-                    <Td>
-                      <Flex alignItems={'center'} fontSize={'xs'}>
-                        <Progress
-                          value={item.uploadedChunksRate}
-                          h={'6px'}
-                          w={'100%'}
-                          maxW={'210px'}
-                          size="sm"
-                          borderRadius={'20px'}
-                          colorScheme={'purple'}
-                          bg="myGray.200"
-                          hasStripe
-                          isAnimated
-                          mr={2}
-                        />
-                        {`${item.uploadedChunksRate}%`}
-                      </Flex>
-                    </Td>
-                  </>
-                ) : (
-                  <>
-                    <Td color={item.uploadedFileRate === 100 ? 'green.600' : 'myGray.600'}>
-                      {item.uploadedFileRate === 100 ? t('common.Finish') : t('common.Waiting')}
-                    </Td>
-                  </>
-                )}
-              </Tr>
-            ))}
+                      </Td>
+                    </>
+                  ) : (
+                    <>
+                      <Td color={item.uploadedFileRate === 100 ? 'green.600' : 'myGray.600'}>
+                        {item.uploadedFileRate === 100 ? t('common.Finish') : t('common.Waiting')}
+                      </Td>
+                    </>
+                  )}
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </TableContainer>
@@ -286,7 +288,7 @@ const Upload = ({ showPreviewChunks }: { showPreviewChunks: boolean }) => {
       <Flex justifyContent={'flex-end'} mt={4}>
         <Button isLoading={isLoading} onClick={handleSubmit((data) => startUpload(data))}>
           {uploadList.length > 0
-            ? `${t('core.dataset.import.Total files', { total: uploadList.length })} | `
+            ? `${t('core.dataset.import.Total files', { total: uploadList.filter((item) => item.chunks.length > 0).length })} | `
             : ''}
           {t('core.dataset.import.Start upload')}
         </Button>

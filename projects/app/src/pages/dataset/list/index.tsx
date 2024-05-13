@@ -48,6 +48,7 @@ import ParentPaths from '@/components/common/ParentPaths';
 import DatasetTypeTag from '@/components/core/dataset/DatasetTypeTag';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { getErrText } from '@fastgpt/global/common/error/utils';
+import AuthorTag from '@/components/core/dataset/AuthorTag';
 
 const CreateModal = dynamic(() => import('./component/CreateModal'), { ssr: false });
 const MoveModal = dynamic(() => import('./component/MoveModal'), { ssr: false });
@@ -267,14 +268,16 @@ const Kb = () => {
                 router.push({
                   pathname: '/dataset/list',
                   query: {
-                    parentId: dataset._id
+                    parentId: dataset._id,
+                    tmbId: dataset.tmbId
                   }
                 });
               } else {
                 router.push({
                   pathname: '/dataset/detail',
                   query: {
-                    datasetId: dataset._id
+                    datasetId: dataset._id,
+                    tmbId: dataset.tmbId
                   }
                 });
               }
@@ -444,6 +447,9 @@ const Kb = () => {
             <Flex alignItems={'center'} fontSize={'sm'}>
               <Box flex={1}>
                 <PermissionIconText permission={dataset.permission} color={'myGray.600'} />
+              </Box>
+              <Box flex={1}>
+                <AuthorTag name={dataset.username} color={'myGray.600'} />
               </Box>
               {dataset.type !== DatasetTypeEnum.folder && (
                 <DatasetTypeTag type={dataset.type} py={1} px={2} />

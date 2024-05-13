@@ -74,4 +74,5 @@ const FileModeSelector = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
+// @ts-ignore
 export default FileModeSelector;

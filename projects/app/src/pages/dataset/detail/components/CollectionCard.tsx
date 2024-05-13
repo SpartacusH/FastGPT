@@ -76,7 +76,11 @@ const CollectionCard = () => {
   const router = useRouter();
   const theme = useTheme();
   const { toast } = useToast();
-  const { parentId = '', datasetId } = router.query as { parentId: string; datasetId: string };
+  const {
+    parentId = '',
+    datasetId,
+    tmbId
+  } = router.query as { parentId: string; datasetId: string; tmbId: string };
   const { t } = useTranslation();
   const { Loading } = useLoading();
   const { isPc } = useSystemStore();
@@ -373,7 +377,6 @@ const CollectionCard = () => {
   }, [parentId]);
 
   // @ts-ignore
-  // @ts-ignore
   return (
     <MyBox isLoading={isLoading} h={'100%'} py={[2, 4]}>
       <Flex ref={BoxRef} flexDirection={'column'} py={[1, 3]} h={'100%'}>
@@ -603,8 +606,6 @@ const CollectionCard = () => {
                     onChange={handleHeaderCheckboxChange}
                   />
                   <Button
-                    w={'100px'}
-                    mx={4}
                     onClick={() => {
                       if (selectedItems.length > 0) {
                         openDeleteConfirm(() => {
@@ -808,47 +809,58 @@ const CollectionCard = () => {
                             ),
                             onClick: () => setMoveCollectionData({ collectionId: collection._id })
                           },
-                          {
-                            label: (
-                              <Flex alignItems={'center'}>
-                                <MyIcon name={'edit'} w={'14px'} mr={2} />
-                                {t('Rename')}
-                              </Flex>
-                            ),
-                            onClick: () =>
-                              onOpenEditTitleModal({
-                                defaultVal: collection.name,
-                                onSuccess: (newName) => {
-                                  onUpdateCollectionName({
-                                    collectionId: collection._id,
-                                    name: newName
-                                  });
+                          // @ts-ignore
+                          ...(collection.tmbId == userInfo.team.tmbId ||
+                          tmbId == userInfo.team.tmbId
+                            ? [
+                                {
+                                  label: (
+                                    <Flex alignItems={'center'}>
+                                      <MyIcon name={'edit'} w={'14px'} mr={2} />
+                                      {t('Rename')}
+                                    </Flex>
+                                  ),
+                                  onClick: () =>
+                                    onOpenEditTitleModal({
+                                      defaultVal: collection.name,
+                                      onSuccess: (newName) => {
+                                        onUpdateCollectionName({
+                                          collectionId: collection._id,
+                                          name: newName
+                                        });
+                                      }
+                                    })
                                 }
-                              })
-                          },
-                          {
-                            label: (
-                              <Flex alignItems={'center'}>
-                                <MyIcon
-                                  mr={1}
-                                  name={'delete'}
-                                  w={'14px'}
-                                  _hover={{ color: 'red.600' }}
-                                />
-                                <Box>{t('common.Delete')}</Box>
-                              </Flex>
-                            ),
-                            onClick: () =>
-                              openDeleteConfirm(
-                                () => {
-                                  onDelCollection(collection._id);
-                                },
-                                undefined,
-                                collection.type === DatasetCollectionTypeEnum.folder
-                                  ? t('dataset.collections.Confirm to delete the folder')
-                                  : t('dataset.Confirm to delete the file')
-                              )()
-                          }
+                              ]
+                            : []),
+                          // @ts-ignore
+                          ...(tmbId == userInfo.team.tmbId
+                            ? [
+                                {
+                                  label: (
+                                    <Flex alignItems={'center'}>
+                                      <MyIcon
+                                        mr={1}
+                                        name={'delete'}
+                                        w={'14px'}
+                                        _hover={{ color: 'red.600' }}
+                                      />
+                                      <Box>{t('common.Delete')}</Box>
+                                    </Flex>
+                                  ),
+                                  onClick: () =>
+                                    openDeleteConfirm(
+                                      () => {
+                                        onDelCollection(collection._id);
+                                      },
+                                      undefined,
+                                      collection.type === DatasetCollectionTypeEnum.folder
+                                        ? t('dataset.collections.Confirm to delete the folder')
+                                        : t('dataset.Confirm to delete the file')
+                                    )()
+                                }
+                              ]
+                            : [])
                         ]}
                       />
                     )}

@@ -20,7 +20,8 @@ export type ImportSourceItemType = {
   icon: string;
   metadata?: Record<string, any>;
   errorMsg?: string;
-
+  isDuplicate?: boolean;
+  status?: string;
   // source
   file?: File;
   link?: string;

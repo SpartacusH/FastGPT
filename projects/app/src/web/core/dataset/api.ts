@@ -39,7 +39,9 @@ import { PagingData } from '@/types';
 /* ======================== dataset ======================= */
 export const getDatasets = (data: { parentId?: string; type?: `${DatasetTypeEnum}` }) =>
   GET<DatasetListItemType[]>(`/core/dataset/list`, data);
-
+/* 监测上传文件时，文件是否重名*/
+export const checkFileExist = (data: { datasetId?: string; fileName: string }) =>
+  GET<boolean>(`/core/dataset/collection/checkFileExist`, data);
 /**
  * get type=dataset list
  */
@@ -117,6 +119,9 @@ export const putDatasetDataById = (data: UpdateDatasetDataProps) =>
  */
 export const delOneDatasetDataById = (id: string) =>
   DELETE<string>(`/core/dataset/data/delete`, { id });
+// 新增批量删除
+export const delDatasetCollectionByIds = (params: { ids: string[] }) =>
+  POST(`/core/dataset/collection/batchDelete`, params);
 
 /* ================ training ==================== */
 /* get length of system training queue */
