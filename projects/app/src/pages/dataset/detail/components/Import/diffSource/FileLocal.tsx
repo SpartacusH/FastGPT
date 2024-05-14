@@ -386,7 +386,10 @@ const SelectFile = React.memo(function SelectFile({
                     <Flex alignItems={'center'}>
                       <MyTooltip
                         key={item.id}
-                        label={item.isDuplicate ? '该知识库中已存在同名文件' : ''}
+                        label={
+                          (item.isDuplicate ? '该知识库中已存在同名文件;' : '') +
+                          (item.status == '处理失败' ? '文件处理失败' : '')
+                        }
                         // @ts-ignore
                         style={'display:flex'}
                       >
@@ -394,7 +397,7 @@ const SelectFile = React.memo(function SelectFile({
                         <Box
                           fontWeight={'bold'}
                           className="textEllipsis"
-                          color={item.isDuplicate ? 'red' : 'black'}
+                          color={item.isDuplicate || item.status == '处理失败' ? 'red' : 'black'}
                           display={'inline'}
                         >
                           {item.sourceName}
@@ -403,7 +406,22 @@ const SelectFile = React.memo(function SelectFile({
                     </Flex>
                   </Td>
                   <Td textAlign={'center'}>{item.sourceSize}</Td>
-                  <Td textAlign={'center'}>{item.status}</Td>
+                  <Td textAlign={'center'}>
+                    <Box
+                      display={'inline-flex'}
+                      alignItems={'center'}
+                      w={'auto'}
+                      color={item.status != '处理失败' ? '#485264' : 'red'}
+                      bg={'#F7F8FA'}
+                      borderWidth={'1px'}
+                      borderColor={'#76E4AA'}
+                      px={3}
+                      py={1}
+                      borderRadius={'md'}
+                    >
+                      {item.status}
+                    </Box>
+                  </Td>
                   <Td textAlign={'center'}>
                     <Flex alignItems={'center'} justifyContent={'center'}>
                       <MyIcon
