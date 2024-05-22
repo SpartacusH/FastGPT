@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Spinner } from '@chakra-ui/react';
 import {
   Box,
   Flex,
@@ -431,11 +430,15 @@ const SelectFile = React.memo(function SelectFile({
                         cursor={'pointer'}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectFiles((state) => state.filter((file) => file.id !== item.id));
-                          // @ts-ignore
-                          if (selectedItems.includes(item.id)) {
-                            // 如果已选中，从列表中移除
-                            setSelectedItems(selectedItems.filter((id) => id !== item.id));
+                          if (!isHandleLoading) {
+                            setSelectFiles((state) => state.filter((file) => file.id !== item.id));
+                            // @ts-ignore
+                            if (selectedItems.includes(item.id)) {
+                              // 如果已选中，从列表中移除
+                              setSelectedItems(selectedItems.filter((id) => id !== item.id));
+                            }
+                          } else {
+                            alert('数据处理中，暂无法删除');
                           }
                         }}
                       />
@@ -461,21 +464,21 @@ const SelectFile = React.memo(function SelectFile({
             </Tbody>
           </Table>
 
-          {isHandleLoading && (
-            <Box
-              position="absolute"
-              top={0}
-              left={0}
-              right={0}
-              bottom={0}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="rgba(255, 255, 255, 0.7)"
-            >
-              <Spinner />
-            </Box>
-          )}
+          {/*{isHandleLoading && (*/}
+          {/*  <Box*/}
+          {/*    position="absolute"*/}
+          {/*    top={0}*/}
+          {/*    left={0}*/}
+          {/*    right={0}*/}
+          {/*    bottom={0}*/}
+          {/*    display="flex"*/}
+          {/*    alignItems="center"*/}
+          {/*    justifyContent="center"*/}
+          {/*    backgroundColor="rgba(255, 255, 255, 0.7)"*/}
+          {/*  >*/}
+          {/*    <Spinner />*/}
+          {/*  </Box>*/}
+          {/*)}*/}
         </TableContainer>
       )}
 

@@ -58,21 +58,18 @@ const SliderApps = ({ appId }: { appId: string }) => {
                     bg: 'myGray.200'
                   },
                   onClick: () => {
-                      if(item.simpleTemplateId=='report-universal')
-                      {
-                          router.push(`/report?appId=${item._id}`);
-                      }
-                      else if(item.simpleTemplateId=='video-universal'){
-                          router.push(`/report?appId=${item._id}`);
-                      }
-                      else {
-                           router.push(`/chat?appId=${item._id}`);
-                          // router.replace({
-                          //     query: {
-                          //         appId: item._id
-                          //     }
-                          // });
-                      }
+                    if (item.simpleTemplateId == 'report-universal') {
+                      router.push(`/report?appId=${item._id}`);
+                    } else if (item.simpleTemplateId == 'video-universal') {
+                      router.push(`/report?appId=${item._id}`);
+                    } else {
+                      router.push(`/chat?appId=${item._id}`);
+                      // router.replace({
+                      //     query: {
+                      //         appId: item._id
+                      //     }
+                      // });
+                    }
                   }
                 })}
           >

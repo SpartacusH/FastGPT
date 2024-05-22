@@ -144,7 +144,10 @@ export const streamFetch = ({
             parseJson?.status
           ) {
             onMessage(parseJson);
-          } else if (event === sseResponseEventEnum.reportStreamResponse && Array.isArray(parseJson)) {
+          } else if (
+            event === sseResponseEventEnum.reportStreamResponse &&
+            Array.isArray(parseJson)
+          ) {
             responseData = parseJson;
           } else if (event === sseResponseEventEnum.error) {
             errMsg = getErrText(parseJson, '流响应错误');

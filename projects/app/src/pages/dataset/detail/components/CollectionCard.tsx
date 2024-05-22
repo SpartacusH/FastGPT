@@ -120,7 +120,10 @@ const CollectionCard = () => {
   const [estimatedTime, setEstimatedTime] = useState(0);
   const { editFolderData, setEditFolderData } = useEditFolder();
   const [moveCollectionData, setMoveCollectionData] = useState<{ collectionId: string }>();
-
+  // 批量删除
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     data: collections,
     Pagination,
@@ -150,7 +153,7 @@ const CollectionCard = () => {
   // change search
   const debounceRefetch = useCallback(
     debounce(() => {
-      getData(1);
+      getData(pageNum);
       lastSearch.current = searchText;
     }, 300),
     []
@@ -196,13 +199,16 @@ const CollectionCard = () => {
         ...status
       };
     });
-    console.log('total:' + total);
+    if (
+      currentPage != pageNum ||
+      (currentPage == pageNum && currentPage == 1 && collections.length == 0)
+    ) {
+      setSelectedItems([]);
+      setIsAllSelected(false);
+      setCurrentPage(pageNum);
+    }
     return result;
   }, [collections, t]);
-
-  // 批量删除
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [isAllSelected, setIsAllSelected] = useState(false);
 
   const handleHeaderCheckboxChange = () => {
     if (isAllSelected) {
@@ -216,13 +222,14 @@ const CollectionCard = () => {
     setIsAllSelected(!isAllSelected);
   };
   // 监听collections的变化，取消选择状态
-  useEffect(() => {
-    setSelectedItems([]);
-    setIsAllSelected(false);
-  }, [collections]);
+  // useEffect(() => {
+  //   setSelectedItems([]);
+  //   setIsAllSelected(false);
+  // }, [collections]);
+
   // 监听selectedItems，更新全选状态
   useEffect(() => {
-    setIsAllSelected(selectedItems.length === formatCollections.length);
+    setIsAllSelected(selectedItems.length > 0 && selectedItems.length === formatCollections.length);
   }, [selectedItems]);
   const handleCheckboxChange = (collectionId: string) => {
     // @ts-ignore
@@ -249,8 +256,15 @@ const CollectionCard = () => {
       return delDatasetCollectionByIds({ ids: selectedIds });
     },
     onSuccess: () => {
-      // 删除成功后刷新数据
-      getData(pageNum);
+      if (isAllSelected && pageNum > 1)
+        //全选删除非第1页
+        // 删除成功后刷新数据
+        getData(pageNum - 1);
+      else if (isAllSelected && pageNum == 1) {
+        //全选删除第1页
+        setIsAllSelected(false);
+        getData(pageNum);
+      } else getData(pageNum);
     },
     successToast: t('common.Delete Success'),
     errorToast: t('common.Delete Failed')
@@ -360,7 +374,7 @@ const CollectionCard = () => {
   useQuery(
     ['refreshCollection'],
     () => {
-      getData(1);
+      getData(currentPage);
       if (datasetDetail.status === DatasetStatusEnum.syncing) {
         loadDatasetDetail(datasetId, true);
       }
@@ -811,7 +825,7 @@ const CollectionCard = () => {
                           },
                           // @ts-ignore
                           ...(collection.tmbId == userInfo.team.tmbId ||
-                          tmbId == userInfo.team.tmbId
+                          tmbId == userInfo?.team.tmbId
                             ? [
                                 {
                                   label: (

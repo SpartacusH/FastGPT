@@ -12,7 +12,7 @@ const SearchParamsTip = ({
   searchMode,
   similarity = 0,
   limit = 1500,
-  responseEmptyText,
+  responseEmptyText
 }: {
   searchMode: `${TemplateSearchModeEnum}`;
   similarity?: number;

@@ -9,7 +9,7 @@ import { DatasetSearchModeEnum } from '../dataset/constants';
 export const getDefaultAppForm = (): AppSimpleEditFormType => {
   return {
     aiSettings: {
-      model: 'gpt-3.5-turbo',
+      model: 'chatglm3',
       systemPrompt: '',
       temperature: 0,
       isResponseAnswerText: true,

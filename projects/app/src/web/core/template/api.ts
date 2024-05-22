@@ -48,12 +48,14 @@ export const getAllTemplate = () => GET<TemplateListItemType[]>(`/core/template/
 export const getTemplatePaths = (parentId?: string) =>
   GET<ParentTreePathItemType[]>('/core/template/paths', { parentId });
 
-export const getTemplateById = (id: string) => GET<TemplateItemType>(`/core/template/detail?id=${id}`);
+export const getTemplateById = (id: string) =>
+  GET<TemplateItemType>(`/core/template/detail?id=${id}`);
 
 export const postCreateTemplate = (data: CreateTemplateParams) =>
   POST<string>(`/core/template/create`, data);
 
-export const putTemplateById = (data: TemplateUpdateBody) => PUT<void>(`/core/template/update`, data);
+export const putTemplateById = (data: TemplateUpdateBody) =>
+  PUT<void>(`/core/template/update`, data);
 
 export const delTemplateById = (id: string) => DELETE(`/core/template/delete?id=${id}`);
 
