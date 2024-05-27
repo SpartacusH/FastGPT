@@ -14,11 +14,13 @@ import {
   useDisclosure,
   Button,
   Link,
-  useTheme
+  useTheme,
+  Checkbox
 } from '@chakra-ui/react';
 import {
   getDatasetCollections,
   delDatasetCollectionById,
+  delDatasetCollectionByIds,
   putDatasetCollectionById,
   postDatasetCollection,
   getDatasetCollectionPathById,
@@ -26,13 +28,15 @@ import {
 } from '@/web/core/dataset/api';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
-import { useConfirm } from '@fastgpt/web/hooks/useConfirm';
+import { useConfirm } from '@/web/common/hooks/useConfirm';
 import { useTranslation } from 'next-i18next';
 import MyIcon from '@fastgpt/web/components/common/Icon';
 import MyInput from '@/components/MyInput';
 import dayjs from 'dayjs';
-import { useRequest } from '@fastgpt/web/hooks/useRequest';
+import { useRequest } from '@/web/common/hooks/useRequest';
+import { useLoading } from '@/web/common/hooks/useLoading';
 import { useRouter } from 'next/router';
+import { usePagination } from '@/web/common/hooks/usePagination';
 import { useSystemStore } from '@/web/common/system/useSystemStore';
 import MyMenu from '@/components/MyMenu';
 import { useEditTitle } from '@/web/common/hooks/useEditTitle';
@@ -61,11 +65,10 @@ import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { DatasetSchemaType } from '@fastgpt/global/core/dataset/type';
 import { DatasetCollectionSyncResultEnum } from '@fastgpt/global/core/dataset/constants';
 import MyBox from '@/components/common/MyBox';
-import { usePagination } from '@fastgpt/web/hooks/usePagination';
-import { ImportDataSourceEnum } from '@fastgpt/global/core/dataset/constants';
+import { ImportDataSourceEnum } from './Import';
 
 const WebSiteConfigModal = dynamic(() => import('./Import/WebsiteConfig'), {});
-const FileSourceSelector = dynamic(() => import('./Import/components/FileSourceSelector'), {});
+const FileSourceSelector = dynamic(() => import('./Import/sourceSelector/FileSourceSelector'), {});
 
 const CollectionCard = () => {
   const BoxRef = useRef<HTMLDivElement>(null);
@@ -73,21 +76,25 @@ const CollectionCard = () => {
   const router = useRouter();
   const theme = useTheme();
   const { toast } = useToast();
-  const { parentId = '', datasetId } = router.query as { parentId: string; datasetId: string };
+  const {
+    parentId = '',
+    datasetId,
+    tmbId
+  } = router.query as { parentId: string; datasetId: string; tmbId: string };
   const { t } = useTranslation();
+  const { Loading } = useLoading();
   const { isPc } = useSystemStore();
   const { userInfo } = useUserStore();
   const [searchText, setSearchText] = useState('');
   const { datasetDetail, updateDataset, startWebsiteSync, loadDatasetDetail } = useDatasetStore();
 
   const { openConfirm: openDeleteConfirm, ConfirmModal: ConfirmDeleteModal } = useConfirm({
-    content: t('dataset.Confirm to delete the file'),
-    type: 'delete'
+    content: t('dataset.Confirm to delete the file')
   });
   const { openConfirm: openSyncConfirm, ConfirmModal: ConfirmSyncModal } = useConfirm({
     content: t('core.dataset.collection.Start Sync Tip')
   });
-  
+
   const {
     isOpen: isOpenFileSourceSelector,
     onOpen: onOpenFileSourceSelector,
@@ -108,10 +115,15 @@ const CollectionCard = () => {
   const { onOpenModal: onOpenEditTitleModal, EditModal: EditTitleModal } = useEditTitle({
     title: t('Rename')
   });
-
+  //是否显示预估时间提示
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState(0);
   const { editFolderData, setEditFolderData } = useEditFolder();
   const [moveCollectionData, setMoveCollectionData] = useState<{ collectionId: string }>();
-
+  // 批量删除
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     data: collections,
     Pagination,
@@ -141,44 +153,122 @@ const CollectionCard = () => {
   // change search
   const debounceRefetch = useCallback(
     debounce(() => {
-      getData(1);
+      getData(pageNum);
       lastSearch.current = searchText;
     }, 300),
     []
   );
 
   // add file icon
-  const formatCollections = useMemo(
-    () =>
-      collections.map((collection) => {
-        const icon = getCollectionIcon(collection.type, collection.name);
-        const status = (() => {
-          if (collection.trainingAmount > 0) {
-            return {
-              statusText: t('dataset.collections.Collection Embedding', {
-                total: collection.trainingAmount
-              }),
-              color: 'myGray.600',
-              bg: 'myGray.50',
-              borderColor: 'borderColor.low'
-            };
-          }
+  const formatCollections = useMemo(() => {
+    var total = 0;
+    var result = collections.map((collection) => {
+      const icon = getCollectionIcon(collection.type, collection.name);
+      const status = (() => {
+        if (collection.trainingAmount > 0) {
+          var tempCount = 1; //默认每组索引1秒
+          if (collection.name.indexOf('.doc') >= 0)
+            //doc、docx耗时比较长每组2秒
+            tempCount = 2;
+          total += tempCount * collection.trainingAmount;
           return {
-            statusText: t('core.dataset.collection.status.active'),
-            color: 'green.600',
-            bg: 'green.50',
-            borderColor: 'green.300'
+            statusText: t('dataset.collections.Collection Embedding', {
+              total: collection.trainingAmount
+            }),
+            color: 'myGray.600',
+            bg: 'myGray.50',
+            borderColor: 'borderColor.low'
           };
-        })();
-
+        }
         return {
-          ...collection,
-          icon,
-          ...status
+          statusText: t('core.dataset.collection.status.active'),
+          color: 'green.600',
+          bg: 'green.50',
+          borderColor: 'green.300'
         };
-      }),
-    [collections, t]
-  );
+      })();
+      if (total > 0) {
+        setEstimatedTime(total);
+        setShowCountdown(true);
+      } else {
+        setShowCountdown(false);
+      }
+      return {
+        ...collection,
+        icon,
+        ...status
+      };
+    });
+    if (
+      currentPage != pageNum ||
+      (currentPage == pageNum && currentPage == 1 && collections.length == 0)
+    ) {
+      setSelectedItems([]);
+      setIsAllSelected(false);
+      setCurrentPage(pageNum);
+    }
+    return result;
+  }, [collections, t]);
+
+  const handleHeaderCheckboxChange = () => {
+    if (isAllSelected) {
+      // 如果当前是全选状态，则取消所有选中
+      setSelectedItems([]);
+    } else {
+      // 否则，全选所有项目
+      // @ts-ignore
+      setSelectedItems(formatCollections.map((collection) => collection._id));
+    }
+    setIsAllSelected(!isAllSelected);
+  };
+  // 监听collections的变化，取消选择状态
+  // useEffect(() => {
+  //   setSelectedItems([]);
+  //   setIsAllSelected(false);
+  // }, [collections]);
+
+  // 监听selectedItems，更新全选状态
+  useEffect(() => {
+    setIsAllSelected(selectedItems.length > 0 && selectedItems.length === formatCollections.length);
+  }, [selectedItems]);
+  const handleCheckboxChange = (collectionId: string) => {
+    // @ts-ignore
+    if (selectedItems.includes(collectionId)) {
+      // 如果已选中，从列表中移除
+      setSelectedItems(selectedItems.filter((id) => id !== collectionId));
+    } else {
+      // 如果未选中，添加到列表中
+      // @ts-ignore
+      setSelectedItems([...selectedItems, collectionId]);
+    }
+  };
+  const handleBatchDelete = () => {
+    // 先展示一个确认对话框，确认后再进行删除操作
+    if (selectedItems.length > 0) {
+      onDelCollections(selectedItems);
+    }
+  };
+
+  // 批量删除
+  const { mutate: onDelCollections, isLoading: isDeletings } = useRequest({
+    mutationFn: (selectedIds: string[]) => {
+      // 调整mutationFn以接受一个id数组
+      return delDatasetCollectionByIds({ ids: selectedIds });
+    },
+    onSuccess: () => {
+      if (isAllSelected && pageNum > 1)
+        //全选删除非第1页
+        // 删除成功后刷新数据
+        getData(pageNum - 1);
+      else if (isAllSelected && pageNum == 1) {
+        //全选删除第1页
+        setIsAllSelected(false);
+        getData(pageNum);
+      } else getData(pageNum);
+    },
+    successToast: t('common.Delete Success'),
+    errorToast: t('common.Delete Failed')
+  });
 
   const { mutate: onCreateCollection, isLoading: isCreating } = useRequest({
     mutationFn: async ({
@@ -274,16 +364,17 @@ const CollectionCard = () => {
     () =>
       isCreating ||
       isDeleting ||
+      isDeletings ||
       isUpdating ||
       isSyncing ||
       (isGetting && collections.length === 0),
-    [collections.length, isCreating, isDeleting, isGetting, isSyncing, isUpdating]
+    [collections.length, isCreating, isDeleting, isDeletings, isGetting, isSyncing, isUpdating]
   );
 
   useQuery(
     ['refreshCollection'],
     () => {
-      getData(1);
+      getData(currentPage);
       if (datasetDetail.status === DatasetStatusEnum.syncing) {
         loadDatasetDetail(datasetId, true);
       }
@@ -299,12 +390,13 @@ const CollectionCard = () => {
     getData(1);
   }, [parentId]);
 
+  // @ts-ignore
   return (
     <MyBox isLoading={isLoading} h={'100%'} py={[2, 4]}>
       <Flex ref={BoxRef} flexDirection={'column'} py={[1, 3]} h={'100%'}>
         {/* header */}
         <Flex px={[2, 6]} alignItems={'flex-start'} h={'35px'}>
-          <Box flex={1}>
+          <Box flex={1} display={'flex'}>
             <ParentPath
               paths={paths.map((path, i) => ({
                 parentId: path.parentId,
@@ -315,6 +407,13 @@ const CollectionCard = () => {
                   <Box fontWeight={'bold'} fontSize={['sm', 'lg']}>
                     {t(DatasetTypeMap[datasetDetail?.type]?.collectionLabel)}({total})
                   </Box>
+                  {showCountdown && (
+                    <Box textAlign={'center'} flex={1} fontWeight={'bold'} fontSize={['sm', 'lg']}>
+                      {'预估所需时间为' +
+                        estimatedTime +
+                        '秒，文档创建索引速度比PDF慢，请耐心等待！'}
+                    </Box>
+                  )}
                   {datasetDetail?.websiteConfig?.url && (
                     <Flex fontSize={'sm'}>
                       {t('core.dataset.website.Base Url')}:
@@ -437,7 +536,6 @@ const CollectionCard = () => {
                           {t('core.dataset.Text collection')}
                         </Flex>
                       ),
-                      // 文本数据集导入入口
                       onClick: onOpenFileSourceSelector
                     },
                     {
@@ -452,7 +550,7 @@ const CollectionCard = () => {
                           query: {
                             ...router.query,
                             currentTab: TabEnum.import,
-                            source: ImportDataSourceEnum.csvTable
+                            source: ImportDataSourceEnum.tableLocal
                           }
                         })
                     }
@@ -509,6 +607,37 @@ const CollectionCard = () => {
           <Table variant={'simple'} fontSize={'sm'} draggable={false}>
             <Thead draggable={false}>
               <Tr bg={'myGray.100'} mb={2}>
+                <Th w={'150px'} display="flex" alignItems="center">
+                  <Checkbox
+                    w={'40px'}
+                    sx={{
+                      '.chakra-checkbox__control': {
+                        width: '20px',
+                        height: '20px'
+                      }
+                    }}
+                    isChecked={isAllSelected}
+                    onChange={handleHeaderCheckboxChange}
+                  />
+                  <Button
+                    onClick={() => {
+                      if (selectedItems.length > 0) {
+                        openDeleteConfirm(() => {
+                          handleBatchDelete();
+                        }, undefined)();
+                      } else {
+                        // 这里弹窗提示
+                        // message.warning(t('core.dataset.Please select at least one dataset'));
+                        toast({
+                          status: 'warning',
+                          title: t('core.dataset.Delete Tip')
+                        });
+                      }
+                    }}
+                  >
+                    {t('core.dataset.Batch Delete')}
+                  </Button>
+                </Th>
                 <Th borderLeftRadius={'md'} overflow={'hidden'} borderBottom={'none'} py={4}>
                   #
                 </Th>
@@ -585,6 +714,23 @@ const CollectionCard = () => {
                     }
                   }}
                 >
+                  <Td w={'50px'} onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      isChecked={
+                        // @ts-ignore
+                        selectedItems.includes(collection._id)
+                      }
+                      onChange={() => {
+                        handleCheckboxChange(collection._id);
+                      }}
+                      sx={{
+                        '.chakra-checkbox__control': {
+                          width: '20px',
+                          height: '20px'
+                        }
+                      }}
+                    />
+                  </Td>
                   <Td w={'50px'}>{index + 1}</Td>
                   <Td minW={'150px'} maxW={['200px', '300px']} draggable>
                     <Flex alignItems={'center'}>
@@ -677,48 +823,58 @@ const CollectionCard = () => {
                             ),
                             onClick: () => setMoveCollectionData({ collectionId: collection._id })
                           },
-                          {
-                            label: (
-                              <Flex alignItems={'center'}>
-                                <MyIcon name={'edit'} w={'14px'} mr={2} />
-                                {t('Rename')}
-                              </Flex>
-                            ),
-                            onClick: () =>
-                              onOpenEditTitleModal({
-                                defaultVal: collection.name,
-                                onSuccess: (newName) => {
-                                  onUpdateCollectionName({
-                                    collectionId: collection._id,
-                                    name: newName
-                                  });
+                          // @ts-ignore
+                          ...(collection.tmbId == userInfo.team.tmbId ||
+                          tmbId == userInfo?.team.tmbId
+                            ? [
+                                {
+                                  label: (
+                                    <Flex alignItems={'center'}>
+                                      <MyIcon name={'edit'} w={'14px'} mr={2} />
+                                      {t('Rename')}
+                                    </Flex>
+                                  ),
+                                  onClick: () =>
+                                    onOpenEditTitleModal({
+                                      defaultVal: collection.name,
+                                      onSuccess: (newName) => {
+                                        onUpdateCollectionName({
+                                          collectionId: collection._id,
+                                          name: newName
+                                        });
+                                      }
+                                    })
                                 }
-                              })
-                          },
-                          {
-                            label: (
-                              <Flex alignItems={'center'}>
-                                <MyIcon
-                                  mr={1}
-                                  name={'delete'}
-                                  w={'14px'}
-                                  _hover={{ color: 'red.600' }}
-                                />
-                                <Box>{t('common.Delete')}</Box>
-                              </Flex>
-                            ),
-                            type: 'danger',
-                            onClick: () =>
-                              openDeleteConfirm(
-                                () => {
-                                  onDelCollection(collection._id);
-                                },
-                                undefined,
-                                collection.type === DatasetCollectionTypeEnum.folder
-                                  ? t('dataset.collections.Confirm to delete the folder')
-                                  : t('dataset.Confirm to delete the file')
-                              )()
-                          }
+                              ]
+                            : []),
+                          // @ts-ignore
+                          ...(tmbId == userInfo.team.tmbId
+                            ? [
+                                {
+                                  label: (
+                                    <Flex alignItems={'center'}>
+                                      <MyIcon
+                                        mr={1}
+                                        name={'delete'}
+                                        w={'14px'}
+                                        _hover={{ color: 'red.600' }}
+                                      />
+                                      <Box>{t('common.Delete')}</Box>
+                                    </Flex>
+                                  ),
+                                  onClick: () =>
+                                    openDeleteConfirm(
+                                      () => {
+                                        onDelCollection(collection._id);
+                                      },
+                                      undefined,
+                                      collection.type === DatasetCollectionTypeEnum.folder
+                                        ? t('dataset.collections.Confirm to delete the folder')
+                                        : t('dataset.Confirm to delete the file')
+                                    )()
+                                }
+                              ]
+                            : [])
                         ]}
                       />
                     )}

@@ -15,6 +15,7 @@ import { serviceSideProps } from '@/web/common/utils/i18n';
 import { useTranslation } from 'next-i18next';
 import { getTrainingQueueLen } from '@/web/core/dataset/api';
 import MyTooltip from '@/components/MyTooltip';
+import Script from 'next/script';
 import CollectionCard from './components/CollectionCard';
 import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { useUserStore } from '@/web/support/user/useUserStore';
@@ -23,11 +24,9 @@ import {
   DatasetTypeEnum,
   DatasetTypeMap
 } from '@fastgpt/global/core/dataset/constants';
-import { useConfirm } from '@fastgpt/web/hooks/useConfirm';
-import { useRequest } from '@fastgpt/web/hooks/useRequest';
+import { useConfirm } from '@/web/common/hooks/useConfirm';
+import { useRequest } from '@/web/common/hooks/useRequest';
 import DatasetTypeTag from '@/components/core/dataset/DatasetTypeTag';
-import Head from 'next/head';
-import MyBox from '@/components/common/MyBox';
 
 const DataCard = dynamic(() => import('./components/DataCard'));
 const Test = dynamic(() => import('./components/Test'));
@@ -146,18 +145,9 @@ const Detail = ({ datasetId, currentTab }: { datasetId: string; currentTab: `${T
 
   return (
     <>
-      <Head>
-        <title>{datasetDetail?.name}</title>
-      </Head>
+      <Script src="/js/pdf.js" strategy="lazyOnload"></Script>
       <PageContainer>
-        {/* 自定义两栏布局 */}
-        <MyBox
-          isLoading={isUpdating}
-          display={'flex'}
-          flexDirection={['column', 'row']}
-          h={'100%'}
-          pt={[4, 0]}
-        >
+        <Flex flexDirection={['column', 'row']} h={'100%'} pt={[4, 0]}>
           {isPc ? (
             <Flex
               flexDirection={'column'}
@@ -274,7 +264,7 @@ const Detail = ({ datasetId, currentTab }: { datasetId: string; currentTab: `${T
               />
             </Box>
           )}
-          {/* 右侧栏的渲染 */}
+
           {!!datasetDetail._id && (
             <Box flex={'1 0 0'} pb={0}>
               {currentTab === TabEnum.collectionCard && <CollectionCard />}
@@ -284,9 +274,9 @@ const Detail = ({ datasetId, currentTab }: { datasetId: string; currentTab: `${T
               {currentTab === TabEnum.import && <Import />}
             </Box>
           )}
-        </MyBox>
+        </Flex>
       </PageContainer>
-      <ConfirmSyncModal />
+      <ConfirmSyncModal isLoading={isUpdating} />
     </>
   );
 };
