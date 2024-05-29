@@ -22,8 +22,8 @@ if (typeof window !== 'undefined') {
 }
 
 const use_ip = ipAddress;
-const apiUrl1 = 'http://' + use_ip + ':3088/api/convert2'; // doc和wps的
-const apiUrl2 = 'http://' + use_ip + ':3089/api/convert2'; // ofd的
+const apiUrl1 = 'http://' + use_ip + ':3087/api/convert2'; // doc和wps的
+const apiUrl2 = 'http://' + use_ip + ':3087/api/convert2'; // ofd的
 type TokenType = {
   str: string;
   dir: string;
@@ -90,7 +90,7 @@ export const readDocContent = async ({ file }: { file: File }) => {
       };
       let apiUrl = apiUrl1;
       //  判断后缀
-      if (file.name.endsWith('.ofd')) {
+      if (file.name.endsWith('.pdf')) {
         apiUrl = apiUrl2;
       }
       // JSON.stringify将请求体对象转换为JSON字符串
