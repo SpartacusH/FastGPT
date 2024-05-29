@@ -212,7 +212,7 @@ const MyApps = () => {
       <Divider />
       <Box height={'calc((100vh - 200px)/2)'} marginTop={'10px'} overflowY={'auto'}>
         <Badge padding={'10px'} fontSize="18px">
-          {'团队应用'}
+          {'公开应用'}
         </Badge>
         <Grid
           paddingTop={'10px'}

@@ -1,13 +1,17 @@
-import type { UserTypee } from '@fastgpt/global/support/user/type.d';
-import type { PromotionRecordSchema } from '@fastgpt/global/support/activity/type.d';
-export interface ResLogin {
-  user: UserType;
-  token: string;
-}
+import {
+  TrainingModeEnum,
+  DatasetCollectionTypeEnum,
+  DatasetTypeEnum
+} from '@fastgpt/global/core/dataset/constants';
+import type { RequestPaging } from '@/types';
+import { TrainingModeEnum } from '@fastgpt/global/core/dataset/constants';
+import type { SearchTestItemType } from '@/types/core/dataset';
+import { UploadChunkItemType } from '@fastgpt/global/core/dataset/type';
+import { DatasetCollectionSchemaType } from '@fastgpt/global/core/dataset/type';
+import { PermissionTypeEnum } from '@fastgpt/global/support/permission/constant';
+import type { LLMModelItemType } from '@fastgpt/global/core/ai/model.d';
 
-export interface PromotionRecordType {
-  _id: PromotionRecordSchema['_id'];
-  type: PromotionRecordSchema['type'];
-  createTime: PromotionRecordSchema['createTime'];
-  amount: PromotionRecordSchema['amount'];
-}
+/* ======= User =========== */
+export type GetUserProps = RequestPaging & {
+  searchText?: string;
+};

@@ -48,6 +48,7 @@ import ParentPaths from '@/components/common/ParentPaths';
 import DatasetTypeTag from '@/components/core/dataset/DatasetTypeTag';
 import { useToast } from '@fastgpt/web/hooks/useToast';
 import { getErrText } from '@fastgpt/global/common/error/utils';
+import AuthorTag from '@/components/core/dataset/AuthorTag';
 
 const CreateModal = dynamic(() => import('./component/CreateModal'), { ssr: false });
 const MoveModal = dynamic(() => import('./component/MoveModal'), { ssr: false });
@@ -267,14 +268,16 @@ const Kb = () => {
                 router.push({
                   pathname: '/dataset/list',
                   query: {
-                    parentId: dataset._id
+                    parentId: dataset._id,
+                    tmbId: dataset.tmbId
                   }
                 });
               } else {
                 router.push({
                   pathname: '/dataset/detail',
                   query: {
-                    datasetId: dataset._id
+                    datasetId: dataset._id,
+                    tmbId: dataset.tmbId
                   }
                 });
               }
@@ -330,51 +333,63 @@ const Kb = () => {
                             }
                           }
                         ]
-                      : [
+                      : dataset.tmbId == userInfo.team.tmbId
+                        ? [
+                            {
+                              label: (
+                                <Flex alignItems={'center'}>
+                                  <MyIcon
+                                    name={'support/permission/privateLight'}
+                                    w={'14px'}
+                                    mr={2}
+                                  />
+                                  {t('permission.Set Private')}
+                                </Flex>
+                              ),
+                              onClick: () => {
+                                updateDataset({
+                                  id: dataset._id,
+                                  permission: PermissionTypeEnum.private
+                                });
+                              }
+                            }
+                          ]
+                        : []),
+                    ...(dataset.permission === PermissionTypeEnum.private ||
+                    dataset.tmbId === userInfo.team.tmbId
+                      ? [
                           {
                             label: (
                               <Flex alignItems={'center'}>
-                                <MyIcon
-                                  name={'support/permission/privateLight'}
-                                  w={'14px'}
-                                  mr={2}
-                                />
-                                {t('permission.Set Private')}
+                                <MyIcon name={'edit'} w={'14px'} mr={2} />
+                                {t('Rename')}
                               </Flex>
                             ),
-                            onClick: () => {
-                              updateDataset({
-                                id: dataset._id,
-                                permission: PermissionTypeEnum.private
-                              });
-                            }
+                            onClick: () =>
+                              onOpenTitleModal({
+                                defaultVal: dataset.name,
+                                onSuccess: (val) => {
+                                  if (val === dataset.name || !val) return;
+                                  updateDataset({ id: dataset._id, name: val });
+                                }
+                              })
                           }
-                        ]),
-                    {
-                      label: (
-                        <Flex alignItems={'center'}>
-                          <MyIcon name={'edit'} w={'14px'} mr={2} />
-                          {t('Rename')}
-                        </Flex>
-                      ),
-                      onClick: () =>
-                        onOpenTitleModal({
-                          defaultVal: dataset.name,
-                          onSuccess: (val) => {
-                            if (val === dataset.name || !val) return;
-                            updateDataset({ id: dataset._id, name: val });
+                        ]
+                      : []),
+                    ...(dataset.permission === PermissionTypeEnum.private ||
+                    dataset.tmbId == userInfo.team.tmbId
+                      ? [
+                          {
+                            label: (
+                              <Flex alignItems={'center'}>
+                                <MyIcon name={'common/file/move'} w={'14px'} mr={2} />
+                                {t('Move')}
+                              </Flex>
+                            ),
+                            onClick: () => setMoveDataId(dataset._id)
                           }
-                        })
-                    },
-                    {
-                      label: (
-                        <Flex alignItems={'center'}>
-                          <MyIcon name={'common/file/move'} w={'14px'} mr={2} />
-                          {t('Move')}
-                        </Flex>
-                      ),
-                      onClick: () => setMoveDataId(dataset._id)
-                    },
+                        ]
+                      : []),
                     {
                       label: (
                         <Flex alignItems={'center'}>
@@ -386,21 +401,26 @@ const Kb = () => {
                         exportDataset(dataset);
                       }
                     },
-                    {
-                      label: (
-                        <Flex alignItems={'center'}>
-                          <MyIcon name={'delete'} w={'14px'} mr={2} />
-                          {t('common.Delete')}
-                        </Flex>
-                      ),
-                      onClick: () => {
-                        openConfirm(
-                          () => onclickDelDataset(dataset._id),
-                          undefined,
-                          DeleteTipsMap.current[dataset.type]
-                        )();
-                      }
-                    }
+                    ...(dataset.permission === PermissionTypeEnum.private ||
+                    dataset.tmbId == userInfo.team.tmbId
+                      ? [
+                          {
+                            label: (
+                              <Flex alignItems={'center'}>
+                                <MyIcon name={'delete'} w={'14px'} mr={2} />
+                                {t('common.Delete')}
+                              </Flex>
+                            ),
+                            onClick: () => {
+                              openConfirm(
+                                () => onclickDelDataset(dataset._id),
+                                undefined,
+                                DeleteTipsMap.current[dataset.type]
+                              )();
+                            }
+                          }
+                        ]
+                      : [])
                   ]}
                 />
               </Box>
@@ -427,6 +447,9 @@ const Kb = () => {
             <Flex alignItems={'center'} fontSize={'sm'}>
               <Box flex={1}>
                 <PermissionIconText permission={dataset.permission} color={'myGray.600'} />
+              </Box>
+              <Box flex={1}>
+                <AuthorTag name={dataset.username} color={'myGray.600'} />
               </Box>
               {dataset.type !== DatasetTypeEnum.folder && (
                 <DatasetTypeTag type={dataset.type} py={1} px={2} />

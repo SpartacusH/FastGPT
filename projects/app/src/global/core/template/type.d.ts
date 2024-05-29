@@ -17,7 +17,7 @@ export type TemplateCollectionsListItemType = {
   createTime: Date;
   dataAmount: number;
   trainingAmount: number;
-  intro?:string;
+  intro?: string;
   fileId?: string;
   rawLink?: string;
   canWrite: boolean;

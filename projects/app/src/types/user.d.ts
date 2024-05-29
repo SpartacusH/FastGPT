@@ -8,3 +8,10 @@ export interface UserUpdateParams {
   timezone?: string;
   openaiAccount?: UserModelSchema['openaiAccount'];
 }
+export type CreateUserParams = {
+  avatar: string;
+  username: string;
+  password: string;
+  teamId: string;
+  timezone: string;
+};

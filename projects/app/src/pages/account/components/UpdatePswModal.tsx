@@ -10,15 +10,17 @@ type FormType = {
   oldPsw: string;
   newPsw: string;
   confirmPsw: string;
+  userId: string;
 };
 
-const UpdatePswModal = ({ onClose }: { onClose: () => void }) => {
+const UpdatePswModal = ({ userId, onClose }: { userId: string; onClose: () => void }) => {
   const { t } = useTranslation();
   const { register, handleSubmit } = useForm<FormType>({
     defaultValues: {
       oldPsw: '',
       newPsw: '',
-      confirmPsw: ''
+      confirmPsw: '',
+      userId: userId
     }
   });
 

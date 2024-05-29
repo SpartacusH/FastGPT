@@ -114,6 +114,8 @@ export type DatasetDataWithCollectionType = Omit<DatasetDataSchemaType, 'collect
 /* ================= dataset ===================== */
 export type DatasetListItemType = {
   _id: string;
+  tmbId: string;
+  username: string;
   parentId: string;
   avatar: string;
   name: string;

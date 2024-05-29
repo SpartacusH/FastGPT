@@ -183,27 +183,27 @@ const UserInfo = () => {
         ml={[0, 10]}
         mt={[6, 0]}
       >
-        {feConfigs.isPlus && (
-          <Flex mb={4} alignItems={'center'} w={['85%', '300px']}>
-            <Box flex={'0 0 80px'}>{t('user.Member Name')}:&nbsp;</Box>
-            <Input
-              flex={1}
-              defaultValue={userInfo?.team?.memberName || 'Member'}
-              title={t('user.Edit name')}
-              borderColor={'transparent'}
-              pl={'10px'}
-              transform={'translateX(-11px)'}
-              maxLength={20}
-              onBlur={(e) => {
-                const val = e.target.value;
-                if (val === userInfo?.team?.memberName) return;
-                try {
-                  putUpdateMemberName(val);
-                } catch (error) {}
-              }}
-            />
-          </Flex>
-        )}
+        {/*{feConfigs.isPlus && (*/}
+        {/*  <Flex mb={4} alignItems={'center'} w={['85%', '300px']}>*/}
+        {/*    <Box flex={'0 0 80px'}>{t('user.Member Name')}:&nbsp;</Box>*/}
+        {/*    <Input*/}
+        {/*      flex={1}*/}
+        {/*      defaultValue={userInfo?.team?.memberName || 'Member'}*/}
+        {/*      title={t('user.Edit name')}*/}
+        {/*      borderColor={'transparent'}*/}
+        {/*      pl={'10px'}*/}
+        {/*      transform={'translateX(-11px)'}*/}
+        {/*      maxLength={20}*/}
+        {/*      onBlur={(e) => {*/}
+        {/*        const val = e.target.value;*/}
+        {/*        if (val === userInfo?.team?.memberName) return;*/}
+        {/*        try {*/}
+        {/*          putUpdateMemberName(val);*/}
+        {/*        } catch (error) {}*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  </Flex>*/}
+        {/*)}*/}
         <Flex alignItems={'center'} w={['85%', '300px']}>
           <Box flex={'0 0 80px'}>{t('user.Account')}:&nbsp;</Box>
           <Box flex={1}>{userInfo?.username}</Box>
@@ -254,136 +254,139 @@ const UserInfo = () => {
             {t('user.Change')}
           </Button>
         </Flex>
-        {feConfigs.isPlus && (
-          <>
-            <Box mt={6} whiteSpace={'nowrap'} w={['85%', '300px']}>
-              <Flex alignItems={'center'}>
-                <Box flex={'0 0 80px'} fontSize={'md'}>
-                  {t('user.team.Balance')}:&nbsp;
-                </Box>
-                <Box flex={1}>
-                  <strong>{formatStorePrice2Read(userInfo?.team?.balance).toFixed(3)}</strong> 元
-                </Box>
-                {feConfigs?.show_pay && userInfo?.team?.canWrite && (
-                  <Button size={['sm', 'md']} ml={5} onClick={onOpenPayModal}>
-                    {t('user.Pay')}
-                  </Button>
-                )}
-              </Flex>
-            </Box>
-            {feConfigs?.show_pay && (
-              <Box mt={6} whiteSpace={'nowrap'} w={['85%', '300px']}>
-                <Flex alignItems={'center'}>
-                  <Box flex={'1 0 0'} fontSize={'md'}>
-                    {t('support.user.team.Dataset usage')}:&nbsp;{datasetUsageMap.usedSize}/
-                    {datasetUsageMap.maxSize}
-                  </Box>
-                  {userInfo?.team?.canWrite && (
-                    <Button size={'sm'} onClick={onOpenSubDatasetModal}>
-                      {t('support.wallet.Buy more')}
-                    </Button>
-                  )}
-                </Flex>
-                <Box mt={1}>
-                  <Progress
-                    value={datasetUsageMap.value}
-                    colorScheme={datasetUsageMap.colorScheme}
-                    borderRadius={'md'}
-                    isAnimated
-                    hasStripe
-                    borderWidth={'1px'}
-                    borderColor={'borderColor.base'}
-                  />
-                </Box>
-              </Box>
-            )}
-          </>
-        )}
 
-        {feConfigs?.docUrl && (
-          <Link
-            href={getDocPath('/docs/intro')}
-            target="_blank"
-            display={'flex'}
-            mt={4}
-            w={['85%', '300px']}
-            py={3}
-            px={6}
-            border={theme.borders.sm}
-            borderWidth={'1.5px'}
-            borderRadius={'md'}
-            alignItems={'center'}
-            userSelect={'none'}
-            textDecoration={'none !important'}
-          >
-            <MyIcon name={'common/courseLight'} w={'18px'} color={'myGray.600'} />
-            <Box ml={2} flex={1}>
-              {t('system.Help Document')}
-            </Box>
-            <Box w={'8px'} h={'8px'} borderRadius={'50%'} bg={'#67c13b'} />
-            <Box fontSize={'md'} ml={2}>
-              V{systemVersion}
-            </Box>
-          </Link>
-        )}
-        {feConfigs?.chatbotUrl && (
-          <Link
-            href={feConfigs.chatbotUrl}
-            target="_blank"
-            display={'flex'}
-            mt={4}
-            w={['85%', '300px']}
-            py={3}
-            px={6}
-            border={theme.borders.sm}
-            borderWidth={'1.5px'}
-            borderRadius={'md'}
-            alignItems={'center'}
-            userSelect={'none'}
-            textDecoration={'none !important'}
-          >
-            <MyIcon name={'core/app/aiLight'} w={'18px'} />
-            <Box ml={2} flex={1}>
-              {t('common.system.Help Chatbot')}
-            </Box>
-          </Link>
-        )}
-        {feConfigs?.show_openai_account && (
-          <>
-            <Divider my={3} />
+        {/*{feConfigs.isPlus && (*/}
+        {/*  <>*/}
+        {/*    <Box mt={6} whiteSpace={'nowrap'} w={['85%', '300px']}>*/}
+        {/*      <Flex alignItems={'center'}>*/}
+        {/*        <Box flex={'0 0 80px'} fontSize={'md'}>*/}
+        {/*          {t('user.team.Balance')}:&nbsp;*/}
+        {/*        </Box>*/}
+        {/*        <Box flex={1}>*/}
+        {/*          <strong>{formatStorePrice2Read(userInfo?.team?.balance).toFixed(3)}</strong> 元*/}
+        {/*        </Box>*/}
+        {/*        {feConfigs?.show_pay && userInfo?.team?.canWrite && (*/}
+        {/*          <Button size={['sm', 'md']} ml={5} onClick={onOpenPayModal}>*/}
+        {/*            {t('user.Pay')}*/}
+        {/*          </Button>*/}
+        {/*        )}*/}
+        {/*      </Flex>*/}
+        {/*    </Box>*/}
+        {/*    {feConfigs?.show_pay && (*/}
+        {/*      <Box mt={6} whiteSpace={'nowrap'} w={['85%', '300px']}>*/}
+        {/*        <Flex alignItems={'center'}>*/}
+        {/*          <Box flex={'1 0 0'} fontSize={'md'}>*/}
+        {/*            {t('support.user.team.Dataset usage')}:&nbsp;{datasetUsageMap.usedSize}/*/}
+        {/*            {datasetUsageMap.maxSize}*/}
+        {/*          </Box>*/}
+        {/*          {userInfo?.team?.canWrite && (*/}
+        {/*            <Button size={'sm'} onClick={onOpenSubDatasetModal}>*/}
+        {/*              {t('support.wallet.Buy more')}*/}
+        {/*            </Button>*/}
+        {/*          )}*/}
+        {/*        </Flex>*/}
+        {/*        <Box mt={1}>*/}
+        {/*          <Progress*/}
+        {/*            value={datasetUsageMap.value}*/}
+        {/*            colorScheme={datasetUsageMap.colorScheme}*/}
+        {/*            borderRadius={'md'}*/}
+        {/*            isAnimated*/}
+        {/*            hasStripe*/}
+        {/*            borderWidth={'1px'}*/}
+        {/*            borderColor={'borderColor.base'}*/}
+        {/*          />*/}
+        {/*        </Box>*/}
+        {/*      </Box>*/}
+        {/*    )}*/}
+        {/*  </>*/}
+        {/*)}*/}
 
-            <MyTooltip label={'点击配置账号'}>
-              <Flex
-                w={['85%', '300px']}
-                py={4}
-                px={6}
-                border={theme.borders.sm}
-                borderWidth={'1.5px'}
-                borderRadius={'md'}
-                bg={'myWhite.300'}
-                alignItems={'center'}
-                cursor={'pointer'}
-                userSelect={'none'}
-                onClick={onOpenOpenai}
-              >
-                <MyIcon name={'common/openai'} w={'18px'} color={'myGray.600'} />
-                <Box ml={2} flex={1}>
-                  OpenAI/OneAPI 账号
-                </Box>
-                <Box
-                  w={'9px'}
-                  h={'9px'}
-                  borderRadius={'50%'}
-                  bg={userInfo?.openaiAccount?.key ? '#67c13b' : 'myGray.500'}
-                />
-              </Flex>
-            </MyTooltip>
-          </>
-        )}
+        {/*{feConfigs?.docUrl && (*/}
+        {/*  <Link*/}
+        {/*    href={getDocPath('/docs/intro')}*/}
+        {/*    target="_blank"*/}
+        {/*    display={'flex'}*/}
+        {/*    mt={4}*/}
+        {/*    w={['85%', '300px']}*/}
+        {/*    py={3}*/}
+        {/*    px={6}*/}
+        {/*    border={theme.borders.sm}*/}
+        {/*    borderWidth={'1.5px'}*/}
+        {/*    borderRadius={'md'}*/}
+        {/*    alignItems={'center'}*/}
+        {/*    userSelect={'none'}*/}
+        {/*    textDecoration={'none !important'}*/}
+        {/*  >*/}
+        {/*    <MyIcon name={'common/courseLight'} w={'18px'} color={'myGray.600'} />*/}
+        {/*    <Box ml={2} flex={1}>*/}
+        {/*      {t('system.Help Document')}*/}
+        {/*    </Box>*/}
+        {/*    <Box w={'8px'} h={'8px'} borderRadius={'50%'} bg={'#67c13b'} />*/}
+        {/*    <Box fontSize={'md'} ml={2}>*/}
+        {/*      V{systemVersion}*/}
+        {/*    </Box>*/}
+        {/*  </Link>*/}
+        {/*)}*/}
+
+        {/*{feConfigs?.chatbotUrl && (*/}
+        {/*  <Link*/}
+        {/*    href={feConfigs.chatbotUrl}*/}
+        {/*    target="_blank"*/}
+        {/*    display={'flex'}*/}
+        {/*    mt={4}*/}
+        {/*    w={['85%', '300px']}*/}
+        {/*    py={3}*/}
+        {/*    px={6}*/}
+        {/*    border={theme.borders.sm}*/}
+        {/*    borderWidth={'1.5px'}*/}
+        {/*    borderRadius={'md'}*/}
+        {/*    alignItems={'center'}*/}
+        {/*    userSelect={'none'}*/}
+        {/*    textDecoration={'none !important'}*/}
+        {/*  >*/}
+        {/*    <MyIcon name={'core/app/aiLight'} w={'18px'} />*/}
+        {/*    <Box ml={2} flex={1}>*/}
+        {/*      {t('common.system.Help Chatbot')}*/}
+        {/*    </Box>*/}
+        {/*  </Link>*/}
+        {/*)}*/}
+
+        {/*{feConfigs?.show_openai_account && (*/}
+        {/*  <>*/}
+        {/*    <Divider my={3} />*/}
+
+        {/*    <MyTooltip label={'点击配置账号'}>*/}
+        {/*      <Flex*/}
+        {/*        w={['85%', '300px']}*/}
+        {/*        py={4}*/}
+        {/*        px={6}*/}
+        {/*        border={theme.borders.sm}*/}
+        {/*        borderWidth={'1.5px'}*/}
+        {/*        borderRadius={'md'}*/}
+        {/*        bg={'myWhite.300'}*/}
+        {/*        alignItems={'center'}*/}
+        {/*        cursor={'pointer'}*/}
+        {/*        userSelect={'none'}*/}
+        {/*        onClick={onOpenOpenai}*/}
+        {/*      >*/}
+        {/*        <MyIcon name={'common/openai'} w={'18px'} color={'myGray.600'} />*/}
+        {/*        <Box ml={2} flex={1}>*/}
+        {/*          OpenAI/OneAPI 账号*/}
+        {/*        </Box>*/}
+        {/*        <Box*/}
+        {/*          w={'9px'}*/}
+        {/*          h={'9px'}*/}
+        {/*          borderRadius={'50%'}*/}
+        {/*          bg={userInfo?.openaiAccount?.key ? '#67c13b' : 'myGray.500'}*/}
+        {/*        />*/}
+        {/*      </Flex>*/}
+        {/*    </MyTooltip>*/}
+        {/*  </>*/}
+        {/*)}*/}
       </Box>
 
       {isOpenPayModal && <PayModal onClose={onClosePayModal} />}
-      {isOpenUpdatePsw && <UpdatePswModal onClose={onCloseUpdatePsw} />}
+      {isOpenUpdatePsw && <UpdatePswModal userId={userInfo?._id} onClose={onCloseUpdatePsw} />}
       {isOpenOpenai && userInfo && (
         <OpenAIAccountModal
           defaultData={userInfo?.openaiAccount}

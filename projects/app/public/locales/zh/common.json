@@ -133,9 +133,11 @@
     "Select One Folder": "选择一个目录",
     "Select template": "选择模板",
     "Set Avatar": "点击设置头像",
+    "Set Account": "创建账号",
     "Set Name": "取个名字",
     "Setting": "设置",
     "Status": "状态",
+    "Operation": "操作",
     "Submit failed": "提交失败",
     "Submit success": "提交成功",
     "Team": "团队",
@@ -670,6 +672,8 @@
         "Start upload": "开始上传",
         "Total Chunk Preview": "分段预览({{totalChunks}}组)",
         "Total files": "共 {{total}} 个文件",
+        "Total selected files": "共上传 {{total}} 个文件",
+        "Total handle files": "共处理成功 {{total}} 个文件",
         "Total tokens": "总Tokens",
         "Training mode": "训练模式",
         "Upload data": "上传数据",
@@ -778,6 +782,9 @@
         "Start Sync": "开始同步",
         "UnValid Website Tip": "您的站点可能非静态站点，无法同步"
       }
+    },
+    "abstract":{
+       "My Abstract": "我的摘要"
     },
     "module": {
       "Add question type": "添加问题类型",
@@ -1134,6 +1141,7 @@
     "Apps": "AI助手",
     "Chat": "对话",
     "Datasets": "知识库",
+    "Abstract": "摘要生成",
     "Module": "模块",
     "Plugin": "插件",
     "Store": "应用市场",
@@ -1166,10 +1174,10 @@
   "permission": {
     "Private": "私有",
     "Private Tip": "仅自己可用",
-    "Public": "团队",
-    "Public Tip": "团队所有成员可使用",
+    "Public": "公开",
+    "Public Tip": "公开所有成员可使用",
     "Set Private": "设为私有",
-    "Set Public": "设为团队可用"
+    "Set Public": "设为公开可用"
   },
   "plugin": {
     "Confirm Delete": "确认删除该插件？",
@@ -1205,6 +1213,7 @@
       "Cancel subscription": "取消订阅"
     },
     "user": {
+      "Create Account":"账号",
       "Need to login": "请先登录",
       "Price": "计费标准",
       "auth": {
@@ -1312,6 +1321,7 @@
     "Pay": "充值",
     "Permission": "使用权限",
     "Personal Information": "个人信息",
+    "User List": "用户列表",
     "Promotion": "",
     "Promotion Rate": "返现比例",
     "Promotion Record": "推广记录",

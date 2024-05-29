@@ -234,8 +234,7 @@ const EditForm = ({
             {
               dataId: nanoid(),
               role: 'user',
-              content:
-                '请根据\n主题：['+reportTheme+']\n以下是模板：'+inputText
+              content: '请根据\n主题：[' + reportTheme + ']\n以下是模板：' + inputText
             },
             { dataId: nanoid(), role: 'assistant', content: '' }
           ];

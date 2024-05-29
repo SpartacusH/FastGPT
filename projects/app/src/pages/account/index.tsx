@@ -13,6 +13,7 @@ import { serviceSideProps } from '@/web/common/utils/i18n';
 import { useTranslation } from 'next-i18next';
 import Script from 'next/script';
 
+const UserListTable = dynamic(() => import('./components/UserListTable'));
 const Promotion = dynamic(() => import('./components/Promotion'));
 const BillTable = dynamic(() => import('./components/BillTable'));
 const PayRecordTable = dynamic(() => import('./components/PayRecordTable'));
@@ -22,6 +23,7 @@ const PriceBox = dynamic(() => import('@/components/support/wallet/Price'));
 
 enum TabEnum {
   'info' = 'info',
+  'userlist' = 'userlist',
   'promotion' = 'promotion',
   'bill' = 'bill',
   'price' = 'price',
@@ -36,46 +38,20 @@ const Account = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
   const { userInfo, setUserInfo } = useUserStore();
   const { feConfigs, isPc } = useSystemStore();
 
+  // @ts-ignore
   const tabList = [
     {
       icon: 'support/user/userLight',
       label: t('user.Personal Information'),
       id: TabEnum.info
     },
-    ...(feConfigs?.isPlus
+    //管理员root，可以管理用户
+    ...(userInfo?.username == 'root'
       ? [
           {
-            icon: 'support/bill/billRecordLight',
-            label: t('user.Usage Record'),
-            id: TabEnum.bill
-          }
-        ]
-      : []),
-    ...(feConfigs?.show_pay && userInfo?.team.canWrite
-      ? [
-          {
-            icon: 'support/pay/payRecordLight',
-            label: t('user.Recharge Record'),
-            id: TabEnum.pay
-          }
-        ]
-      : []),
-    ...(feConfigs?.show_pay
-      ? [
-          {
-            icon: 'support/pay/priceLight',
-            label: t('support.user.Price'),
-            id: TabEnum.price
-          }
-        ]
-      : []),
-
-    ...(feConfigs?.show_promotion
-      ? [
-          {
-            icon: 'support/account/promotionLight',
-            label: t('user.Promotion Record'),
-            id: TabEnum.promotion
+            icon: 'support/user/userList',
+            label: t('user.User List'),
+            id: TabEnum.userlist
           }
         ]
       : []),
@@ -88,15 +64,53 @@ const Account = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
           }
         ]
       : []),
-    ...(feConfigs.isPlus
-      ? [
-          {
-            icon: 'support/user/informLight',
-            label: t('user.Notice'),
-            id: TabEnum.inform
-          }
-        ]
-      : []),
+    // ...(feConfigs?.isPlus
+    //   ? [
+    //       {
+    //         icon: 'support/bill/billRecordLight',
+    //         label: t('user.Usage Record'),
+    //         id: TabEnum.bill
+    //       }
+    //     ]
+    //   : []),
+    // ...(feConfigs?.show_pay && userInfo?.team.canWrite
+    //   ? [
+    //       {
+    //         icon: 'support/pay/payRecordLight',
+    //         label: t('user.Recharge Record'),
+    //         id: TabEnum.pay
+    //       }
+    //     ]
+    //   : []),
+    // ...(feConfigs?.show_pay
+    //   ? [
+    //       {
+    //         icon: 'support/pay/priceLight',
+    //         label: t('support.user.Price'),
+    //         id: TabEnum.price
+    //       }
+    //     ]
+    //   : []),
+    //
+    // ...(feConfigs?.show_promotion
+    //   ? [
+    //       {
+    //         icon: 'support/account/promotionLight',
+    //         label: t('user.Promotion Record'),
+    //         id: TabEnum.promotion
+    //       }
+    //     ]
+    //   : []),
+
+    // ...(feConfigs.isPlus
+    //   ? [
+    //       {
+    //         icon: 'support/user/informLight',
+    //         label: t('user.Notice'),
+    //         id: TabEnum.inform
+    //       }
+    //     ]
+    //   : []),
 
     {
       icon: 'support/account/loginoutLight',
@@ -177,6 +191,7 @@ const Account = ({ currentTab }: { currentTab: `${TabEnum}` }) => {
 
           <Box flex={'1 0 0'} h={'100%'} pb={[4, 0]}>
             {currentTab === TabEnum.info && <UserInfo />}
+            {currentTab === TabEnum.userlist && <UserListTable />}
             {currentTab === TabEnum.promotion && <Promotion />}
             {currentTab === TabEnum.bill && <BillTable />}
             {currentTab === TabEnum.pay && <PayRecordTable />}

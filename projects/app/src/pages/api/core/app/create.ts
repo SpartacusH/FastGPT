@@ -29,9 +29,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const authCount = await MongoApp.countDocuments({
       teamId
     });
-    if (authCount >= 500000000) {
-      throw new Error('每个团队上限 500000000 个应用');
-    }
+
+    /*去掉每个团队应用上限校验*/
+    // if (authCount >= 500000000) {
+    //   throw new Error('每个团队上限 500000000 个应用');
+    // }
 
     // 创建模型
     const response = await MongoApp.create({

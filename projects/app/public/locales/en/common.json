@@ -133,6 +133,7 @@
     "Select template": "Select template",
     "Set Avatar": "Set Avatar",
     "Set Name": "Make a nice name",
+    "Set Account": "Make a nice account",
     "Setting": "Setting",
     "Status": "Status",
     "Submit failed": "Submit failed",
@@ -770,6 +771,9 @@
         "UnValid Website Tip": "Your site may not be static and cannot be synchronized"
       }
     },
+     "abstract":{
+       "My Abstract": "My Abstract"
+    },
     "module": {
       "Add question type": "Add type",
       "Can not connect self": "Cannot connect itself",
@@ -1125,6 +1129,7 @@
     "Apps": "App",
     "Chat": "Chat",
     "Datasets": "DataSet",
+    "Abstract": "Abstract",
     "Module": "Module",
     "Plugin": "Plugin",
     "Store": "Store",
@@ -1196,6 +1201,7 @@
       "Cancel subscription": "Cancel"
     },
     "user": {
+      "Create Account":"Create Account",
       "Need to login": "Please log in first",
       "Price": "Price",
       "auth": {
@@ -1303,6 +1309,7 @@
     "Pay": "Pay",
     "Permission": "Permission",
     "Personal Information": "Personal",
+    "User List": "User List",
     "Promotion": "Promotion",
     "Promotion Rate": "Promotion Rate",
     "Promotion Record": "Promotion",
