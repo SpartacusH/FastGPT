@@ -83,8 +83,6 @@ export const postCreateDatasetLinkCollection = (data: LinkCreateDatasetCollectio
 export const putDatasetCollectionById = (data: UpdateDatasetCollectionParams) =>
   POST(`/core/dataset/collection/update`, data);
 // 新增批量删除
-export const delDatasetCollectionByIds = (params: { ids: string[] }) =>
-  POST(`/core/dataset/collection/batchDelete`, params);
 export const delDatasetCollectionById = (params: { id: string }) =>
   DELETE(`/core/dataset/collection/delete`, params);
 export const postLinkCollectionSync = (collectionId: string) =>
