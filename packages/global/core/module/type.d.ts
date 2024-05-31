@@ -56,6 +56,12 @@ export type AppTTSConfigType = {
   voice?: string;
   speed?: number;
 };
+// whisper
+export type AppWhisperConfigType = {
+  open: boolean;
+  autoSend: boolean;
+  autoTTSResponse: boolean;
+};
 
 export type SelectAppItemType = {
   id: string;

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef} from 'react';
+import React, { useCallback, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getInitChatInfo } from '@/web/core/chat/api';
@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useSystemStore } from '@/web/common/system/useSystemStore';
 import { useQuery } from '@tanstack/react-query';
-import { streamFetch } from '@/web/common/api/fetch';
+import { streamFetch, streamFetch1, streamFetch0 } from '@/web/common/api/fetch';
 import { useChatStore } from '@/web/core/chat/storeChat';
 import { useLoading } from '@fastgpt/web/hooks/useLoading';
 import { useToast } from '@fastgpt/web/hooks/useToast';
@@ -34,24 +34,32 @@ import { useUserStore } from '@/web/support/user/useUserStore';
 import { serviceSideProps } from '@/web/common/utils/i18n';
 import { useAppStore } from '@/web/core/app/store/useAppStore';
 import { checkChatSupportSelectFileByChatModels } from '@/web/core/chat/utils';
-import { getChatTitleFromChatMessage } from '@fastgpt/global/core/chat/utils';
+import {
+  chatContentReplaceBlock,
+  getChatTitleFromChatMessage
+} from '@fastgpt/global/core/chat/utils';
 import { ChatStatusEnum } from '@fastgpt/global/core/chat/constants';
-import { GPTMessages2Chats } from '@fastgpt/global/core/chat/adapt';
+//import { GPTMessages2Chats } from '@fastgpt/global/core/chat/adapt';
 import { ImportSourceItemType } from '@/web/core/dataset/type.d';
 
 import FileSelector, { type SelectFileItemType } from '@/web/core/abstract/components/FileSelector';
-import { readFileRawContent } from '@fastgpt/service/common/file/read/utils';
-import { getUploadBase64ImgController} from '@/web/common/file/controller'
+// import { readFileRawContent } from '@fastgpt/service/common/file/read/utils';
+import { readFileRawContent } from '@fastgpt/web/common/file/read';
+import { getUploadBase64ImgController } from '@/web/common/file/controller';
+import { MongoImageTypeEnum } from '@fastgpt/global/common/file/image/constants';
 import { getNanoid } from '@fastgpt/global/common/string/tools';
 import { splitText2Chunks } from '@fastgpt/global/common/string/textSplitter';
+
 // import { useImportStore } from '@/pages/dataset/detail/components/Import/Provider'
 // import FileSelector,{ type SelectFileItemType }from '@/pages/dataset/detail/components/Import/components/FileSelector';
 
-let fileContent: string ;
-let chunks:string[] = [];
+let fileContent: string;
+let chunks: string[] = [];
 const relatedId = getNanoid(32);
-const abstract_prompt = "请你作为一个ai助手,总结所选文档的主要内容,并给出摘要,要求摘要内容简洁、准确、不超过300字,并使用中文回答";
-const abstract_prompt_send = "请你作为一个ai助手,总结上述文字的主要内容形成摘要,要求摘要内容简洁、准确、不超过300字,并使用中文回答";
+const abstract_prompt =
+  '请你作为一个ai助手,总结所选文档的主要内容,并给出摘要,要求摘要内容简洁、准确,并使用中文回答';
+const abstract_prompt_send =
+  '请你作为一个ai助手,总结上述文字的主要内容形成摘要,要求摘要内容简洁、准确、不超过300字,并使用中文回答';
 type FileItemType = ImportSourceItemType & { file: File };
 
 const fileType = '.txt, .doc, .docx, .csv, .pdf, .md, .html, .ofd, .wps';
@@ -91,55 +99,80 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   // 这段代码定义了一个名为 startChat 的异步函数，
   // 该函数处理开始聊天的操作，包括发送消息、处理响应、更新聊天历史记录和界面。
   const startChat = useCallback(
-    async ({ messages, controller, generatingMessage, variables,file_content}: StartChatFnProps) => {
+    async ({
+      messages,
+      controller,
+      generatingMessage,
+      variables,
+      file_content
+    }: StartChatFnProps) => {
       // 递归处理方法，直到没有消息为止
       const prompts = messages.slice(-2);
       const completionChatId = chatId ? chatId : nanoid();
-      let responseText_temp:String='';
-      if(file_content && file_content.length>0){
-        for(let i=0;i<file_content.length;i++){
-          console.log("文本分块：总"+ (file_content.length)+"块")
-          console.log("文本分块：第"+(i+1)+"块内容：");
+      let responseText_temp: String = '';
+      // let abstract_result:String[]=[];
+      if (file_content && file_content.length > 0) {
+        for (let i = 0; i < file_content.length; i++) {
+          console.log('文本分块：总' + file_content.length + '块');
+          console.log('文本分块：第' + (i + 1) + '块内容：');
           console.log(file_content[i]);
-          
+
           prompts.forEach((item) => {
-            if(item.role === 'user' && file_content){
-              item.content =responseText_temp + file_content[i] + abstract_prompt_send;
+            if (item.role === 'user' && file_content) {
+              // item.content =responseText_temp + file_content[i] + abstract_prompt_send;
+              item.content = responseText_temp + file_content[i] + abstract_prompt_send;
+              console.log('display:');
+              console.log(item.content.length);
             }
           });
-          responseText_temp = "";
-          if(i===file_content.length-1) break;
-          const {responseText} = await streamFetch({
-            data:{
-              messages:prompts,
+          responseText_temp = '';
+          if (i === file_content.length - 1) {
+            break;
+          }
+
+          const { responseText } = await streamFetch({
+            data: {
+              messages: prompts,
               variables,
               appId,
-              chatId
+              chatId: completionChatId
             },
-            onMessage:generatingMessage,
-            abortCtrl:controller
+            onMessage: () => {},
+            abortCtrl: controller
           });
-          console.log("文本分块：第"+(i+1)+"块响应："+responseText);
-          const responseText_2 = responseText.slice(10);
-          responseText_temp += responseText_2;
+          console.log('文本分块：第' + (i + 1) + '块响应：' + responseText);
+          // abstract_result.push(responseText);
+          responseText_temp = responseText;
         }
       }
-      console.log(prompts)
+
+      // console.log(abstract_result);
+      console.log('prompts:');
+      console.log(prompts);
 
       // 调用 streamFetch 函数发送请求并获取响应
-      const { responseText,responseData } = await streamFetch({
+      const { responseText, responseData } = await streamFetch({
         data: {
           messages: prompts,
           variables,
           appId,
           chatId: completionChatId
         },
+        // @ts-ignore
         onMessage: generatingMessage,
         abortCtrl: controller
       });
-      //定义新对话的标题
-      const newTitle = getChatTitleFromChatMessage(GPTMessages2Chats(prompts)[0]);
+      console.log(responseText);
 
+      //定义新对话的标题
+      //const newTitle = getChatTitleFromChatMessage(GPTMessages2Chats(prompts)[0]);
+      // @ts-ignore
+      // @ts-ignore
+      const newTitle =
+        chatContentReplaceBlock(prompts[0].content || '')?.slice(0, 20) ||
+        // @ts-ignore
+        prompts[1]?.value?.slice(0, 20) ||
+        t('core.chat.New Chat');
       // 如果当前对话的 ID 不等于新对话的 ID，则说明是新对话，需要将新对话添加到历史记录中
       // 否则，说明是同一个对话，只需要更新对话历史记录即可
       if (completionChatId !== chatId) {
@@ -183,7 +216,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
     },
     [appId, chatId, histories, pushHistory, router, setChatData, updateHistory]
   );
- 
+
   useQuery(['loadModels'], () => loadMyApps(false));
 
   // 定义loadChatInfo()方法，用于加载聊天信息
@@ -267,7 +300,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
       return router.replace({
         query: {
           appId: myApps[0]._id,
-          chatId:''
+          chatId: ''
           // chatId: lastChatId
         }
       });
@@ -289,7 +322,7 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
           router.replace({
             query: {
               appId: apps[0]._id,
-              chatId:''
+              chatId: ''
               // chatId: lastChatId
             }
           });
@@ -317,65 +350,114 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
   // 定义useQuery钩子，名字为loadHistories，useQuery 钩子被用于加载聊天记录信息
   useQuery(['loadHistories', appId], () => (appId ? loadHistories({ appId }) : null));
 
-  const onSelectFile = (e: SelectFileItemType[]) => {
-    const file = e[0].file
+  const onSelectFile = async (e: SelectFileItemType[]) => {
+    const file = e[0].file;
     // const extension = e[0].file.name.split('.')[1];
     if (!file) return;
     const file_size = e[0].file.size;
-    let chunksize:number;
-    if(file_size>0){
+    let chunksize: number;
+    if (file_size > 0) {
       toast({
-        title: t('common.Import success'),
+        title: '导入成功！',
         status: 'success'
       });
-    }
-    else{
+    } else {
       toast({
-        title: "空文件，请重新选择！",
+        title: '空文件，请重新选择！',
         status: 'error'
       });
-      
+    }
 
-    }
-    if(file_size<7000){
-      chunksize = 7000;
-    }
-    else{
-      chunksize =5000;
-    }
-    
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function(event) {
-    if (event.target?.result && typeof event.target.result === 'string') {
-          fileContent = event.target.result; 
-          //文本分块
-          const overlapRatio = 0.2;
-          chunks = splitText2Chunks({
-          text: fileContent,
-          chunkLen: chunksize,
-          overlapRatio,
-        }).chunks;
-
-        if(chunks.length>0){
-          ChatBoxRef.current?.resetInputText_FileContent(abstract_prompt,chunks)
-          
-          // 清空聊天历史记录并新建一个聊天记录
-          ChatBoxRef.current?.resetHistory([]);
-          router.replace({
-            query: {
-              ...router.query,
-              chatId: ''
-            }
+    try {
+      const { rawText } = await (() => {
+        try {
+          return readFileRawContent({
+            // @ts-ignore
+            file: file,
+            uploadBase64Controller: (base64Img: string) =>
+              getUploadBase64ImgController({
+                base64Img,
+                type: MongoImageTypeEnum.collectionImage,
+                metadata: {
+                  relatedId: getNanoid(32)
+                }
+              })
           });
-          setLastChatId(chatId);
-          setLastChatAppId(appId);
-          }
+        } catch (error) {
+          return { rawText: '' };
         }
-       
+      })();
+      fileContent = rawText;
+      console.log('readFileRawContent.length:');
+      console.log(fileContent.length);
+
+      //文本清洗
+      fileContent = fileContent.replace(/\r\n/g, '');
+      fileContent = fileContent.replace(/\s/g, '');
+
+      console.log(' After readFileRawContent.length:');
+      console.log(fileContent.length);
+
+      if (fileContent.length < 7000) {
+        chunksize = 7000;
+      } else {
+        chunksize = 5000;
       }
+      //文本分块
+      const overlapRatio = 0.2;
+      chunks = splitText2Chunks({
+        text: fileContent,
+        chunkLen: chunksize,
+        overlapRatio
+      }).chunks;
+
+      if (chunks.length > 0) {
+        ChatBoxRef.current?.resetInputText_FileContent(abstract_prompt, chunks);
+        // 清空聊天历史记录并新建一个聊天记录
+        ChatBoxRef.current?.resetHistory([]);
+        router.replace({
+          query: {
+            ...router.query,
+            chatId: ''
+          }
+        });
+        setLastChatId(chatId);
+        setLastChatAppId(appId);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // const reader = new FileReader();
+    // reader.readAsText(file);
+    // reader.onload = function(event) {
+    // if (event.target?.result && typeof event.target.result === 'string') {
+    //       fileContent = event.target.result;
+    //       //文本分块
+    //       const overlapRatio = 0.2;
+    //       chunks = splitText2Chunks({
+    //       text: fileContent,
+    //       chunkLen: chunksize,
+    //       overlapRatio,
+    //     }).chunks;
+    //
+    //     if(chunks.length>0){
+    //       ChatBoxRef.current?.resetInputText_FileContent(abstract_prompt,chunks)
+    //
+    //       // 清空聊天历史记录并新建一个聊天记录
+    //       ChatBoxRef.current?.resetHistory([]);
+    //       router.replace({
+    //         query: {
+    //           ...router.query,
+    //           chatId: ''
+    //         }
+    //       });
+    //       setLastChatId(chatId);
+    //       setLastChatAppId(appId);
+    //       }
+    //     }
+    //
+    //   }
   };
-    
 
   return (
     <Flex h={'100%'}>
@@ -474,22 +556,21 @@ const Chat = ({ appId, chatId }: { appId: string; chatId: string }) => {
               showHistory
             />
 
-
             {/* chat box */}
             <Box flex={0.8}>
-              <Box flex={0.2} w='60%' margin={'auto'} p={4}>
-              <FileSelector
+              <Box flex={0.2} w="60%" margin={'auto'} p={4}>
+                <FileSelector
                   isLoading={false}
                   fileType={fileType}
                   multiple={false}
                   maxCount={maxSelectFileCount}
-                  maxSize={(300) * 1024 * 1024}
+                  maxSize={300 * 1024 * 1024}
                   onSelectFile={onSelectFile}
-              />
+                />
               </Box>
               <ChatBox
                 ref={ChatBoxRef}
-                showEmptyIntro
+                showEmptyIntro={false}
                 appAvatar={chatData.app.avatar}
                 userAvatar={userInfo?.avatar}
                 userGuideModule={chatData.app?.userGuideModule}

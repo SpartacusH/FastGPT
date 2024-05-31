@@ -1,3 +1,4 @@
+import { AppWhisperConfigType } from './type';
 export enum AppTypeEnum {
   simple = 'simple',
   advanced = 'advanced',
@@ -17,4 +18,10 @@ export const AppTypeMap = {
   [AppTypeEnum.video]: {
     label: 'video'
   }
+};
+
+export const defaultWhisperConfig: AppWhisperConfigType = {
+  open: false,
+  autoSend: false,
+  autoTTSResponse: false
 };

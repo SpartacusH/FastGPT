@@ -97,6 +97,14 @@ export const DatasetDataIndexTypeMap = {
 };
 
 /* ------------ training -------------- */
+
+export enum ImportDataSourceEnum {
+  fileLocal = 'fileLocal',
+  fileLink = 'fileLink',
+  fileCustom = 'fileCustom',
+  csvTable = 'csvTable'
+}
+
 export enum TrainingModeEnum {
   chunk = 'chunk',
   qa = 'qa'

@@ -12,6 +12,7 @@ const ContextModal = ({
 }) => {
   const theme = useTheme();
 
+  // @ts-ignore
   return (
     <MyModal
       isOpen={true}

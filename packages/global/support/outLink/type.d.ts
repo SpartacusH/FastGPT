@@ -25,3 +25,6 @@ export type OutLinkEditType = {
   responseDetail: OutLinkSchema['responseDetail'];
   limit: OutLinkSchema['limit'];
 };
+export type OutLinkWithAppType = Omit<OutLinkSchema, 'appId'> & {
+  appId: AppSchema;
+};

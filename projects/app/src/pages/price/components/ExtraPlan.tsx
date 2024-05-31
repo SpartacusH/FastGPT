@@ -131,6 +131,7 @@ const ExtraPlan = ({ extraDatasetSize }: { extraDatasetSize?: TeamSubSchema }) =
             </Box>
             <MyIcon
               transform={'translate(20px,-20px)'}
+              // @ts-ignore
               name={'support/pay/extraDatasetsize'}
               fill={'none'}
             />

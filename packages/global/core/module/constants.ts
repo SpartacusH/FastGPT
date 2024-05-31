@@ -34,6 +34,7 @@ export enum ModuleInputKeyEnum {
   userChatInput = 'userChatInput',
   questionGuide = 'questionGuide',
   tts = 'tts',
+  whisper = 'whisper',
   answerText = 'text',
   agents = 'agents', // cq agent key
 

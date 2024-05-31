@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }));
 
     jsonRes<DatasetListItemType[]>(res, {
+      // @ts-ignore
       data
     });
   } catch (err) {

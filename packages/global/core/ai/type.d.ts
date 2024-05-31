@@ -5,7 +5,9 @@ import type {
   ChatCompletionMessageParam,
   ChatCompletionContentPart
 } from 'openai/resources';
-
+export type ChatCompletionMessageParam = ChatCompletionMessageParam & {
+  dataId?: string;
+};
 export type ChatCompletionContentPart = ChatCompletionContentPart;
 export type ChatCompletionCreateParams = ChatCompletionCreateParams;
 export type ChatMessageItemType = Omit<ChatCompletionMessageParam, 'name'> & {
@@ -13,6 +15,15 @@ export type ChatMessageItemType = Omit<ChatCompletionMessageParam, 'name'> & {
   dataId?: string;
   content: any;
 } & any;
+export type ChatCompletionMessageToolCall = ChatCompletionMessageToolCall & {
+  toolName?: string;
+  toolAvatar?: string;
+};
+export type ChatCompletionMessageFunctionCall = ChatCompletionAssistantMessageParam.FunctionCall & {
+  id?: string;
+  toolName?: string;
+  toolAvatar?: string;
+};
 
 export type ChatCompletion = ChatCompletion;
 export type StreamChatType = Stream<ChatCompletionChunk>;

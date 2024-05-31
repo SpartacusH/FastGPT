@@ -607,37 +607,39 @@ const CollectionCard = () => {
           <Table variant={'simple'} fontSize={'sm'} draggable={false}>
             <Thead draggable={false}>
               <Tr bg={'myGray.100'} mb={2}>
-                <Th w={'150px'} display="flex" alignItems="center">
-                  <Checkbox
-                    w={'40px'}
-                    sx={{
-                      '.chakra-checkbox__control': {
-                        width: '20px',
-                        height: '20px'
-                      }
-                    }}
-                    isChecked={isAllSelected}
-                    onChange={handleHeaderCheckboxChange}
-                  />
-                  <Button
-                    onClick={() => {
-                      if (selectedItems.length > 0) {
-                        openDeleteConfirm(() => {
-                          handleBatchDelete();
-                        }, undefined)();
-                      } else {
-                        // 这里弹窗提示
-                        // message.warning(t('core.dataset.Please select at least one dataset'));
-                        toast({
-                          status: 'warning',
-                          title: t('core.dataset.Delete Tip')
-                        });
-                      }
-                    }}
-                  >
-                    {t('core.dataset.Batch Delete')}
-                  </Button>
-                </Th>
+                {tmbId == userInfo?.team.tmbId && (
+                  <Th w={'150px'} display="flex" alignItems="center">
+                    <Checkbox
+                      w={'40px'}
+                      sx={{
+                        '.chakra-checkbox__control': {
+                          width: '20px',
+                          height: '20px'
+                        }
+                      }}
+                      isChecked={isAllSelected}
+                      onChange={handleHeaderCheckboxChange}
+                    />
+                    <Button
+                      onClick={() => {
+                        if (selectedItems.length > 0) {
+                          openDeleteConfirm(() => {
+                            handleBatchDelete();
+                          }, undefined)();
+                        } else {
+                          // 这里弹窗提示
+                          // message.warning(t('core.dataset.Please select at least one dataset'));
+                          toast({
+                            status: 'warning',
+                            title: t('core.dataset.Delete Tip')
+                          });
+                        }
+                      }}
+                    >
+                      {t('core.dataset.Batch Delete')}
+                    </Button>
+                  </Th>
+                )}
                 <Th borderLeftRadius={'md'} overflow={'hidden'} borderBottom={'none'} py={4}>
                   #
                 </Th>
@@ -714,23 +716,25 @@ const CollectionCard = () => {
                     }
                   }}
                 >
-                  <Td w={'50px'} onClick={(e) => e.stopPropagation()}>
-                    <Checkbox
-                      isChecked={
-                        // @ts-ignore
-                        selectedItems.includes(collection._id)
-                      }
-                      onChange={() => {
-                        handleCheckboxChange(collection._id);
-                      }}
-                      sx={{
-                        '.chakra-checkbox__control': {
-                          width: '20px',
-                          height: '20px'
+                  {tmbId == userInfo?.team.tmbId && (
+                    <Td w={'50px'} onClick={(e) => e.stopPropagation()}>
+                      <Checkbox
+                        isChecked={
+                          // @ts-ignore
+                          selectedItems.includes(collection._id)
                         }
-                      }}
-                    />
-                  </Td>
+                        onChange={() => {
+                          handleCheckboxChange(collection._id);
+                        }}
+                        sx={{
+                          '.chakra-checkbox__control': {
+                            width: '20px',
+                            height: '20px'
+                          }
+                        }}
+                      />
+                    </Td>
+                  )}
                   <Td w={'50px'}>{index + 1}</Td>
                   <Td minW={'150px'} maxW={['200px', '300px']} draggable>
                     <Flex alignItems={'center'}>

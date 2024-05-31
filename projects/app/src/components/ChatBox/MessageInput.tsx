@@ -184,6 +184,7 @@ ${images.map((img) => JSON.stringify({ src: img.src })).join('\n')}
     renderCurve();
   }, [renderAudioGraph, stream]);
 
+  // @ts-ignore
   return (
     <Box m={['0 auto', '10px auto']} w={'100%'} maxW={['auto', 'min(800px, 100%)']} px={[0, 5]}>
       <Box
@@ -404,6 +405,7 @@ ${images.map((img) => JSON.stringify({ src: img.src })).join('\n')}
                 >
                   <MyTooltip label={isSpeaking ? t('core.chat.Stop Speak') : t('core.chat.Record')}>
                     <MyIcon
+                      // @ts-ignore
                       name={isSpeaking ? 'core/chat/stopSpeechFill' : 'core/chat/recordFill'}
                       width={['20px', '22px']}
                       height={['20px', '22px']}

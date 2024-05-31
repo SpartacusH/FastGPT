@@ -22,7 +22,15 @@ export const ChatRoleMap = {
     name: 'Tool'
   }
 };
-
+export enum ChatFileTypeEnum {
+  image = 'image',
+  file = 'file'
+}
+export enum ChatItemValueTypeEnum {
+  text = 'text',
+  file = 'file',
+  tool = 'tool'
+}
 export enum ChatSourceEnum {
   test = 'test',
   online = 'online',

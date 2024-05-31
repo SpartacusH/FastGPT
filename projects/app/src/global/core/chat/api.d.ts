@@ -35,7 +35,12 @@ export type InitChatResponse = {
     canUse?: boolean;
   };
 };
-
+export type InitTeamChatProps = {
+  teamId: string;
+  appId: string;
+  chatId?: string;
+  teamToken: string;
+};
 /* ---------- history ----------- */
 export type getHistoriesProps = {
   appId?: string;

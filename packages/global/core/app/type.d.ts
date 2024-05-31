@@ -125,3 +125,27 @@ export type AppSimpleEditConfigTemplateType = {
     };
   };
 };
+
+// variable
+export type VariableItemType = {
+  id: string;
+  key: string;
+  label: string;
+  type: `${VariableInputEnum}`;
+  required: boolean;
+  maxLen: number;
+  enums: { value: string }[];
+};
+// tts
+export type AppTTSConfigType = {
+  type: 'none' | 'web' | 'model';
+  model?: string;
+  voice?: string;
+  speed?: number;
+};
+// whisper
+export type AppWhisperConfigType = {
+  open: boolean;
+  autoSend: boolean;
+  autoTTSResponse: boolean;
+};

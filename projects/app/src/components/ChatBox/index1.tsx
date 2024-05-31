@@ -72,7 +72,6 @@ import ChatBoxDivider from '../core/chat/Divider';
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 24);
 
 const textareaMinH = '22px';
-let fileContent: string[] = [];
 
 type generatingMessageProps = { text?: string; name?: string; status?: 'running' | 'finish' };
 
@@ -81,7 +80,6 @@ export type StartChatFnProps = {
   messages: ChatMessageItemType[];
   controller: AbortController;
   variables: Record<string, any>;
-  file_content?: string[];
   generatingMessage: (e: generatingMessageProps) => void;
 };
 
@@ -91,7 +89,6 @@ export type ComponentRef = {
   resetHistory: (history: ChatSiteItemType[]) => void;
   scrollToBottom: (behavior?: 'smooth' | 'auto') => void;
   sendPrompt: (question: string) => void;
-  resetInputText_FileContent: (prompt: string, file_content: string[]) => void;
 };
 
 enum FeedbackTypeEnum {
@@ -383,12 +380,10 @@ const ChatBox = (
             messages,
             controller: abortSignal,
             generatingMessage,
-            variables,
-            file_content: fileContent
+            variables
           });
 
           isNewChatReplace.current = isNewChat;
-          fileContent = [];
 
           // set finish status
           setChatHistory((state) =>
@@ -512,10 +507,6 @@ const ChatBox = (
       sendPrompt({
         inputVal: question
       });
-    },
-    resetInputText_FileContent(prompt, file_content) {
-      resetInputVal(prompt);
-      fileContent = file_content;
     }
   }));
 

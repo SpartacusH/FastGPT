@@ -117,17 +117,23 @@ const Provider = ({
 
   // segment audio
   const [audioPlayingChatId, setAudioPlayingChatId] = useState<string>();
+
   const {
     audioLoading,
     audioPlaying,
     hasAudio,
+    // @ts-ignore
     playAudioByText,
     cancelAudio,
+    // @ts-ignore
     startSegmentedAudio,
+    // @ts-ignore
     finishSegmentedAudio,
+    // @ts-ignore
     splitText2Audio
   } = useAudioPlay({
     ttsConfig,
+    // @ts-ignore
     shareId,
     outLinkUid,
     teamId,

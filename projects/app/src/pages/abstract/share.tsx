@@ -95,6 +95,7 @@ const OutLink = ({
           chatId: completionChatId,
           outLinkUid
         },
+        // @ts-ignore
         onMessage: generatingMessage,
         abortCtrl: controller
       });

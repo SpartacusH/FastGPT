@@ -40,7 +40,7 @@ export function ChatContextFilter({
   for (let i = chatPrompts.length - 1; i >= 0; i--) {
     const item = chatPrompts[i];
     chats.unshift(item);
-
+    //@ts-ignore
     const tokens = countPromptTokens(item.value, adaptRole_Chat2Message(item.obj));
     maxTokens -= tokens;
 
