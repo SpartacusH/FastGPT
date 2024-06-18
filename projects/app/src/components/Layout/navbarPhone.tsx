@@ -28,7 +28,7 @@ const NavbarPhone = ({ unread }: { unread: number }) => {
         activeLink: ['/app/list', '/app/detail'],
         unread: 0
       },
-        {
+      {
         label: t('navbar.Abstract'),
         icon: 'core/abstract/abstractLight',
         activeIcon: 'core/abstract/abstractFill',

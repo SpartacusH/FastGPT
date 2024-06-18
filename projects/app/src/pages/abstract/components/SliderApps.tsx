@@ -20,7 +20,7 @@ const SliderApps = ({
 
   return (
     <Flex flexDirection={'column'} h={'100%'}>
-              {/* <Image src={'/imgs/module/db.png'} alt={''} mr={2} h={'24px'} /> */}
+      {/* <Image src={'/imgs/module/db.png'} alt={''} mr={2} h={'24px'} /> */}
       {/* <Box className="textlg" letterSpacing={1} fontSize={'24px'} fontWeight={'bold'}>
                 {t('core.dataset.My Dataset')}
       </Box> */}

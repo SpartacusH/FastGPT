@@ -44,7 +44,7 @@ const defaultFeConfigs: FastGPTFeConfigsType = {
   show_git: true,
   docUrl: '',
   openAPIDocUrl: '',
-  systemTitle: '参谋助手',
+  systemTitle: '714所助手',
   concatMd: '*',
   limit: {
     exportDatasetLimitMinutes: 0,

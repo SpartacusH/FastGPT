@@ -313,7 +313,7 @@ export const appTemplates: (AppItemType & {
             label: 'core.app.Welcome Text',
             showTargetInApp: false,
             showTargetInPlugin: false,
-            value: '你好，我是参谋助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
+            value: '你好，我是714所助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
             connected: false
           },
           {
@@ -759,7 +759,7 @@ export const appTemplates: (AppItemType & {
             label: 'core.app.Welcome Text',
             showTargetInApp: false,
             showTargetInPlugin: false,
-            value: '你好，我是参谋助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
+            value: '你好，我是714所助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
             connected: false
           },
           {
@@ -1205,7 +1205,7 @@ export const appTemplates: (AppItemType & {
             label: 'core.app.Welcome Text',
             showTargetInApp: false,
             showTargetInPlugin: false,
-            value: '你好，我是参谋助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
+            value: '你好，我是714所助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
             connected: false
           },
           {
