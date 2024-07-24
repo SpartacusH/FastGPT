@@ -46,6 +46,8 @@ const Upload = ({ showPreviewChunks }: { showPreviewChunks: boolean }) => {
 
   const { mutate: startUpload, isLoading } = useRequest({
     mutationFn: async ({ mode, customSplitChar, qaPrompt, webSelector }: FormType) => {
+      // console.log("source:",sources)
+      // console.log("uploadlist:",uploadList)
       if (uploadList.length === 0) return;
 
       await checkTeamDatasetSizeLimit(totalChunks);
@@ -191,7 +193,15 @@ const Upload = ({ showPreviewChunks }: { showPreviewChunks: boolean }) => {
 
   return (
     <Box>
-      <TableContainer>
+      <Flex direction="column" flex="1" minH="600px">
+        <TableContainer
+          px={[2, 6]}
+          mt={[0, 3]}
+          position={'relative'}
+          flex={'1 0 0'}
+          overflowY={'auto'}
+          maxH="800px"
+        >
         <Table variant={'simple'} fontSize={'sm'} draggable={false}>
           <Thead draggable={false}>
             <Tr bg={'myGray.100'} mb={2}>
@@ -284,6 +294,7 @@ const Upload = ({ showPreviewChunks }: { showPreviewChunks: boolean }) => {
           </Tbody>
         </Table>
       </TableContainer>
+    </Flex>
 
       <Flex justifyContent={'flex-end'} mt={4}>
         <Button isLoading={isLoading} onClick={handleSubmit((data) => startUpload(data))}>

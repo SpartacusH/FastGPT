@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useTransition } from 'react';
+import React, { useMemo, useState, useTransition, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -94,6 +94,7 @@ const EditForm = ({
 
   const aiSystemPrompt = watch('aiSettings.systemPrompt');
   const selectLLMModel = watch('aiSettings.model');
+  console.log(selectLLMModel);
   const datasetSearchSetting = watch('dataset');
   const variables = watch('userGuide.variables');
   const formatVariables = useMemo(() => formatEditorVariablePickerIcon(variables), [variables]);
@@ -103,7 +104,7 @@ const EditForm = ({
       value: item.model,
       label: item.name
     })))();
-
+  console.log(chatModelSelectList);
   const selectDatasets = useMemo(
     () => allDatasets.filter((item) => datasets.find((dataset) => dataset.datasetId === item._id)),
     [allDatasets, datasets]
@@ -162,6 +163,11 @@ const EditForm = ({
     flexShrink: 0,
     fontSize: ['sm', 'md']
   };
+
+  // 页面加载完成后执行onSubmitSave方法
+  // useEffect(() => {
+  //    handleSubmit((data) => onDefaultSubmitSave(data))();
+  // }, []);  // 注意这里的空数组，表示只在组件挂载和卸载时执行
 
   return (
     <Box>

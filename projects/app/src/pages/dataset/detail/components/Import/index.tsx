@@ -19,7 +19,6 @@ export enum ImportDataSourceEnum {
   folderLocal = 'folderLocal',
   fileLink = 'fileLink',
   fileCustom = 'fileCustom',
-
   tableLocal = 'tableLocal'
 }
 
@@ -37,6 +36,7 @@ const ImportDataset = () => {
     type?: string;
   };
 
+  // 定义不同数据源的步骤
   const modeSteps: Record<`${ImportDataSourceEnum}`, { title: string }[]> = {
     [ImportDataSourceEnum.fileLocal]: [
       {
@@ -94,6 +94,7 @@ const ImportDataset = () => {
       }
     ]
   };
+
   const steps = modeSteps[source];
 
   const { activeStep, goToNext, goToPrevious, MyStep } = useMyStep({
@@ -101,6 +102,7 @@ const ImportDataset = () => {
     steps
   });
 
+  // 管理步骤状态
   const ImportComponent = useMemo(() => {
     if (source === ImportDataSourceEnum.fileLocal) return FileLocal;
     if (source === ImportDataSourceEnum.fileLink) return FileLink;
@@ -145,12 +147,13 @@ const ImportDataset = () => {
         )}
         <Box flex={1} />
       </Flex>
-      {/* step */}
+      {/* 步骤导航工具MyStep */}
       <Box
-        mt={4}
-        mb={5}
-        px={3}
-        py={[2, 4]}
+      // mystep组件
+        mt={4}     //外边距上4
+        mb={5}     //外边距下5
+        px={3}     //内边距水平边距3
+        py={[2, 4]}  //内边距垂直边距范围【2，4】
         bg={'myGray.50'}
         borderWidth={'1px'}
         borderColor={'borderColor.low'}
@@ -160,6 +163,7 @@ const ImportDataset = () => {
           <MyStep />
         </Box>
       </Box>
+      {/* 根据数据源显示动态导入组件，该组件传递了三个属性:activeStep,goToNext,type */}
       <Provider dataset={datasetDetail} parentId={parentId}>
         <Box flex={'1 0 0'} overflow={'auto'} position={'relative'}>
           <ImportComponent activeStep={activeStep} goToNext={goToNext} type={type || ''} />

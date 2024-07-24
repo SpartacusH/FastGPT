@@ -1,14 +1,8 @@
 import type { ChatItemType } from '../../core/chat/type.d';
-import { ChatFileTypeEnum, ChatItemValueTypeEnum, ChatRoleEnum } from '../../core/chat/constants';
+import { ChatFileTypeEnum,ChatItemValueTypeEnum,ChatRoleEnum } from '../../core/chat/constants';
 import { ChatCompletionRequestMessageRoleEnum } from '../../core/ai/constant';
 // @ts-ignore
-import type {
-  ChatMessageItemType,
-  ChatCompletionMessageParam,
-  ChatCompletionMessageToolCall,
-  ChatCompletionMessageFunctionCall,
-  ChatCompletionFunctionMessageParam
-} from '../../core/ai/type.d';
+import type { ChatMessageItemType,ChatCompletionMessageParam,ChatCompletionMessageToolCall,ChatCompletionMessageFunctionCall,ChatCompletionFunctionMessageParam } from '../../core/ai/type.d';
 
 const chat2Message = {
   [ChatRoleEnum.AI]: ChatCompletionRequestMessageRoleEnum.Assistant,

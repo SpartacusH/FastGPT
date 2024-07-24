@@ -6,6 +6,7 @@ import { readPdfFile } from './pdf';
 import { readDocContent } from './doc';
 import { readFileRawText } from './rawText';
 import { readWordFile } from './word';
+import { readDocxFile } from './docx';
 
 export const readFileRawContent = async ({
   file,
@@ -20,8 +21,7 @@ export const readFileRawContent = async ({
 
   switch (extension) {
     case 'txt':
-      console.log('read txt file');
-
+      // console.log('read txt file');
       return readFileRawText(file);
     case 'md':
       return readMdFile({
@@ -35,10 +35,12 @@ export const readFileRawContent = async ({
       });
     case 'csv':
       return readCsvContent({ file });
-    // case 'pdf':
-    //   const pdf = await loadFile2Buffer({ file });
-    //   // 判断是否是扫描版pdf的方法
-    //   return readPdfFile({ pdf });
+    // case 'docx':
+    //   // console.log('resole docx file:',file);
+    //   return readDocxFile({
+    //     file,
+    //     uploadImgController: uploadBase64Controller
+    //   });
     case 'pdf':
     case 'ofd':
     case 'doc':
@@ -51,7 +53,6 @@ export const readFileRawContent = async ({
     //     file,
     //     uploadImgController: uploadBase64Controller
     //   });
-
     default:
       return {
         rawText: ''

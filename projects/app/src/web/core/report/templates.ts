@@ -331,7 +331,7 @@ export const reportTemplates: (ReportItemType & {
             // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
-            value: '你好，我是714所助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
+            value: '你好，我是参谋助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
             connected: false
           },
           {
@@ -804,7 +804,7 @@ export const reportTemplates: (ReportItemType & {
             // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
-            value: '你好，我是714所助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
+            value: '你好，我是参谋助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
             connected: false
           },
           {
@@ -1277,7 +1277,7 @@ export const reportTemplates: (ReportItemType & {
             // @ts-ignore
             showTargetInReport: false,
             showTargetInPlugin: false,
-            value: '你好，我是714所助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
+            value: '你好，我是参谋助手，请选择您的知识库和模型\n[你是谁]\n[如何使用]',
             connected: false
           },
           {

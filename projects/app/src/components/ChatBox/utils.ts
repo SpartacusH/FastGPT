@@ -15,16 +15,16 @@ export const formatChatValue2InputType = (value: ChatItemValueItemType[]): ChatB
   const files =
     (value
       .map((item) =>
-        // @ts-ignore
+          // @ts-ignore
         item.type === 'file' && item.file
           ? {
               id: getNanoid(),
-              // @ts-ignore
+            // @ts-ignore
               type: item.file.type,
-              // @ts-ignore
+            // @ts-ignore
               name: item.file.name,
               icon: '',
-              // @ts-ignore
+            // @ts-ignore
               url: item.file.url
             }
           : undefined

@@ -185,6 +185,7 @@ export const streamFetch = ({
     }
   });
 
+
 /*摘要生成专用方法，只获取最后一次生成的结果*/
 export const streamFetch1 = ({
   url = '/api/v1/chat/completions',

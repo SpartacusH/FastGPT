@@ -41,6 +41,7 @@ export enum TabEnum {
   import = 'import'
 }
 
+//Detail组件
 const Detail = ({ datasetId, currentTab }: { datasetId: string; currentTab: `${TabEnum}` }) => {
   const theme = useTheme();
   const { t } = useTranslation();

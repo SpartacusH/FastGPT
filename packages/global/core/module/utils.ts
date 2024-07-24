@@ -6,7 +6,7 @@ import {
   variableMap
 } from './constants';
 import { FlowNodeInputItemType, FlowNodeOutputItemType } from './node/type';
-import { AppTTSConfigType, ModuleItemType, VariableItemType, AppWhisperConfigType } from './type';
+import { AppTTSConfigType, ModuleItemType, VariableItemType,AppWhisperConfigType } from './type';
 import { Input_Template_Switch } from './template/input';
 import { EditorVariablePickerType } from '../../../web/components/common/Textarea/PromptEditor/type';
 import { defaultWhisperConfig } from '../app/constants';
@@ -28,7 +28,7 @@ export const splitGuideModule = (guideModules?: ModuleItemType) => {
     (item) => item.key === ModuleInputKeyEnum.tts
   )?.value || { type: 'web' };
 
-  const whisperConfig: AppWhisperConfigType =
+ const whisperConfig: AppWhisperConfigType =
     guideModules?.inputs?.find((item) => item.key === ModuleInputKeyEnum.whisper)?.value ||
     defaultWhisperConfig;
   return {

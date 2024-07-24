@@ -386,13 +386,9 @@ const UserInfo = () => {
       </Box>
 
       {isOpenPayModal && <PayModal onClose={onClosePayModal} />}
-      {isOpenUpdatePsw && (
-        <UpdatePswModal
+      {isOpenUpdatePsw && <UpdatePswModal
           // @ts-ignore
-          userId={userInfo?._id}
-          onClose={onCloseUpdatePsw}
-        />
-      )}
+          userId={userInfo?._id} onClose={onCloseUpdatePsw} />}
       {isOpenOpenai && userInfo && (
         <OpenAIAccountModal
           defaultData={userInfo?.openaiAccount}

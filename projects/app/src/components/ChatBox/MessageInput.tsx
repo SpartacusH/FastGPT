@@ -405,7 +405,7 @@ ${images.map((img) => JSON.stringify({ src: img.src })).join('\n')}
                 >
                   <MyTooltip label={isSpeaking ? t('core.chat.Stop Speak') : t('core.chat.Record')}>
                     <MyIcon
-                      // @ts-ignore
+                        // @ts-ignore
                       name={isSpeaking ? 'core/chat/stopSpeechFill' : 'core/chat/recordFill'}
                       width={['20px', '22px']}
                       height={['20px', '22px']}

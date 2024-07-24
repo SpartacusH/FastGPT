@@ -8,7 +8,7 @@ import {
   ModalBody,
   Input,
   Textarea,
-  // @ts-ignore
+    // @ts-ignore
   AttachmentIcon
 } from '@chakra-ui/react';
 import { useSelectFile } from '@/web/common/file/hooks/useSelectFile';

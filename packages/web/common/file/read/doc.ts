@@ -4,7 +4,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 let ipAddress;
 if (typeof window !== 'undefined') {
-  let thisurl = window.location.href;
+  const thisurl = window.location.href;
 
   // 考虑localhost的情况
   if (thisurl.indexOf('localhost') > -1) {
@@ -18,7 +18,7 @@ if (typeof window !== 'undefined') {
       ipAddress = 'localhost';
     }
   }
-  console.log('url:', ipAddress);
+  // console.log('url:', ipAddress);
 }
 
 const use_ip = ipAddress;
@@ -34,8 +34,21 @@ type TokenType = {
   hasEOL: boolean;
 };
 
+function arrayBufferToBase64(arrayBuffer:ArrayBuffer):string {
+  const uint8Array = new Uint8Array(arrayBuffer);
+  const chunkSize = 0x8000; // 每次处理的字节数
+  let result = '';
+  for (let i = 0; i < uint8Array.length; i += chunkSize) {
+    // @ts-ignore
+    result += String.fromCharCode.apply(null, uint8Array.subarray(i,i+chunkSize));
+  }
+  return btoa(result);
+}
+
 export const readDocContent = async ({ file }: { file: File }) => {
+  console.log("转pdf通过ocr获取文本内容")
   pdfjsLib.GlobalWorkerOptions.workerSrc = '/js/pdf.worker.js';
+
   const readPDFPage = async (doc: any, pageNo: number) => {
     const page = await doc.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
@@ -63,7 +76,7 @@ export const readDocContent = async ({ file }: { file: File }) => {
     }
 
     page.cleanup();
-
+   
     return pageTexts
       .map((token) => {
         const paragraphEnd = token.hasEOL && /([。？！.?!\n\r]|(\r\n))$/.test(token.str);
@@ -77,11 +90,12 @@ export const readDocContent = async ({ file }: { file: File }) => {
     try {
       console.log('apiUrl', file.name, file.type);
       const arrayBuffer = await loadFile2Buffer({ file }); // ArrayBuffer数据
-
-      // 将ArrayBuffer转换为Base64字符串
-      const base64String = btoa(
-        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
+   
+      // 将ArrayBuffer转换为Base64字符串,原代码
+      // const base64String = btoa(
+      //   new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+      // );
+      const base64String = arrayBufferToBase64(arrayBuffer);
 
       // 构建请求体为JSON格式，包含type和base64数据
       const requestBody = {
@@ -108,9 +122,9 @@ export const readDocContent = async ({ file }: { file: File }) => {
         let binaryString = atob(data.pdf_file);
 
         // 创建适当大小的ArrayBuffer
-        let len = binaryString.length;
-        let buffer = new ArrayBuffer(len);
-        let view = new Uint8Array(buffer);
+        const len = binaryString.length;
+        const buffer = new ArrayBuffer(len);
+        const view = new Uint8Array(buffer);
 
         // 将每个字符转换为字节并填充到ArrayBuffer中
         for (let i = 0; i < len; i++) {
@@ -119,11 +133,12 @@ export const readDocContent = async ({ file }: { file: File }) => {
         const doc = await pdfjsLib.getDocument(buffer).promise;
         const pageTextPromises = [];
         for (let pageNo = 1; pageNo <= doc.numPages; pageNo++) {
-          console.log(`Processing page ${pageNo}`);
+          // console.log(`Processing page ${pageNo}`);
           pageTextPromises.push(readPDFPage(doc, pageNo));
         }
         const pageTexts = await Promise.all(pageTextPromises);
-        console.log('pageTexts', pageTexts);
+        // console.log('pageTexts', pageTexts);
+
         return {
           rawText: pageTexts.join('')
         };

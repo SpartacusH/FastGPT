@@ -6,7 +6,7 @@ import type {
   InitChatResponse,
   InitOutLinkChatProps,
   getHistoriesProps,
-  InitTeamChatProps
+      InitTeamChatProps
 } from '@/global/core/chat/api.d';
 import type {
   AdminUpdateFeedbackParams,
@@ -18,7 +18,7 @@ import type {
 import { UpdateChatFeedbackProps } from '@fastgpt/global/core/chat/api';
 
 import { AuthTeamTagTokenProps } from '@fastgpt/global/support/user/team/tag';
-import { AppListItemType } from '@fastgpt/global/core/app/type';
+import {AppListItemType} from "@fastgpt/global/core/app/type";
 /**
  * 获取初始化聊天内容
  */

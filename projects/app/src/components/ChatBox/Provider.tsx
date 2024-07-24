@@ -122,14 +122,14 @@ const Provider = ({
     audioLoading,
     audioPlaying,
     hasAudio,
-    // @ts-ignore
+       // @ts-ignore
     playAudioByText,
     cancelAudio,
-    // @ts-ignore
+       // @ts-ignore
     startSegmentedAudio,
-    // @ts-ignore
+       // @ts-ignore
     finishSegmentedAudio,
-    // @ts-ignore
+       // @ts-ignore
     splitText2Audio
   } = useAudioPlay({
     ttsConfig,

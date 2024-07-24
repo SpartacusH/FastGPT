@@ -125,7 +125,7 @@ const OutLink = () => {
             ...currentChat,
             updateTime: new Date(),
             title: newTitle,
-            // @ts-ignore
+              // @ts-ignore
             teamId,
             teamToken
           });
@@ -201,11 +201,8 @@ const OutLink = () => {
   useQuery(['loadHistories', appId], () => {
     if (teamId && appId) {
       return loadHistories({
-        // @ts-ignore
-        teamId,
-        appId,
-        teamToken: teamToken
-      });
+          // @ts-ignore
+        teamId, appId, teamToken: teamToken });
     }
     return;
   });
@@ -317,22 +314,13 @@ const OutLink = () => {
                   onCloseSlider();
                 }
               }}
-              onDelHistory={(e) =>
-                delOneHistory({
-                  ...e,
-                  appId,
+              onDelHistory={(e) => delOneHistory({ ...e, appId,
                   // @ts-ignore
-                  teamId,
-                  teamToken
-                })
-              }
+                teamId, teamToken })}
               onClearHistory={() => {
-                clearHistories({
-                  appId,
-                  // @ts-ignore
-                  teamId,
-                  teamToken
-                });
+                clearHistories({ appId,
+                    // @ts-ignore
+                  teamId, teamToken });
                 router.replace({
                   query: {
                     ...router.query,
@@ -341,13 +329,9 @@ const OutLink = () => {
                 });
               }}
               onSetHistoryTop={(e) => {
-                updateHistory({
-                  ...e,
-                  // @ts-ignore
-                  teamId,
-                  teamToken,
-                  appId
-                });
+                updateHistory({ ...e,
+                    // @ts-ignore
+                  teamId, teamToken, appId });
               }}
               onSetCustomTitle={async (e) => {
                 updateHistory({
@@ -355,7 +339,7 @@ const OutLink = () => {
                   chatId: e.chatId,
                   title: e.title,
                   customTitle: e.title,
-                  // @ts-ignore
+                    // @ts-ignore
                   teamId,
                   teamToken
                 });
@@ -391,18 +375,13 @@ const OutLink = () => {
                 onUpdateVariable={(e) => {}}
                 onStartChat={startChat}
                 onDelMessage={(e) =>
-                  delOneHistoryItem({
-                    ...e,
-                    appId: chatData.appId,
-                    chatId,
-                    // @ts-ignore
-                    teamId,
-                    teamToken
-                  })
+                  delOneHistoryItem({ ...e, appId: chatData.appId, chatId,
+                      // @ts-ignore
+                    teamId, teamToken })
                 }
                 appId={chatData.appId}
                 chatId={chatId}
-                // @ts-ignore
+                  // @ts-ignore
                 teamId={teamId}
                 teamToken={teamToken}
               />

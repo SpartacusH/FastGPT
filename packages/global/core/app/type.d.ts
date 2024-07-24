@@ -149,3 +149,4 @@ export type AppWhisperConfigType = {
   autoSend: boolean;
   autoTTSResponse: boolean;
 };
+

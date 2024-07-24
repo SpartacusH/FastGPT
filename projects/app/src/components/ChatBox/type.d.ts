@@ -51,5 +51,5 @@ export type ComponentRef = {
   resetHistory: (history: ChatSiteItemType[]) => void;
   scrollToBottom: (behavior?: 'smooth' | 'auto') => void;
   sendPrompt: (question: string) => void;
-  resetInputText_FileContent: (prompt: string, file_content: string[]) => void; // 输入框内容重置
+  resetInputText_FileContent:(prompt:string,file_content:string[]) => void;    // 输入框内容重置
 };

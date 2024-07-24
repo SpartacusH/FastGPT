@@ -88,9 +88,8 @@ const ChatItem = ({
         <>
           {files.length > 0 && <FilesBlock files={files} />}
           <Markdown
-            // @ts-ignore
-            source={text}
-          />
+              // @ts-ignore
+              source={text} />
         </>
       );
     }
@@ -98,114 +97,110 @@ const ChatItem = ({
     /* AI */
     return (
       <Flex flexDirection={'column'} key={chat.dataId} gap={2}>
-        {
-          // @ts-ignore
+        {// @ts-ignore
           chat.value.map((value, i) => {
-            const key = `${chat.dataId}-ai-${i}`;
+          const key = `${chat.dataId}-ai-${i}`;
 
-            if (value.text) {
-              let source = (value.text?.content || '').trim();
+          if (value.text) {
+            let source = (value.text?.content || '').trim();
 
-              if (!source && chat.value.length > 1) return null;
+            if (!source && chat.value.length > 1) return null;
 
-              if (
-                isLastChild &&
-                !isChatting &&
-                questionGuides.length > 0 &&
-                i === chat.value.length - 1
-              ) {
-                source = `${source}
+            if (
+              isLastChild &&
+              !isChatting &&
+              questionGuides.length > 0 &&
+              i === chat.value.length - 1
+            ) {
+              source = `${source}
 \`\`\`${CodeClassName.questionGuide}
 ${JSON.stringify(questionGuides)}`;
-              }
-
-              return (
-                <Markdown
-                  key={key}
-                  source={source}
-                  // @ts-ignore
-                  showAnimation={isLastChild && isChatting && i === chat.value.length - 1}
-                />
-              );
             }
-            if (value.type === ChatItemValueTypeEnum.tool && value.tools) {
-              return (
-                <Box key={key}>
-                  {
-                    // @ts-ignore
-                    value.tools.map((tool) => {
-                      const toolParams = (() => {
-                        try {
-                          return JSON.stringify(JSON.parse(tool.params), null, 2);
-                        } catch (error) {
-                          return tool.params;
-                        }
-                      })();
-                      const toolResponse = (() => {
-                        try {
-                          return JSON.stringify(JSON.parse(tool.response), null, 2);
-                        } catch (error) {
-                          return tool.response;
-                        }
-                      })();
 
-                      return (
-                        <Box key={tool.id}>
-                          <Accordion allowToggle>
-                            <AccordionItem borderTop={'none'} borderBottom={'none'}>
-                              <AccordionButton
-                                w={'auto'}
-                                bg={'white'}
-                                borderRadius={'md'}
-                                borderWidth={'1px'}
-                                borderColor={'myGray.200'}
-                                boxShadow={'1'}
-                                _hover={{
-                                  bg: 'auto',
-                                  color: 'primary.600'
-                                }}
-                              >
-                                <Image src={tool.toolAvatar} alt={''} w={'14px'} mr={2} />
-                                <Box mr={1}>{tool.toolName}</Box>
-                                {isChatting && !tool.response && (
-                                  <MyIcon name={'common/loading'} w={'14px'} />
-                                )}
-                                <AccordionIcon color={'myGray.600'} ml={5} />
-                              </AccordionButton>
-                              <AccordionPanel
-                                py={0}
-                                px={0}
-                                mt={0}
-                                borderRadius={'md'}
-                                overflow={'hidden'}
-                                maxH={'500px'}
-                                overflowY={'auto'}
-                              >
-                                {toolParams && toolParams !== '{}' && (
-                                  <Markdown
-                                    source={`~~~json#Input
+            return (
+              <Markdown
+                key={key}
+                source={source}
+                // @ts-ignore
+                showAnimation={isLastChild && isChatting && i === chat.value.length - 1}
+              />
+            );
+          }
+          if (value.type === ChatItemValueTypeEnum.tool && value.tools) {
+            return (
+              <Box key={key}>
+                {// @ts-ignore
+                  value.tools.map((tool) => {
+                  const toolParams = (() => {
+                    try {
+                      return JSON.stringify(JSON.parse(tool.params), null, 2);
+                    } catch (error) {
+                      return tool.params;
+                    }
+                  })();
+                  const toolResponse = (() => {
+                    try {
+                      return JSON.stringify(JSON.parse(tool.response), null, 2);
+                    } catch (error) {
+                      return tool.response;
+                    }
+                  })();
+
+                  return (
+                    <Box key={tool.id}>
+                      <Accordion allowToggle>
+                        <AccordionItem borderTop={'none'} borderBottom={'none'}>
+                          <AccordionButton
+                            w={'auto'}
+                            bg={'white'}
+                            borderRadius={'md'}
+                            borderWidth={'1px'}
+                            borderColor={'myGray.200'}
+                            boxShadow={'1'}
+                            _hover={{
+                              bg: 'auto',
+                              color: 'primary.600'
+                            }}
+                          >
+                            <Image src={tool.toolAvatar} alt={''} w={'14px'} mr={2} />
+                            <Box mr={1}>{tool.toolName}</Box>
+                            {isChatting && !tool.response && (
+                              <MyIcon name={'common/loading'} w={'14px'} />
+                            )}
+                            <AccordionIcon color={'myGray.600'} ml={5} />
+                          </AccordionButton>
+                          <AccordionPanel
+                            py={0}
+                            px={0}
+                            mt={0}
+                            borderRadius={'md'}
+                            overflow={'hidden'}
+                            maxH={'500px'}
+                            overflowY={'auto'}
+                          >
+                            {toolParams && toolParams !== '{}' && (
+                              <Markdown
+                                source={`~~~json#Input
 ${toolParams}`}
-                                  />
-                                )}
-                                {toolResponse && (
-                                  <Markdown
-                                    source={`~~~json#Response
+                              />
+                            )}
+                            {toolResponse && (
+                              <Markdown
+                                source={`~~~json#Response
 ${toolResponse}`}
-                                  />
-                                )}
-                              </AccordionPanel>
-                            </AccordionItem>
-                          </Accordion>
-                        </Box>
-                      );
-                    })
-                  }
-                </Box>
-              );
-            }
-            return null;
-          })
-        }
+                              />
+                            )}
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
+                    </Box>
+                  );
+                })}
+              </Box>
+            );
+          }
+          return null;
+        })}
       </Flex>
     );
   }, [chat.dataId, chat.value, isChatting, isLastChild, questionGuides, type]);

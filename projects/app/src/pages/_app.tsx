@@ -50,7 +50,7 @@ function App({ Component, pageProps }: AppProps) {
         feConfigs: { scripts, isPlus, show_git, systemTitle }
       } = await clientInitData();
 
-      setTitle(systemTitle || '714所助手');
+      setTitle(systemTitle || '参谋助手');
 
       // log fastgpt
 

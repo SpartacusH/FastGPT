@@ -13,6 +13,7 @@ import {
   MenuButton,
   useDisclosure,
   Button,
+  Progress,
   Link,
   useTheme,
   Checkbox
@@ -46,6 +47,7 @@ import MyMenu from '@/components/MyMenu';
 import { ImportDataSourceEnum } from '@/pages/dataset/detail/components/Import';
 import { useRouter } from 'next/router';
 import rowTabs from '@fastgpt/web/components/common/Tabs/RowTabs';
+import { stringify } from 'querystring';
 
 const DataProcess = dynamic(() => import('../commonProgress/DataProcess'), {
   loading: () => <Loading fixed={false} />
@@ -53,9 +55,12 @@ const DataProcess = dynamic(() => import('../commonProgress/DataProcess'), {
 const Upload = dynamic(() => import('../commonProgress/Upload'));
 const PreviewRawText = dynamic(() => import('../components/PreviewRawText'));
 
-type FileItemType = ImportSourceItemType & { file: File };
+type FileItemType = ImportSourceItemType & { file: File ,resolveFileRate:number};
 const fileType = '.txt, .doc, .docx, .csv, .pdf, .md, .html, .ofd, .wps';
-const maxSelectFileCount = 1000;
+const maxSelectFileCount = 300;
+
+// let resolveFileRate=0
+// FileLocal组件，按步骤显示不同组件
 const FileLocal = ({ type, activeStep, goToNext }: ImportDataComponentProps) => {
   return (
     <>
@@ -68,6 +73,7 @@ const FileLocal = ({ type, activeStep, goToNext }: ImportDataComponentProps) => 
 
 export default React.memo(FileLocal);
 
+// 步骤为0时， 渲染SelectFile组件，处理文件选择和预处理逻辑
 const SelectFile = React.memo(function SelectFile({
   goToNext,
   type
@@ -76,27 +82,41 @@ const SelectFile = React.memo(function SelectFile({
   type: any;
 }) {
   const router = useRouter();
+  // 从router.query 对象中提取 datasetId 属性，并将其类型断言为可选字符串
   const { datasetId } = (router.query || {}) as { datasetId?: string };
   const { t } = useTranslation();
   const { feConfigs } = useSystemStore();
   const { sources, setSources } = useImportStore();
   // @ts-ignore
+  // 已选择的文件数组
   const [selectFiles, setSelectFiles] = useState<FileItemType[]>(sources);
+  // 预处理成功的文件数组
   const [successFiles, setSuccessFiles] = useState<FileItemType[]>([]);
   // let successFiles = useMemo(() => selectFiles.filter((item) => !item.errorMsg), [selectFiles]);
   const [isHandleLoading, setIsHandleLoading] = useState(false);
   const [previewRaw, setPreviewRaw] = useState<PreviewRawTextProps>();
-
+  // let resolvefilecount:number=0;
   // useEffect(() => {
   //   setSources(successFiles);
   // }, [successFiles]);
+
+  // 选择文件数组更新时，自动更新source数组和预处理成功的文件数组
   useEffect(() => {
-    setSources(selectFiles);
-    setSuccessFiles(selectFiles.filter((item) => !item.errorMsg));
+    setSources(selectFiles.filter((item) => item.status==='处理成功'));
+    setSuccessFiles(selectFiles.filter((item) => item.status==='处理成功'));
   }, [selectFiles]);
+
+  
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  // 待预处理文件数组
+  // const [waitResolvefiles,setWaitResolvefiles] = useState([]);
+  // useEffect(() => {
+  //   resolvefilecount = waitResolvefiles.length;
+  // },[waitResolvefiles])
 
+
+  // 打钩的文件id数组
   selectFiles.forEach((cur) => {
     // @ts-ignore
     if (cur?.id && !selectedItems.includes(cur?.id) && !cur.isDuplicate) {
@@ -105,7 +125,7 @@ const SelectFile = React.memo(function SelectFile({
     }
   });
 
-  /* 标题复选框勾选、取消*/
+  /* 复选框全选或取消全选操作*/
   const handleHeaderCheckboxChange = () => {
     if (isAllSelected) {
       // 如果当前是全选状态，则取消所有选中
@@ -118,7 +138,7 @@ const SelectFile = React.memo(function SelectFile({
     setIsAllSelected(!isAllSelected);
   };
 
-  /*复选框勾选、取消*/
+  /*复选框选择和取消操作*/
   const handleCheckboxChange = (fileId: string) => {
     // @ts-ignore
     if (selectedItems.includes(fileId)) {
@@ -131,15 +151,23 @@ const SelectFile = React.memo(function SelectFile({
     }
   };
 
-  /* 处理勾选的文件 */
+  /**********解析勾选的文件  ***************/
+  // txt、csv、md、html文档直接解析，其他类型文档上传到服务器转成pdf文件，利用ocr对pdf文件进行文本内容的提取
   const handelFile = async () => {
     setIsHandleLoading(true);
     let i = 0;
+    // 获取选中文件
     let selectedFiles = selectFiles.filter(function (cur) {
       // @ts-ignore
       return selectedItems.indexOf(cur.id) >= 0;
     });
+
+    for (let i = 0; i < selectFiles.length; i++) {
+      selectFiles[i].resolveFileRate= Math.floor(Math.random() * 5)
+    }
+    // 遍历选择文件，获取文件的富文本内容
     for await (const file of selectedFiles) {
+
       if (!file.rawText) {
         try {
           const { rawText } = await (() => {
@@ -157,18 +185,25 @@ const SelectFile = React.memo(function SelectFile({
                   })
               });
             } catch (error) {
+              file.errorMsg = "resolve file failed"
               return { rawText: '' };
             }
           })();
+
+          // test docx file
+          // console.log("raw content:",rawText);
+
           let newSelectFiles = [...selectFiles];
           let fileIndex = newSelectFiles.findIndex((fileItem) => fileItem == file);
           file.rawText = rawText;
           file.errorMsg = rawText.length > 0 ? '' : file.errorMsg;
           // @ts-ignore
           file.status = rawText.length == 0 ? '处理失败' : '处理成功';
+          file.resolveFileRate = rawText.length==0 ? Math.floor(Math.random() * 99) + 1:100
           newSelectFiles[fileIndex] = file;
           setSelectFiles(newSelectFiles);
           i++;
+          // 记录处理数量
         } catch (error) {
           console.log(error);
           let newSelectFiles = [...selectFiles];
@@ -178,24 +213,29 @@ const SelectFile = React.memo(function SelectFile({
           file.status = '处理失败';
           newSelectFiles[fileIndex] = file;
           setSelectFiles(newSelectFiles);
+          // setWaitResolvefiles([]);
         }
       }
     }
-    setSuccessFiles(selectFiles.filter((item) => !item.errorMsg));
-    console.log(selectFiles);
+    // setSuccessFiles(selectFiles.filter((item) => item.status==="处理成功"));
+    // console.log(selectFiles);
     setIsHandleLoading(false);
   };
 
-  /* 选择文件 */
+  /* 选择文件回调函数 */
   let { mutate: onSelectFile, isLoading } = useRequest({
     mutationFn: async (files: SelectFileItemType[]) => {
       {
+        // 设置加载状态
         isLoading = true;
+        // 遍历选择文件数组
         for await (const selectFile of files) {
+          // 获取文件对象和文件路径
           const { file, folderPath } = selectFile;
           const relatedId = getNanoid(32);
+          // 检查数据库中是否已有同名文件
           const isDuplicate = await checkFileExist({ datasetId, fileName: file.name });
-
+          // 如果已选择文件的数组不存在同名文件则创建文件对象项，并更新selectFiles数组状态  过滤掉同名文件
           if (selectFiles.filter((item) => item.file.name == file.name).length == 0) {
             // const { rawText } = await (() => {
             //   try {
@@ -227,22 +267,28 @@ const SelectFile = React.memo(function SelectFile({
               sourceSize: formatFileSize(file.size),
               icon: getFileIcon(file.name),
               errorMsg: rawText.length === 0 ? t('common.file.Empty file tip') : '',
-              status: '待处理'
+              status: isDuplicate?'':'待预处理',
+              resolveFileRate:0
             };
+
+            // 状态更新方法，用于更新选中文件列表，state 为当前选择文件数组  
+            // 在当前选中文件列表的开头添加一个新文件 item，并确保选中文件的总数不超过 maxSelectFileCount。如果新添加的文件数量超过了最大限制，
+            // 则会裁剪数组，使其长度等于 maxSelectFileCount。
             setSelectFiles((state) => {
               const results = [item].concat(state).slice(0, maxSelectFileCount);
               return results;
             });
-            //将未重名的文件加入到选中数组
+            //将通过同名校验的文件对象加入到数组selecteditems中和待预处理文件数组中  过滤掉同名文件
             if (!item.isDuplicate) {
               // @ts-ignore
               setSelectedItems((state) => {
                 const results = [item.id].concat(state).slice(0, maxSelectFileCount);
                 return results;
-              });
+              });       
             }
           }
         }
+        // setSelectFiles 函数来更新 selectedFiles 的状态，并对文件进行排序，使得重复文件在前
         setSelectFiles((state) => {
           state.sort(function (a, b) {
             return Number(b.isDuplicate) - Number(a.isDuplicate);
@@ -263,7 +309,8 @@ const SelectFile = React.memo(function SelectFile({
           fileType={fileType}
           multiple
           maxCount={maxSelectFileCount}
-          maxSize={(feConfigs?.uploadFileMaxSize || 500) * 1024 * 1024}
+          maxSize={(feConfigs?.uploadFileMaxSize || 100) * 1024 * 1024}
+          // maxSize={100 * 1024 * 1024}
           onSelectFile={onSelectFile}
         />
       )}
@@ -271,9 +318,10 @@ const SelectFile = React.memo(function SelectFile({
         <FileSelector
           isLoading={isLoading}
           fileType={fileType}
-          multiple
+          multiple={true}
           maxCount={maxSelectFileCount}
-          maxSize={(feConfigs?.uploadFileMaxSize || 500) * 1024 * 1024}
+          maxSize={(feConfigs?.uploadFileMaxSize || 100) * 1024 * 1024}
+          // maxSize={100 * 1024 * 1024}
           onSelectFile={onSelectFile}
         />
       )}
@@ -282,21 +330,30 @@ const SelectFile = React.memo(function SelectFile({
       {selectFiles.length > 0 && (
         <Flex px={[6, 6]} alignItems={'center'} h={'35px'}>
           <Box fontWeight={'bold'} fontSize={['sm', 'lg']} flex={1}>
-            {'共上传' +
+            {'共选择' +
               selectFiles.length +
               '个文件' +
-              (selectedItems.length > 0 ? ' | 选中' + selectedItems.length + '个文件' : '') +
-              (selectFiles.filter((item) => item.isDuplicate == true).length > 0
-                ? ' | ' +
-                  selectFiles.filter((item) => item.isDuplicate == true).length +
-                  '个重名文件'
-                : '')}
+              (selectFiles.filter((item) => item.isDuplicate == true).length >= 0
+                ? ' | 数据库同名文件数量：' +
+                  selectFiles.filter((item) => item.isDuplicate == true).length
+                : '')+
+              ( ' | 选中文件数量：' + (selectFiles.length- selectFiles.filter((item) => item.isDuplicate == true).length) ) 
+              }
           </Box>
         </Flex>
       )}
       {selectFiles.length > 0 && (
         <Flex px={[6, 6]} alignItems={'center'} h={'35px'}>
           <Box fontWeight={'bold'} fontSize={['sm', 'lg']} flex={1}>
+            {(successFiles.length >0 ? '预处理进度 '+(Number(((successFiles.length+selectFiles.filter((item) => item.status == '处理失败').length)*100 / (successFiles.length+selectFiles.filter((item) => item.status == '处理失败').length+selectFiles.filter((item)=>item.status == '待预处理').length)).toFixed(1)))+'% |':'') +
+              (successFiles.length>=0 ?'已成功'+successFiles.length+'个,':'') +
+              (selectFiles.filter((item) => item.status == '处理失败').length >= 0
+                ? '失败' + selectFiles.filter((item) => item.status == '处理失败').length +
+                  '个,': '') +
+              (selectFiles.filter((item)=>item.status == '待预处理').length >= 0 ? '待预处理' + selectFiles.filter((item)=>item.status == '待预处理').length+'个' : '')
+            }
+          </Box>
+          {/* <Box fontWeight={'bold'} fontSize={['sm', 'lg']} flex={1}>
             {(successFiles.length > 0 ? '处理成功' + successFiles.length + '个文件 | ' : '') +
               (selectFiles.filter((item) => item.status == '处理失败').length > 0
                 ? '处理失败' +
@@ -308,17 +365,19 @@ const SelectFile = React.memo(function SelectFile({
                   selectFiles.filter((item) => item.status == '待处理').length +
                   '个文件 |'
                 : '')}
-          </Box>
+          </Box> */}
         </Flex>
       )}
       {/* 渲染用户选中的文件列表*/}
       {selectFiles.length > 0 && (
+      <Flex direction="column" flex="1" minH="600px">
         <TableContainer
           px={[2, 6]}
           mt={[0, 3]}
           position={'relative'}
           flex={'1 0 0'}
           overflowY={'auto'}
+          maxH="800px"
         >
           <Table variant={'simple'} fontSize={'sm'} draggable={false}>
             <Thead draggable={false}>
@@ -345,6 +404,9 @@ const SelectFile = React.memo(function SelectFile({
                 <Th borderBottom={'none'} w={'150px'} textAlign={'center'} py={4}>
                   {t('dataset.File Size')}
                 </Th>
+                <Th borderBottom={'none'} w={'150px'} textAlign={'center'} py={4}>
+                  {'预处理进度'}
+                </Th>  
                 <Th borderBottom={'none'} w={'150px'} textAlign={'center'} py={4}>
                   {t('common.Status')}
                 </Th>
@@ -380,7 +442,9 @@ const SelectFile = React.memo(function SelectFile({
                       }}
                     />
                   </Td>
-                  <Td w={'100px'}>{index + 1}</Td>
+                  {/* 序号 */}
+                  <Td w={'100px'}>{index + 1}</Td>  
+                  {/* 名称 */}
                   <Td minW={'150px'} maxW={['200px', '300px']} draggable>
                     <Flex alignItems={'center'}>
                       <MyTooltip
@@ -404,23 +468,48 @@ const SelectFile = React.memo(function SelectFile({
                       </MyTooltip>
                     </Flex>
                   </Td>
+                  {/* 文件大小 */}
                   <Td textAlign={'center'}>{item.sourceSize}</Td>
+                  {/* 预处理进度 */}
+                  {!item.isDuplicate?
+                  (<Td>
+                    <Flex alignItems={'center'} fontSize={'xs'}>
+                          <Progress
+                            value={item.resolveFileRate}
+                            h={'6px'}
+                            w={'100%'}
+                            maxW={'210px'}
+                            size="sm"
+                            borderRadius={'20px'}
+                            colorScheme={'blue'}
+                            bg="myGray.200"
+                            hasStripe
+                            isAnimated
+                            mr={2}
+                          />
+                          {`${item.resolveFileRate}%`}
+                    </Flex>
+                  </Td>):
+                  (<Td textAlign={'center'}>{'*'}</Td>)
+                  }
+                  {item.status==''?(<Td textAlign={'center'}>{'*'}</Td>):
                   <Td textAlign={'center'}>
-                    <Box
-                      display={'inline-flex'}
-                      alignItems={'center'}
-                      w={'auto'}
-                      color={item.status != '处理失败' ? '#485264' : 'red'}
-                      bg={'#F7F8FA'}
-                      borderWidth={'1px'}
-                      borderColor={'#76E4AA'}
-                      px={3}
-                      py={1}
-                      borderRadius={'md'}
-                    >
-                      {item.status}
-                    </Box>
-                  </Td>
+                  <Box
+                    display={'inline-flex'}
+                    alignItems={'center'}
+                    w={'auto'}
+                    color={item.status != '处理失败' ? '#485264' : 'red'}
+                    bg={'#F7F8FA'}
+                    borderWidth={'1px'}
+                    borderColor={'#76E4AA'}
+                    px={3}
+                    py={1}
+                    borderRadius={'md'}
+                  >
+                    {item.status}
+                  </Box>
+                 </Td>
+                  }
                   <Td textAlign={'center'}>
                     <Flex alignItems={'center'} justifyContent={'center'}>
                       <MyIcon
@@ -480,6 +569,7 @@ const SelectFile = React.memo(function SelectFile({
           {/*  </Box>*/}
           {/*)}*/}
         </TableContainer>
+        </Flex>
       )}
 
       {/* render files */}
@@ -531,23 +621,33 @@ const SelectFile = React.memo(function SelectFile({
       {/*  ))}*/}
       {/*</Flex>*/}
 
-      <Box textAlign={'right'}>
+      <Box 
+         mt={4}     //外边距上4
+         mb={5}     //外边距下5
+        //  px={3}     //内边距水平边距3
+        //  py={[2, 4]}  //内边距垂直边距范围【2，4】
+         textAlign={'right'} 
+      >
+        <Flex justify="flex-end" gap={3}>
         <Button
-          isDisabled={selectedItems.length === 0}
+          isDisabled={selectFiles.filter((item)=>item.status == '待预处理').length === 0 || isLoading}
           isLoading={isHandleLoading}
           onClick={handelFile}
         >
-          {selectFiles.length > 0
+          {/* {selectFiles.length > 0
             ? `${t('core.dataset.import.Total selected files', { total: selectedItems.length })} | `
-            : ''}
-          {'处理文件'}
+            : ''} */}
+          {'预处理'}
         </Button>
-        <Button isDisabled={successFiles.length === 0 || isLoading} onClick={goToNext}>
+        
+        <Button isDisabled={successFiles.length === 0 || isHandleLoading} onClick={goToNext}>
           {successFiles.length > 0
             ? `${t('core.dataset.import.Total handle files', { total: successFiles.length })} | `
             : ''}
           {t('common.Next Step')}
         </Button>
+        </Flex>
+        
       </Box>
 
       {previewRaw && <PreviewRawText {...previewRaw} onClose={() => setPreviewRaw(undefined)} />}
